@@ -1,43 +1,105 @@
-﻿# Preparación del Entorno Virtual
+# Preparación del Entorno Virtual
 
-## Para la instalación de Conda + VS Code
+## Crear entorno virtual con Conda
 
-#### Instalación de Conda
-Conda es un **gestor de entornos virtuales y paquetes** ampliamente utilizado en ciencia de datos, ingeniería y computación científica.  
-Permite crear entornos aislados con versiones específicas de **Python** y sus librerías, evitando conflictos entre proyectos.
+Habiendo instalado [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (recomendado) o Anaconda, para crear un entorno virtual se tienen los siguientes pasos:
 
-1.  **Descarga Miniconda** (recomendado por ser ligero):  
-    [Enlace de descarga](https://drive.google.com/open?id=1iDMDOdSDpe13DB6RUY16saTUqJUDocM0&usp=drive_fs)
+1. Abrir la terminal o consola de Windows.
 
-2.  **Instalación:** Ejecuta el instalador y sigue los pasos por defecto.  
-    *Nota: En Windows, se recomienda marcar la opción "Add Miniconda to PATH" para facilitar el uso en la terminal.*
+2. Crear un entorno virtual con Conda:
 
-3.  **Verificación:** Abre una terminal (CMD o PowerShell) y ejecuta:
-    ```bash
-    conda --version
-    ```
+```bash
+conda create -n ml python=3.12 -y
+```
 
-4.  **Crear un entorno virtual:**
-    ```bash
-    conda create -n ml python=3.12
-    ```
+3. Activar el entorno virtual:
 
-5.  **Activar el entorno:**
-    ```bash
-    conda activate ml
-    ```
+```bash
+conda activate ml
+```
 
-6.  **Instalar dependencias**
-    ```bash
-    conda install numpy matplotlib scipy pandas ipykernel
-    pip install jax jaxlib
-    ```
-    *(Usamos `pip` para JAX ya que es el método oficial recomendado para obtener las últimas versiones compatibles).*
+4. Instalar Poetry dentro del entorno virtual activo:
 
-7. **Registro de entorno en Jupyter**
-    ```bash
-    python -m ipykernel install --user --name ml --display-name "Python (ml)"
-    ```
+```bash
+pip install poetry
+```
+
+5. Configurar Poetry para que **NO cree un entorno virtual adicional** y use el entorno Conda activo:
+
+```bash
+poetry config virtualenvs.create false --local
+```
+
+> ⚠️ Este paso es importante para evitar que Poetry cree un `.venv` independiente.
+
+---
+
+## Crear un workspace con Poetry integrado al entorno `ml`
+
+1. Crear el directorio del proyecto:
+
+```bash
+mkdir proyecto-ml
+cd proyecto-ml
+```
+
+2. Activar el entorno virtual (si no lo está ya):
+
+```bash
+conda activate ml
+```
+
+3. Inicializar Poetry en la raíz del proyecto. Esto generará el archivo `pyproject.toml`:
+
+```bash
+poetry init --no-interaction
+```
+
+4. Agregar directorio `src` al workspace:
+
+```bash
+mkdir src
+```
+
+5. Instalar dependencias y agregarlas al poetry:
+
+```bash
+poetry add numpy matplotlib scipy pandas ipykernel
+```
+
+> ⚠️ Si el proyecto fue clonado o descargado y ya cuenta con un archivo `pyproject.toml`, para instalar las dependencias debes ejecutar:
+> ```bash
+> poetry install
+> ```
+> Las dependencias se instalarán dentro del entorno `ml` y se registrarán en `pyproject.toml`.
+
+6. **Registro de entorno en Jupyter**
+Para que el entorno sea visible en los notebooks:
+```bash
+python -m ipykernel install --user --name ml --display-name "Python (ml)"
+```
+
+7. Ejemplo de archivo principal, crear un archivo `main.py` dentro del directorio `src` con el siguiente contenido:
+
+```python
+# Codigo Hello World de ejemplo con numpy y matplotlib
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2 * np.pi, 100)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.title("Grafica de sin(x)")
+plt.show()
+```
+
+8. Ejecutar el proyecto desde la raíz del proyecto:
+
+```bash
+python src/main.py
+```
 
 ---
 
@@ -53,7 +115,7 @@ Es el editor de código (IDE) donde escribiremos y ejecutaremos nuestras rutinas
 ---
 
 #### Configuración con Jupyter Notebook
-Para ejecutar notebooks (`.ipynb`) utilizando el entorno de Conda creado:
+Para ejecutar notebooks (`.ipynb`) utilizando el entorno de Conda y Poetry creado:
 
 1.  **Crear o abrir un archivo:** Crea un archivo con extensión `.ipynb`.
 2.  **Seleccionar el Kernel:** En la esquina superior derecha del editor, haz clic en **"Select Kernel"** (Seleccionar kernel).
