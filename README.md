@@ -1,11 +1,55 @@
 ﻿# Machine Learning 1 (23433)
 
-### Ingeniería Electronica con Enfasis en Ciencias de la Computación
+### Ingeniería Electrónica con Énfasis en Ciencias de la Computación
 
+---
 
-Este es el repositorio oficial de la Práctica de Machine Learning 1
+## 📚 Descripción
 
-Aquí se encuentran todas las informaciones, ejemplos, plantillas, scripts, programas, algoritmos, código, y ejemplos relacionados a la materia.
+Repositorio oficial de la Práctica de Machine Learning 1. Contiene ejemplos, plantillas, scripts y código relacionado a la materia.
+
+---
+
+## 👨‍🏫 Equipo Docente
+
+| **Rol** | **Nombre** | **Email** |
+|---------|------------|-----------|
+| Docente Teoría | Diego Stalder | dstalder@ing.una.py |
+| Docente Práctica | Carlos Benítez | carlosbenitez@fiuna.edu.py |
+
+---
+
+## 📊 Evaluación
+
+| **Componente** | **Ponderación** |
+|----------------|-----------------|
+| Cuestionarios | 10% |
+| Trabajos Prácticos (TP1-TP6) | 10% |
+| Primer Examen Parcial | 30% |
+| Segundo Examen Parcial | 20% |
+| Proyecto de Curso (Kaggle) | 30% |
+| **TOTAL** | **100%** |
+
+### Trabajos Prácticos
+
+| **TP** | **Descripción** |
+|--------|-----------------|
+| TP1 | Mi primer repositorio en GitHub |
+| TP2 | Comparación de modelos de regresión + regularización |
+| TP3 | Clusterización con SVM |
+| TP4 | Comparación de similitud de imágenes con PCA |
+| TP5 | Optimización de hiperparámetros con Optuna |
+| TP6 | GitHub Pages para proyecto final |
+
+---
+
+## 🛠️ Configuración del Entorno
+
+### Instalación de Conda + VS Code
+
+1. **Descarga Miniconda:** [Enlace](https://drive.google.com/open?id=1iDMDOdSDpe13DB6RUY16saTUqJUDocM0&usp=drive_fs)
+2. **Descarga VS Code:** [Enlace](https://drive.google.com/open?id=1X9ZI900FQ-AbXGKRc-z1zBdHEPQif-cL&usp=drive_fs)
+3. **Extensiones de VS Code:** Python + Jupyter
 
 
 ## Instalacion de Conda + VS Code
