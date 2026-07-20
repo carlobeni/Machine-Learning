@@ -27,7 +27,7 @@ Repositorio oficial de la Práctica de Machine Learning 1. Contiene ejemplos, pl
 | Trabajos Prácticos (TP1-TP6) | 10% |
 | Primer Examen Parcial | 30% |
 | Segundo Examen Parcial | 20% |
-| Proyecto de Curso (Kaggle) | 30% |
+| Proyecto de Curso  | 30% |
 | **TOTAL** | **100%** |
 
 ### Trabajos Prácticos
