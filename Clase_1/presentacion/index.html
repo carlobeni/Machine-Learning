@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación - Machine Learning 1</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Portada -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover">
+                <h1 style="margin-bottom: 0.2rem;">Machine Learning 1</h1>
+                <h3 style="color: #6B7280; font-weight: 400; margin-bottom: 1.5rem;">(código: 23433)</h3>
+                <h2>Universidad Nacional de Asunción</h2>
+                <h3>Facultad de Ingeniería</h3>
+                <p class="subtitle">Semestre Séptimo - Electrónica</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Horarios -->
+        <section class="slide" id="slide-2">
+            <div class="clean-card">
+                <h2>Horarios de Clase</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Clases Teóricas</h3>
+                        <p>Día: <strong>Lunes</strong></p>
+                        <p>Contenido: Fundamentos matemáticos, demostraciones de algoritmos y discusión conceptual.</p>
+                        <p>Docente: Dr. Diego Stalder</p>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Clases Prácticas</h3>
+                        <p>Día: <strong>Lunes</strong></p>
+                        <p>Contenido: Programación en Python, uso de librerías y aplicaciones sobre datasets reales.</p>
+                        <p>Docente: Ing. Carlos Benitez</p>
+                    </div>
+                </div>
+                <p class="footnote text-center">Periodo: Del 20 de julio al 2 de noviembre de 2026 (14 semanas efectivas).</p>
+            </div>
+        </section>
+
+        <!-- Slide 3: Evaluación -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>Plan de Evaluación y Exoneración</h2>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="segment" style="width: 10%; background-color: #A7F3D0;" title="Cuestionarios: 10%">10%</div>
+                        <div class="segment" style="width: 10%; background-color: #6EE7B7;" title="TPs: 10%">10%</div>
+                        <div class="segment" style="width: 30%; background-color: #93C5FD;" title="Primer Parcial: 30%">30%</div>
+                        <div class="segment" style="width: 20%; background-color: #60A5FA;" title="Segundo Parcial: 20%">20%</div>
+                        <div class="segment" style="width: 30%; background-color: #C4B5FD;" title="Proyecto Final: 30%">30%</div>
+                    </div>
+                    <div class="legend">
+                        <span class="leg-item"><span class="dot" style="background-color: #A7F3D0;"></span>Cuestionarios</span>
+                        <span class="leg-item"><span class="dot" style="background-color: #6EE7B7;"></span>Trabajos Prácticos</span>
+                        <span class="leg-item"><span class="dot" style="background-color: #93C5FD;"></span>1er Parcial</span>
+                        <span class="leg-item"><span class="dot" style="background-color: #60A5FA;"></span>2do Parcial</span>
+                        <span class="leg-item"><span class="dot" style="background-color: #C4B5FD;"></span>Proyecto</span>
+                    </div>
+                </div>
+
+                <div class="split-content exoneracion-rules">
+                    <div>
+                        <h3>Condiciones para Exonerar</h3>
+                        <ul>
+                            <li>Completar el <strong>100%</strong> de los TPs y Cuestionarios.</li>
+                            <li>Haber presentado satisfactoriamente el proyecto final (defensa, informe y GitHub Page).</li>
+                        </ul>
+                    </div>
+                    <div class="grades-box">
+                        <h3>Puntajes de Exoneración</h3>
+                        <p><strong>$\ge 81$ puntos:</strong> Exoneración con Calificación 4</p>
+                        <p><strong>$\ge 91$ puntos:</strong> Exoneración con Calificación 5</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Cronograma TPs -->
+        <section class="slide" id="slide-4">
+            <div class="clean-card">
+                <h2>Cuestionarios y Trabajos Prácticos</h2>
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Semanas</th>
+                            <th>Cuestionario</th>
+                            <th>Trabajo Práctico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1–2</td><td>Cuestionario 1</td><td><strong>TP1:</strong> Primer repo de GitHub para todos los TPs.</td></tr>
+                        <tr><td>3–6</td><td>Cuestionario 2</td><td><strong>TP2:</strong> Comparación de modelos de regresión y regularización.</td></tr>
+                        <tr class="highlight-row"><td colspan="3" class="text-center"><em>Semanas 7–8: Receso por evaluations</em></td></tr>
+                        <tr><td>9–10</td><td>Cuestionario 3</td><td><strong>TP3:</strong> Ejemplo de clusterización con SVM.</td></tr>
+                        <tr><td>11</td><td>Cuestionario 4</td><td><strong>TP4:</strong> Comparación de similitud de imágenes con PCA.</td></tr>
+                        <tr><td>12–13</td><td>Cuestionario 6</td><td><strong>TP5:</strong> Optuna con comparación de modelos de decisión.</td></tr>
+                        <tr><td>14–15</td><td>Tutoría de proyecto</td><td><strong>TP6:</strong> GitHub Pages para el proyecto final.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 5: Introducción a ML -->
+        <section class="slide" id="slide-5">
+            <div class="clean-card">
+                <h2>Introducción a Machine Learning</h2>
+                <div class="split-content align-center">
+                    <div>
+                        <p>Tradicionalmente, en la programación, le pedimos a un experto humano que escriba reglas lógicas (una función <strong>$f$</strong>) para resolver un problema.</p>
+                        <p>En Machine Learning, invertimos el paradigma: tratamos al modelo como una <strong>"caja negra"</strong> (Black Box). Introducimos datos ($\mathcal{D}$), y un algoritmo <em>aprende</em> a configurar los parámetros de esa caja para producir la salida correcta.</p>
+                    </div>
+                    <div class="black-box-diagram">
+                        <div class="inputs">
+                            <div>Tamaño (pies²)</div>
+                            <div>Habitaciones</div>
+                        </div>
+                        <div class="arrow">$\rightarrow$</div>
+                        <div class="box">Modelo ML<br>(Black Box)</div>
+                        <div class="arrow">$\rightarrow$</div>
+                        <div class="outputs">
+                            <div>Precio ($)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-box bg-gray">
+                    <p><strong>Ejemplo clásico (Andrew Ng):</strong> Predicción de precios de vivienda en Portland. Si alimentamos nuestra "caja" con el área de las casas y el número de dormitorios como *features*, la caja aprenderá a predecir o estimar el precio de venta (*target*) de una casa nueva que nunca ha visto.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Categorías de Machine Learning (Venn) -->
+        <section class="slide" id="slide-6">
+            <div class="clean-card">
+                <h2>Categorías de Machine Learning</h2>
+                <p>Las tareas en aprendizaje automático se dividen fundamentalmente según el tipo de datos y la retroalimentación del entorno:</p>
+                
+                <div class="venn-container">
+                    <div class="venn-circle supervised">
+                        <h4>Aprendizaje Supervisado</h4>
+                        <span>Regresión y Clasificación<br>(Datos etiquetados $X \rightarrow y$)</span>
+                    </div>
+                    <div class="venn-circle unsupervised">
+                        <h4>No Supervisado</h4>
+                        <span>Clustering y Reducción<br>(Estructura en $X$ sin etiquetas)</span>
+                    </div>
+                    <div class="venn-circle reinforcement">
+                        <h4>Por Refuerzo (RL)</h4>
+                        <span>Agentes en Entornos<br>(Recompensas y Políticas)</span>
+                    </div>
+                    <div class="venn-circle deep-learning">
+                        <h4>Deep Learning</h4>
+                        <span>Redes Neuronales<br>Profundas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Categorías (Estructura Xponance) -->
+        <section class="slide" id="slide-7">
+            <div class="clean-card">
+                <h2>Categorías de Machine Learning</h2>
+                <div class="split-content image-focus align-center">
+                    <div class="text-content">
+                        <p><strong>Según el tipo de aprendizaje:</strong></p>
+                        <ul style="margin-top: 0.5rem; margin-bottom: 1.5rem;">
+                            <li><strong>Supervised Learning:</strong> El modelo aprende con datos etiquetados (entradas con salidas conocidas).</li>
+                            <li><strong>Unsupervised Learning:</strong> Los datos no tienen etiquetas. Busca estimar la estructura natural.</li>
+                        </ul>
+                        <p><strong>Según la naturaleza del problema:</strong></p>
+                        <ul style="margin-top: 0.5rem;">
+                            <li><strong>Clasificación:</strong> Salidas con valor discreto (categorías).</li>
+                            <li><strong>Regresión:</strong> Salidas con valor continuo.</li>
+                        </ul>
+                    </div>
+                    <div class="img-container" style="text-align: center;">
+                        <img src="Chart2-1024x298.png" onerror="this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart2-1024x298.png'" alt="Supervised vs Unsupervised" class="article-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Transición -->
+        <section class="slide center-align" id="slide-8">
+            <div class="clean-card cover">
+                <h1 style="font-size: 3.5rem; line-height: 1.2; font-weight: 800; color: var(--accent); border: none;">Algunos Modelos Centrales de Machine Learning 1</h1>
+            </div>
+        </section>
+
+        <!-- Slide 9: Regresión y GAM -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>I. Regresión & GAM</h2>
+                <p class="subtitle">Modelando relaciones entre variables.</p>
+                <div class="split-content image-focus align-center">
+                    <div>
+                        <p><strong>Regresión Lineal:</strong> Ajusta una función lineal a los datos. Es muy interpretable (ej. CAPM).</p>
+                        <p><strong>Ridge y Lasso:</strong> Mejoran la predicción manejando alta correlación mediante regularización.</p>
+                        <div class="info-box bg-light-orange mt-2" style="padding: 1.2rem; margin-top: 1.5rem;">
+                            <p style="margin-bottom: 0;"><strong>Observación: GAM (Generalized Additive Models)</strong></p>
+                            <p style="font-size: 0.95rem; margin-top: 0.5rem;">Suma de funciones no lineales que predice relaciones complejas sin perder interpretabilidad:</p>
+                            <div style="font-size: 1.2rem; text-align: center; margin-top: 0.8rem; font-weight: bold;">
+                                $g(E(Y)) = \beta_0 + f_1(X_1) + f_2(X_2) + \dots + f_p(X_p)$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="img-container" style="display: flex; align-items: center;">
+                        <img src="Chart3-1024x274.png" onerror="this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart3-1024x274.png'" alt="Regression vs GAM" class="article-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Árboles de Decisión -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>II. Árboles de Decisión</h2>
+                <p class="subtitle">Ensamblajes: Bagging y Boosting con Figuras Visuales</p>
+                <div class="split-content image-focus align-center">
+                    <div>
+                        <p><strong>Árbol de Decisión:</strong> Segmenta características. Es visual pero inestable por sí solo.</p>
+                        <p><strong>Random Forest (Bagging):</strong> Ensambla múltiples árboles descorrelacionados para mayor precisión.</p>
+                        <p><strong>XGBoost (Boosting):</strong> Árboles secuenciales que aprenden de errores anteriores. Muy robusto.</p>
+                    </div>
+                    <div class="img-container vertical-imgs" style="display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center;">
+                        <img src="Chart4-1024x338.png" onerror="this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart4-1024x338.png'" alt="Decision Tree" class="article-img">
+                        <img src="Chart5-1024x383.png" onerror="this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart5-1024x383.png'" alt="Random Forest" class="article-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Clustering -->
+        <section class="slide" id="slide-11">
+            <div class="clean-card">
+                <h2>III. Clustering (Agrupamiento)</h2>
+                <p class="subtitle">Encontrando grupos naturales.</p>
+                <div class="split-content image-focus align-center">
+                    <div>
+                        <p>El <strong>Clustering</strong> agrupa datos sin etiquetar basándose en sus similitudes.</p>
+                        <p><strong>K-Means:</strong> El algoritmo más común. Asigna cada punto al centroide ($k$) más cercano minimizando las distancias.</p>
+                        <div class="info-box bg-light-purple mt-2" style="padding: 1.2rem; margin-top: 1.5rem;">
+                            <p style="margin-bottom: 0;"><strong>Formalismo Matemático (Inercia):</strong></p>
+                            <div style="font-size: 1.2rem; text-align: center; margin-top: 0.8rem; font-weight: bold;">
+                                $\arg\min_{S} \sum_{i=1}^{k} \sum_{\mathbf{x} \in S_i} || \mathbf{x} - \boldsymbol{\mu}_i ||^2$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="clustering.png" onerror="this.src='Chart6-1024x380.png'; this.onerror=function(){this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart6-1024x380.png'}" alt="Clustering K-Means" class="article-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: PCA y SVD -->
+        <section class="slide" id="slide-12">
+            <div class="clean-card">
+                <h2>IV. Reducción de Dimensionalidad (PCA y SVD)</h2>
+                <p class="subtitle">Simplificando la complejidad matemática.</p>
+                <div class="split-content image-focus align-center">
+                    <div class="text-content">
+                        <p><strong>PCA:</strong> Combina variables en componentes principales independientes. Reduce la redundancia conservando la varianza.</p>
+                        <div class="info-box bg-light-green mt-2" style="padding: 1rem; margin-top: 1rem;">
+                            <p style="margin-bottom: 0;"><strong>SVD (Singular Value Decomposition)</strong></p>
+                            <p style="font-size: 0.95rem; margin-top: 0.3rem;">La factorización matricial fundamental de la que deriva PCA:</p>
+                            <div style="font-size: 1.2rem; text-align: center; margin-top: 0.5rem; font-weight: bold;">
+                                $X = U \Sigma V^T$
+                            </div>
+                            <p style="font-size: 0.85rem; margin-top: 0.5rem; line-height: 1.3;">Donde $U$ son los vectores singulares izquierdos, $\Sigma$ la matriz diagonal de valores singulares, y $V^T$ los vectores singulares derechos ortogonales.</p>
+                        </div>
+                    </div>
+                    <div class="img-container" style="text-align: center;">
+                        <img src="PCA.jpg" onerror="this.src='Chart7-and-Chart8.png'; this.onerror=function(){this.src='https://www.xponance.com/wp-content/uploads/2021/09/Chart7-and-Chart8.png'}" alt="PCA and Deep Learning" class="article-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Deep Learning & NLP -->
+        <section class="slide" id="slide-13">
+            <div class="clean-card">
+                <h2>V y VI. Deep Learning & NLP</h2>
+                <p class="subtitle">Formas más avanzadas de Inteligencia Artificial.</p>
+                <div class="split-content">
+                    <div class="info-box bg-light-blue">
+                        <h3>Deep Learning (DL)</h3>
+                        <p>Redes neuronales artificiales (ANN) con múltiples capas complejas para procesar información imitando el cerebro. Procesan datos en secuencias y mejoran enormemente la precisión de predicción, aunque son una "caja negra".</p>
+                    </div>
+                    <div class="info-box bg-light-green">
+                        <h3>Natural Language Processing (NLP)</h3>
+                        <p>Analiza grandes cantidades de texto para extraer <em>insights</em>. En el sector financiero se usa para detectar el tono en reportes o impacto de noticias.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; padding: 1.5rem; background-color: #FEF2F2; border: 2px solid #EF4444; border-radius: 8px; text-align: center;">
+                    <h3 style="color: #B91C1C; margin-bottom: 0.5rem;">Nota Importante: Machine Learning 2</h3>
+                    <p style="color: #7F1D1D; font-weight: 500; margin-bottom: 0;">Estos temas avanzados, incluyendo arquitecturas profundas y procesamiento de lenguaje natural, serán objeto de estudio exhaustivo en la asignatura de <strong>Machine Learning 2</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Ecosistema -->
+        <section class="slide center-align" id="slide-14">
+            <div class="clean-card">
+                <h2>Ecosistema del Machine Learning</h2>
+                <div class="img-container mt-2">
+                    <img src="Chart1-and-Table1-980x564.png" alt="Machine Learning Ecosystem" class="article-img" style="max-height: 400px; max-width: 100%;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Python -->
+        <section class="slide" id="slide-15">
+            <div class="clean-card">
+                <h2 style="text-align: center;">¿Por qué usamos Python?</h2>
+                <div class="split-content" style="margin-top: 2rem; align-items: center;">
+                    <div>
+                        <p>Python se ha consolidado como el lenguaje estándar absoluto en la industria e investigación de Inteligencia Artificial.</p>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>Sintaxis legible y minimalista:</strong> Permite centrarse en la matemática y la lógica, no en los pormenores del lenguaje.</li>
+                            <li><strong>Ecosistema insuperable:</strong> Acceso a bibliotecas robustas para cálculo científico y procesamiento de datos.</li>
+                            <li><strong>Comunidad y soporte global.</strong></li>
+                        </ul>
+                    </div>
+                    <div class="libraries-list" style="justify-content: flex-start;">
+                        <span class="lib-tag">NumPy</span>
+                        <span class="lib-tag">Pandas</span>
+                        <span class="lib-tag">Matplotlib</span>
+                        <span class="lib-tag">Scikit-Learn</span>
+                        <span class="lib-tag">PyTorch</span>
+                        <span class="lib-tag">TensorFlow</span>
+                        <span class="lib-tag">Jupyter</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Próximos Pasos -->
+        <section class="slide center-align" id="slide-16">
+            <div class="clean-card">
+                <h2>Próximos Pasos (TP1)</h2>
+                <p class="subtitle">Preparando tu entorno de trabajo profesional</p>
+                <div class="text-content text-left" style="max-width: 700px; margin: 0 auto; padding: 2rem; background: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB;">
+                    <p style="font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center;">Por favor, dirígete al <strong><a href="README.md" style="color: var(--accent); text-decoration: none; font-weight: bold;">README de la Clase 1</a></strong> para completar lo siguiente:</p>
+                    <ul style="font-size: 1.1rem; line-height: 1.8; margin-left: 2rem;">
+                        <li><strong>Instalación de Conda:</strong> Gestor de entornos base.</li>
+                        <li><strong>Creación de un Entorno Virtual:</strong> Aislamiento de dependencias.</li>
+                        <li><strong>Uso de Poetry:</strong> Manejo robusto de dependencias de Python.</li>
+                        <li><strong>Integración de Jupyter Notebooks:</strong> Para experimentación interactiva.</li>
+                        <li><strong>Repositorio en GitHub:</strong> Creación y vinculación de tu primer repo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
