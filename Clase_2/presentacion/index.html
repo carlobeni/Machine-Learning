@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Clase 2 - Datasets y Repositorios para Machine Learning</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Portada -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover">
+                <h1 style="margin-bottom: 0.2rem;">Machine Learning 1</h1>
+                <h3 style="color: #6B7280; font-weight: 400; margin-bottom: 1.5rem;">Clase 2: Fuentes de Datos, Datasets Clásicos y Repositorios para Proyectos</h3>
+                <h2>Universidad Nacional de Asunción</h2>
+                <h3>Facultad de Ingeniería</h3>
+                <p class="subtitle">Semestre Séptimo - Electrónica</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Importancia de los Datos -->
+        <section class="slide" id="slide-2">
+            <div class="clean-card">
+                <h2>El Combustible del Machine Learning</h2>
+                <div class="split-content align-center">
+                    <div>
+                        <h3>"Garbage In, Garbage Out"</h3>
+                        <p>Por más avanzada que sea una arquitectura o algoritmo (Deep Learning, SVM, Random Forests), si los datos de entrenamiento son incompletos, sesgados o defectuosos, las predicciones serán inservibles.</p>
+                        <p>En ingeniería de Machine Learning, invertimos más del <strong>70% del tiempo</strong> en la adquisición, depuración y validación del <em>Dataset</em>.</p>
+                    </div>
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Criterios de Excelencia del Dato</h3>
+                        <ul>
+                            <li><strong>Representatividad:</strong> La muestra debe capturar la realidad operal de todo el fenómeno estudiado.</li>
+                            <li><strong>Granularidad:</strong> Frecuencia correcta en series temporales o resolución óptima en imágenes y sensores.</li>
+                            <li><strong>Ausencia de Sesgos (Bias):</strong> Cobertura equilibrada de las clases o regiones de interés.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="info-box bg-gray text-center">
+                    <p><strong>Objetivo de hoy:</strong> Explorar las bases y repositorios especializados de donde extraeremos las muestras en crudo para fundamentar el proyecto semestral del curso.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Datasets Clásicos -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>Datasets Clásicos de Estudio y Benchmarking</h2>
+                <p>Para aprender o prototipar modelos rápidamente sin enfrentar complejas limpiezas iniciales, recurrimos a estándares académicos canónicos de la comunidad:</p>
+                
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Tipo de Tarea</th>
+                            <th>Dominio</th>
+                            <th>Descripción Aplicada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td><strong>Iris Dataset</strong></td>
+                            <td>Clasificación (Tabular)</td>
+                            <td>Botánica / Mediciones</td>
+                            <td>Clasificación de 3 especies según dimensiones de pétalos y sépalos. El "Hello World" estadístico en ML.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MNIST</strong></td>
+                            <td>Clasificación (Imágenes)</td>
+                            <td>Visión / OCR</td>
+                            <td>70,000 dígitos escritos a mano (28x28 píxeles en escala de grises). Estándar indiscutible para iniciarse en Redes Neuronales y Computer Vision.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Boston Housing</strong></td>
+                            <td>Regresión (Tabular)</td>
+                            <td>Bienes Raíces / Economía</td>
+                            <td>Estación del valor de viviendas según variables demográficas y criminales. *(Hoy reemplazado por <strong>California Housing</strong>)*.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>UCI Machine Learning Repository</strong></td>
+                            <td>Multidisciplinario</td>
+                            <td>Universidad de California</td>
+                            <td>El mayor catálogo histórico de datasets gratuitos en ciencia e ingeniería para experimentación controlada.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 4: Visión por Computador -->
+        <section class="slide" id="slide-4">
+            <div class="clean-card">
+                <h2>Repositorios de Imágenes y Visión por Computador</h2>
+                <div class="split-content">
+                    <div>
+                        <p>Los proyectos aplicados en electrónica moderna requieren repositorios masivos con anotaciones estructuradas (Bounding Boxes y Máscaras):</p>
+                        <div class="info-box border-blue">
+                            <h3>Roboflow Universe</h3>
+                            <p>La mayor comunidad colaborativa de visión artificial del mundo. Contiene más de 200,000 datasets etiquetados y listos para descargar en formatos modernos para YOLO y Faster R-CNN.</p>
+                        </div>
+                        <div class="info-box border-purple">
+                            <h3>ImageNet & MS COCO</h3>
+                            <p>Colecciones monumentales con millones de imágenes que representan el benchmark de la industria a nivel mundial.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-box border-green bg-light-green">
+                            <h3>🤖 Aplicaciones en Electrónica e Industria</h3>
+                            <p>El uso de estos catálogos nos permite entrenar prototipos industriales aplicados:</p>
+                            <ul>
+                                <li><strong>Control de Calidad PCB:</strong> Detección automática de soldaduras frías, componentes faltantes y cortes de pistas sobre placas de circuito impreso.</li>
+                                <li><strong>Robótica Autónoma:</strong> Reconocimiento y esquive de obstáculos, lectura y obediencia de señales de tráfico para vehículos no tripulados.</li>
+                                <li><strong>Smart Grid & Telemedición:</strong> Lectura óptica automatizada a distancia sobre pantallas numéricas de medidores eléctricos convencionales.</li>
+                            </ul>
+                            <div class="libraries-list">
+                                <a href="https://universe.roboflow.com/" target="_blank" class="lib-tag">Roboflow Universe ↗</a>
+                                <a href="https://cocodataset.org/" target="_blank" class="lib-tag lib-tag-green">MS COCO ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Datos Climáticos -->
+        <section class="slide" id="slide-5">
+            <div class="clean-card">
+                <h2>Repositorios de Datos Climáticos y Meteorológicos</h2>
+                <p>El modelado atmosférico y de pronóstico temporal es fundamental para predecir eficiencias y demandas en sistemas energéticos renovables:</p>
+                <div class="split-content">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>Copernicus (ECMWF - ERA5)</h3>
+                            <p>Reanálisis meteorológicos horarios de la Agencia Espacial Europea. Permite obtener historial térmico, eólico y radiativo solar del globo tierra por coordenadas.</p>
+                        </div>
+                        <div class="info-box border-orange bg-light-orange">
+                            <h3>NOAA & NASA Earth Data</h3>
+                            <p>Catálogo norteamericano abierto enfocado en física de la atmósfera, oceanografía y sensores remotos satelitales.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-box border-green">
+                            <h3>Open-Meteo Historical API</h3>
+                            <p>API gratuita y ultrarrápida para consultar históricos climáticos globales hora por hora mediante HTTP por scripts ininterrumpidamente, sin requerir API Key.</p>
+                        </div>
+                        <div class="libraries-list">
+                            <a href="https://cds.climate.copernicus.eu/" target="_blank" class="lib-tag">Copernicus CDS ↗</a>
+                            <a href="https://open-meteo.com/" target="_blank" class="lib-tag lib-tag-green">Open-Meteo API ↗</a>
+                            <a href="https://www.ncei.noaa.gov/" target="_blank" class="lib-tag lib-tag-orange">NOAA Data ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Demografía -->
+        <section class="slide" id="slide-6">
+            <div class="clean-card">
+                <h2>Repositorios de Datos Demográficos y Socio-Económicos</h2>
+                <p>Esenciales al dimensionar consumo civil o proyectar demanda urbana de agua, ancho de banda o generación eléctrica distrital:</p>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>World Bank Open Data (Banco Mundial)</h3>
+                        <p>Catálogo global con miles de indicadores socioeconómicos sobre adopción tecnológica, acceso al suministro eléctrico rural, producto interno y huella poblacional en tablas `.csv` estructuradas por año y país.</p>
+                        <a href="https://data.worldbank.org/" target="_blank" class="lib-tag">World Bank Data ↗</a>
+                    </div>
+                    <div class="info-box border-blue">
+                        <h3>IPUMS International & Gapminder</h3>
+                        <p><strong>IPUMS:</strong> El mayor inventario de microdatos censales (hogares e individuos desidentificados) a escala planetaria, facilitando pronósticos de consumo y segmentación.</p>
+                        <p><strong>Gapminder:</strong> Series longitudinales excelentes para estudiar evolución en esperanza de vida e índices antropométricos mundiales.</p>
+                        <div class="libraries-list">
+                            <a href="https://ipums.org/" target="_blank" class="lib-tag">IPUMS ↗</a>
+                            <a href="https://www.gapminder.org/data/" target="_blank" class="lib-tag lib-tag-orange">Gapminder ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Enfermedades y Salud -->
+        <section class="slide" id="slide-7">
+            <div class="clean-card">
+                <h2>Repositorios de Enfermedades y Salud (Healthcare & Bio-ML)</h2>
+                <p>En el campo de la <strong>Electrónica Médica (Ingeniería Biomédica)</strong>, el diagnóstico asistido por inteligencia artificial está revolucionando la práctica clínica:</p>
+                
+                <div class="split-content">
+                    <div>
+                        <div class="info-box border-red" style="border-left-color: #EF4444; background: #FEF2F2;">
+                            <h3 style="color: #991B1B;">PhysioNet (MIMIC-III / MIMIC-IV)</h3>
+                            <p>Base de datos de referencia desarrollada por el <strong>MIT & Beth Israel Hospital</strong>. Dispone de millones de registros desidentificados de unidades de cuidados intensivos: señales fisiológicas continuas, monitores <strong>ECG, EEG, presión arterial en crudo</strong> y parches hormonales de urgencia.</p>
+                            <a href="https://physionet.org/" target="_blank" class="lib-tag" style="background: #FCA5A5; color: #7F1D1D;">PhysioNet MIT ↗</a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>NIH Chest X-ray & COVID-19 Radiography</h3>
+                            <ul>
+                                <li><strong>NIH X-ray Dataset:</strong> Más de 100,000 radiografías torácicas con etiquetas clínicas diagnosticadas con 14 patologías pulmonares (neumonía, cardiomegalia, efusiones).</li>
+                                <li><strong>COVID-19 Radiography Database:</strong> Imágenes médicas clasificadas en pacientes positivos al virus, neumonías y pulmón saludable.</li>
+                                <li><strong>UCI Pima Indians Diabetes:</strong> Tabular canónico para evaluar predicción metabólica del riesgo de diabetes tipo 2 e índices cardiovasculares.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Datos de Paraguay -->
+        <section class="slide" id="slide-8">
+            <div class="clean-card">
+                <h2>Caso de Estudio: Datos Abiertos e Institucionales de Paraguay (PY) 🇵🇾</h2>
+                <p>Para aquellos alumnos deseosos de enfocar su proyecto de ingeniería en solventar problemáticas energéticas o sanitarias en el territorio paraguayo:</p>
+                
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Estadísticas y Población</h3>
+                        <ul>
+                            <li><strong>Portal Oficial de Datos Abiertos (`www.datos.gov.py`):</strong> Centraliza compras del estado (DNCP), becas educativas, inversiones en infraestructura e índices económicos web en JSON o CSV.</li>
+                            <li><strong>INE (Instituto Nacional de Estadística):</strong> Acceso a microdatos inestimables de la <strong>Encuesta Permanente de Hogares Continua (EPHC)</strong> y los datos oficiales del <strong>Censo Nacional 2022</strong> para estimaciones demográficas regionales por departamento.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-blue">
+                        <h3>Ingeniería y Epidemiología en PY</h3>
+                        <ul>
+                            <li><strong>MSPBS (Vigilancia de la Salud):</strong> Boletines e informes históricos sobre brotes locales de <strong>Arbovirosis (Dengue, Chikungunya, Zika)</strong> para modelados espacio-temporales predictivos asociados a clima y lluvias.</li>
+                            <li><strong>Sector Eléctrico (ANDE / Itaipu / Yacyretá):</strong> Registros de demanda y curva de carga horaria en el <strong>Sistema Interconectado Nacional (SIN)</strong>, un problema de serie temporal rey para electrónica de potencia o redes inteligente.</li>
+                            <li><strong>DMH / DINAC:</strong> Registros pluviométricos del río Paraguay y Paraná para pronóstico y alerta de estiaje.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Tutorial Pandas -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>Mini-Tutorial: Pipeline Exploratorio Inicial con Pandas</h2>
+                <p>Una vez descargada nuestra muestra del repositorio elegido, nuestro primer archivo `notebooks/01_EDA.ipynb` se encarga de las siguientes rutinas:</p>
+                
+                <pre class="code-block"><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Cargar datos tabulares directamente desde URL o directorio local 'data/raw/'
+url_dataset = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/mpg.csv"
+df = pd.read_csv(url_dataset)
+
+# 2. Inspeccionar estructura exploratoria del dataset (EDA preliminar)
+print("Dimensiones (Filas, Columnas):", df.shape)
+display(df.head())             # Visualización tabular elegante en Jupyter
+display(df.describe())         # Resumen estadístico de media, min, max, cuartiles
+
+# 3. Detectar anomalías o pérdida de datos en crudo
+print("\nConteo de Valores Nulos por Atributo:\n", df.isnull().sum())
+
+# 4. Graficación inicial de distribuciones
+plt.figure(figsize=(7, 3.5))
+df['mpg'].hist(bins=20, edgecolor='black', color='#3b82f6')
+plt.title("Distribución de Consumo de Combustible - Exploratorio")
+plt.xlabel("Millas por Galón"); plt.ylabel("Frecuencia")
+plt.show()</code></pre>
+            </div>
+        </section>
+
+        <!-- Slide 10: Tareas y Próximos Pasos -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>🛠️ Próximos Pasos para tu Trabajo Práctico</h2>
+                <div class="info-box border-blue bg-light-blue">
+                    <h3>Lista de Verificación de la Semana</h3>
+                    <ul>
+                        <li><strong>1. Inspiración y Selección del Dominio:</strong> Revisa los repositorios recomendados (Roboflow, Open-Meteo, PhysioNet o INE/ANDE Paraguay) y elige la problemática que tu grupo desea resolver este semestre.</li>
+                        <li><strong>2. Adquisición del Dataset:</strong> Descarga la muestra original e inyéctala <em>sin alterar</em> dentro del directorio de trabajo de tu repositorio: <code>data/raw/</code>.</li>
+                        <li><strong>3. Mantenimiento del Repositorio:</strong> Recuerda añadir exclusiones en tu archivo <code>.gitignore</code> si el dataset es excesivamente pesado (archivos mayores a 50 MB) para no desbordar tus commits en GitHub.</li>
+                        <li><strong>4. Primer Notebook:</strong> Inicializa el script <code>notebooks/01_EDA.ipynb</code> con Pandas e importa con éxito la tabla elegida verificando con <code>df.shape</code> y <code>df.head()</code>.</li>
+                    </ul>
+                </div>
+                <p class="footnote text-center">¡Cualquier consulta sobre viabilidad del dataset o dudas con los archivos, consulten al auxiliar o durante la tutoría en clase!</p>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
