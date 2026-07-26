@@ -70,7 +70,7 @@ print(df_clima.head(10))
 ## 4. Repositorios de Datos Demográficos, Sociales y Económicos
 Útiles en la estimación de demanda regional, sociometría urbana, optimización logística y análisis socio-actuariales:
 
-*   **[World Bank Open Data (Banco Mundial)](https://data.worldbank.org/):** Catálogo masivo del desarrollo mundial con tablas descargables por país abordando infraestructura, adopción de internet, educación, generación en GWh e índices económicos.
+*   **[World Bank Open Data (Banco Mundial)](https://data.worldbank.org/):** Catálogo masivo del desarrollo mundial con tablas descargables por país abordando infraestructura, adopción de internet, educación, generación en GWh e indices económicos.
 *   **[IPUMS International](https://ipums.org/):** Repositorio líder a nivel mundial del análisis social que dispone de millones de microdatos armonizados de censos demográficos correspondientes a viviendas, ingresos e individuos.
 *   **[Gapminder Open Data](https://www.gapminder.org/data/):** Conjuntos consolidados y altamente limpios sobre esperanza de vida, crecimiento demográfico e indicadores globales adaptables para visualización animada de clustering o tendencias multidimensionales.
 
@@ -96,7 +96,7 @@ Para el desarrollo de proyectos de impacto institucional y regional enfocados en
     * **Encuesta Permanente de Hogares Continua (EPHC):** Excelentes y extensos microdatos poblacionales tabulados referidos al estado laboral, salarios, tenencia de equipos e infraestructura física de las viviendas paraguayas.
     * **Censo Nacional 2022:** Repositorios analíticos definitivos poblacionales y zonales a nivel de departamentos y distritos para proyectar demanda de conectividad, agua y servicios red.
 3.  **[Ministerio de Salud Pública y Bienestar Social (MSPBS - Dirección General de Vigilancia de la Salud)](https://dgvs.mspbs.gov.py/):**
-    * **Boletines e Historiales Epidemiológicos:** Información de notificaciones, casos confirmados y serotipos circulantes de enfermedades endémicas como **Arbovirosis (Dengue, Chikungunya y Zika)** distribuidas territorialmente. Estos datos son espléndidos para correlacionar factores climáticos (humedad/precipitación) y entrenar modelos predictivos espacio-temporales sobre brotes epidemiológicos en ciudades afectadas.
+    * **Boletines e Historiales Epidemiológicos:** Información de notificaciones, casos confirmados y serotipos circulantes de enfermedades endémicas como **Arbovirosis (Dengue, Chikungunya y Zika)** distribuidas territorialmente. Estos datos son excelentes para correlacionar factores climáticos (humedad/precipitación) y entrenar modelos predictivos espacio-temporales sobre brotes epidemiológicos en ciudades afectadas.
 4.  **[Sector Eléctrico del Paraguay (ANDE / ITAIPU / YACYRETÁ / VME)](https://www.ande.gov.py/):**
     * Permite la obtención de resúmenes o consulta de las series temporales horarias o mensuales sobre **demanda de energía en el Sistema Interconectado Nacional (SIN)** del Paraguay. La estimación de despachos y predicción de consumo a 24/48 horas vista en redes es una de las temáticas electivas estrella para la carrera de Electrónica.
 5.  **[Dirección de Meteorología e Hidrología (DMH - DINAC)](https://www.meteorologia.gov.py/):**
@@ -146,8 +146,8 @@ plt.show()
 
 ---
 
-## 🛠️ Lista de Tareas sugerida para esta Clase
+## Lista de Tareas Sugerida para esta Clase
 1. Explorar los repositorios presentados en este documento para inspirarse en posibles ideas de aplicación ingenierial.
-2. Seleccionar tentativamente **un problema y su dataset asociado** aplicable a los lineamientos del curso (series temporales energéticas, robótica de visión, pronósticos médicos epidemiológicos, hidrología en PY, etc.).
+2. Seleccionar tentativamente **un problema y su dataset asociado** aplicable a los lineamientos del curso (series temporales energéticas, robótica de visión, pronósticos médicos epidemiológicos, hidrología en Paraguay, etc.).
 3. Ubicar los ficheros de datos descargados sin alterar en el directorio `data/raw/` (recuerden configurar Git para que no suba archivos pesados `.csv` innecesarios modificando su `.gitignore` en caso de que sean mayores a 50MB).
 4. Inicializar y verificar las cargas del entorno con `pandas` conectadas en una celda en blanco de nuestro archivo `notebooks/01_EDA.ipynb`.
