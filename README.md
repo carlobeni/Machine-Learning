@@ -107,8 +107,11 @@ Habiendo instalado [Miniconda](https://docs.anaconda.com/miniconda/) y **Antigra
     > Nota: Este paso es fundamental para garantizar que tanto Conda como Poetry compartan el mismo espacio de memoria y librerías.
 
 6. **Instalar dependencias basicas**
+
+    numpy, scipy, pandas, jupyterlab, scikit-learn, optuna, matplotlib, seaborn, plotly, ipykernel
+
     ```bash
-    conda install numpy matplotlib scipy pandas ipykernel jupyterlab scikit-learn jupyterlab
+    conda install numpy scipy pandas jupyterlab scikit-learn optuna matplotlib seaborn plotly ipykernel
     ```
 
 7.  **Registrar el entorno como Kernel en Jupyter:**  
@@ -148,7 +151,7 @@ Siempre que inicien un nuevo trabajo práctico o proyecto semestral, seguirán e
 
 5.  **Añadir e instalar el stack científico básico de Machine Learning:**
     ```bash
-    poetry add numpy matplotlib scipy pandas ipykernel
+    poetry add numpy scipy pandas jupyterlab scikit-learn optuna matplotlib seaborn plotly ipykernel
     ```
 
     > Si descargaron o clonaron un repositorio existente que ya incluye un archivo `pyproject.toml` con sus dependencias declaradas, simplemente ejecuten dentro del entorno activo:
