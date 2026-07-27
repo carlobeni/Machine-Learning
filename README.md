@@ -106,9 +106,15 @@ Habiendo instalado [Miniconda](https://docs.anaconda.com/miniconda/) y **Antigra
     ```
     > Nota: Este paso es fundamental para garantizar que tanto Conda como Poetry compartan el mismo espacio de memoria y librerías.
 
-6.  **Registrar el entorno como Kernel en Jupyter:**  
+6. **Instalar dependencias basicas**
+    ```bash
+    conda install numpy matplotlib scipy pandas ipykernel jupyterlab scikit-learn jupyterlab
+    ```
+
+7.  **Registrar el entorno como Kernel en Jupyter:**  
     Para que nuestros cuadernos interactivos reconozcan el motor `ml`:
     ```bash
+    conda activate ml
     python -m ipykernel install --user --name ml --display-name "Python (ml)"
     ```
 
