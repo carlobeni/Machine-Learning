@@ -35,23 +35,10 @@ En lugar de clonar o crear de forma manual el proyecto en la web, aprovecharemos
 4. Haz clic en la opción nativa de **"Publish to GitHub"** o **"Publish Branch"** ofrecida de forma visual por Antigravity IDE.
    - El editor te guiará o autenticará si es la primera vez, y generará automáticamente de forma remota tu repositorio oficial de GitHub de manera instantánea, subiendo los archivos base.
 
-### Paso 3: Inicialización del Ecosistema de Dependencias (Poetry)
-1. Con el terminal integrado de Antigravity IDE abierto y tu entorno virtual de Conda debidamente activado, inicia el archivo de manifiesto de dependencias en la raíz del proyecto ejecutando:
-   ```bash
-   poetry init --no-interaction
-   ```
-2. Instala el conjunto elemental de bibliotecas para análisis científico de la materia mediante Poetry:
-   ```bash
-   poetry add numpy pandas matplotlib seaborn scikit-learn jupyter
-   ```
-   *(Esto generará los archivos automáticos `pyproject.toml` y `poetry.lock`, los cuales deberán versionarse mediante un nuevo commit desde el IDE).*
-
 ### Paso 4: Estructura Modular del Repositorio
 Organiza el directorio de tu Workspace creando las carpetas y módulos para los Trabajos Prácticos del semestre, los cuales deberán reposar directamente dentro de la carpeta raíz y sin contenedores intermedio:
 ```text
 ML1-2026-TPs/
-├── pyproject.toml
-├── poetry.lock
 ├── README.md
 ├── .gitignore
 ├── TP_1/
