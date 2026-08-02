@@ -44,6 +44,18 @@ Repositorio oficial de la Práctica de Machine Learning 1. Contiene ejemplos, pl
 
 ## Configuración del Entorno de Desarrollo
 
+<h2 align="center">Vídeo de instalación de Antigravity IDE + Miniconda + Dependencias</h2>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=MIeZwQ20MAk">
+    <img
+      src="https://i.ytimg.com/vi/MIeZwQ20MAk/maxresdefault.jpg"
+      alt="Project Demo"
+      width="900"
+    />
+  </a>
+</p>
+
 Para la realización de los prácticos y del proyecto semestral, utilizaremos **Miniconda** como gestor de paquetes y entornos aislados, en conjunto con **Antigravity IDE** como entorno de desarrollo integrado e impulsado por asistencia inteligente.
 
 ### 1. Instalación de Conda (Miniconda)
