@@ -1,5 +1,17 @@
 # Trabajo Práctico 1 (TP1): Configuración del Repositorio y Ecosistema de Desarrollo
 
+<h2 align="center">Video guia de TP1</h2>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=Vz2Z-n-Cfk0">
+    <img
+      src="https://i.ytimg.com/vi/Vz2Z-n-Cfk0/maxresdefault.jpg"
+      alt="Project Demo"
+      width="900"
+    />
+  </a>
+</p>
+
 Para realizar con éxito este primer Trabajo Práctico, se recomienda haber leído y seguido en detalle la guía principal ubicada en el **`README.md` del directorio raíz en la rama `clases`** de este repositorio.
 
 En dicha guía oficial se aborda el procedimiento paso a paso para la configuración del ecosistema técnico que se utilizará a lo largo de todo el semestre en Machine Learning.
