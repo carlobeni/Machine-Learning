@@ -1,0 +1,16 @@
+# Archivos comprimidos y datasets masivos
+*.zip
+personas_202607262153.zip
+
+# Scripts generadores de figuras de presentación
+generate_figures.py
+
+# Entorno Python y cachés
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# Archivos de sistema y temporales
+.DS_Store
+Thumbs.db

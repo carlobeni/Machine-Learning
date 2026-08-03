@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Clase 3 - Preprocesamiento de Datos en Machine Learning</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="presentation-container" id="presentationContainer">
+        
+        <!-- Slide 1: Portada -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover">
+                <span class="badge badge-blue">Semana 3</span>
+                <h1 style="margin-bottom: 0.2rem;">Machine Learning 1</h1>
+                <h3 style="color: #6B7280; font-weight: 400; margin-bottom: 1.5rem;">Clase 3: Preprocesamiento de Datos, Limpieza, Imputación, Normalización, Outliers y PCA</h3>
+                <h2>Universidad Nacional de Asunción</h2>
+                <h3>Facultad de Ingeniería</h3>
+                <p class="subtitle">Semestre Séptimo - Ingeniería Electrónica</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Importancia del Preprocesamiento -->
+        <section class="slide" id="slide-2">
+            <div class="clean-card">
+                <h2>1. Importancia del Preprocesamiento de Datos</h2>
+                <div class="info-box border-blue bg-light-blue">
+                    <h3>Principios de Calidad en la Ingeniería de Datos</h3>
+                    <p>Un modelo probabilístico o estadístico requiere datos limpios, consistentes y representativos. El preprocesamiento riguroso elimina el ruido, homogeiniza escalas y asegura la convergencia estable de los algoritmos de Machine Learning.</p>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-green">
+                        <h3>Fases del Pipeline de Datos</h3>
+                        <ul>
+                            <li><strong>Adquisición e Inspección:</strong> Verificación de fuentes de datos.</li>
+                            <li><strong>Limpieza de Ausencias:</strong> Eliminación directa (`dropna`) o Imputación.</li>
+                            <li><strong>Normalización / Escalado:</strong> Homogeneización de escalas numéricas.</li>
+                            <li><strong>Filtro de Outliers:</strong> Criterios físicos y modelos de anomalía.</li>
+                            <li><strong>Reducción de Dimensionalidad:</strong> Compresión óptima vía PCA.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Prevención de Data Leakage</h3>
+                        <p><strong>REGLA DE ORO:</strong> Realizar la partición en <em>Train</em> y <em>Validation/Test</em> <strong>antes</strong> de ajustar imputadores, escaladores o detectores de anomalías. Ajustar siempre <strong>SOLO en Train</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Fuentes de Datos y Mecanismos de Ausencia -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>Fuentes de Datos y Matriz de Valores Nulos</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>Datasets de Estudio (Semana 3)</h3>
+                            <ul>
+                                <li><strong>Titanic Open Dataset:</strong> Tabular ($891$ filas $\times 12$ cols). Presencia de nulos en <code>Age</code>, <code>Cabin</code>, <code>Embarked</code>.</li>
+                                <li><strong>Dataset Personas (ZIP):</strong> Registro civil masivo (~1 GB CSV en ZIP) para estimación de edad según Cédula.</li>
+                                <li><strong>Olivetti Real Faces:</strong> Imágenes ($64 \times 64$ px, $D=4096$) con anomalías ópticas inyectadas.</li>
+                            </ul>
+                        </div>
+                        <div class="info-box border-orange">
+                            <h3>Formulaciones de Ausencia</h3>
+                            <ul>
+                                <li><strong>MCAR:</strong> $$P(M | Y_{obs}, Y_{mis}) = P(M)$$</li>
+                                <li><strong>MAR:</strong> $$P(M | Y_{obs}, Y_{mis}) = P(M | Y_{obs})$$</li>
+                                <li><strong>MNAR:</strong> $$P(M | Y_{obs}, Y_{mis}) = P(M | Y_{obs}, Y_{mis})$$</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/missing_matrix_titanic.png" class="slide-img" alt="Matriz Nulos Titanic">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Limpieza Tabular: dropna vs Imputación -->
+        <section class="slide" id="slide-4">
+            <div class="clean-card">
+                <h2>2. Limpieza Tabular: Eliminación Directa (`dropna`) vs. Imputación</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-red">
+                            <h3>Eliminación Directa (`dropna`)</h3>
+                            <ul>
+                                <li><strong>Por Filas (`subset`):</strong> Recomendado cuando los nulos representan $< 5\%$ de los datos en atributos clave.</li>
+                                <li><strong>Por Columnas (`thresh`):</strong> Indicado cuando la variable pierde $> 70\%$ de datos (ej. <code>Cabin</code> en Titanic).</li>
+                            </ul>
+                        </div>
+                        <div class="info-box border-green">
+                            <h3>Imputación Estructurada (`KNNImputer`)</h3>
+                            <p>Calcula el promedio ponderado de los $k$ vecinos más cercanos utilizando la distancia Euclídea ajustada:</p>
+                            $$d(x, p) = \sqrt{\frac{m}{m_{obs}} \sum_{k \in Obs} w_k (x_k - p_k)^2}$$
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/missing_kde_age.png" class="slide-img" alt="Imputación KNN Edad">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Normalización y Escalado de Características -->
+        <section class="slide" id="slide-5">
+            <div class="clean-card">
+                <h2>3. Normalización y Escalado de Características</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>StandardScaler (Z-Score)</h3>
+                            $$z = \frac{x - \mu}{\sigma}$$
+                            <p>Media $\mu = 0$ y desviación estándar $\sigma = 1$. Ideal para PCA.</p>
+                        </div>
+                        <div class="info-box border-green">
+                            <h3>MinMaxScaler ([0, 1])</h3>
+                            $$x_{norm} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+                            <p>Acota los datos en el rango $[0, 1]$. Sensible a outliers.</p>
+                        </div>
+                        <div class="info-box border-purple">
+                            <h3>RobustScaler (Median / IQR)</h3>
+                            $$x_{rob} = \frac{x - Med(X)}{IQR(X)} = \frac{x - P_{50}}{P_{75} - P_{25}}$$
+                            <p>Robusto a la influencia de valores atípicos severos.</p>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/scaler_comparison_boxplots.png" class="slide-img" alt="Boxplots Comparativos Escalado">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Comparativa de Normalización (Gráfica y Cuantitativa) -->
+        <section class="slide" id="slide-6">
+            <div class="clean-card">
+                <h2>Comparativa de Normalización en la Tarifa (`Fare`)</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <p>Evaluación visual del impacto del escalado sobre la distribución de la tarifa (<code>Fare</code>):</p>
+                        <div class="info-box border-orange">
+                            <h3>Conclusiones Clave</h3>
+                            <ul>
+                                <li><strong>Original:</strong> Distribución fuertemente sesgada a la derecha.</li>
+                                <li><strong>StandardScaler:</strong> Centra la media en $0.0$ preservando la curva.</li>
+                                <li><strong>MinMaxScaler:</strong> Comprime datos por la tarifa extrema de $\$512$.</li>
+                                <li><strong>RobustScaler:</strong> Mantiene la escala del $50\%$ central alrededor de $1.0$.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/normalization_comparison.png" class="slide-img" alt="Comparativa de Normalización">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Detección de Outliers en Datos Tabulares -->
+        <section class="slide" id="slide-7">
+            <div class="clean-card">
+                <h2>4. Detección de Outliers en Datos Tabulares</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>Criterio IQR Univariado (Tukey)</h3>
+                            $$IQR = Q_3 - Q_1$$
+                            $$\text{Límite Superior} = Q_3 + 1.5 \times IQR$$
+                            <p>Detecta valores fuera de la valla intercuartílica.</p>
+                        </div>
+                        <div class="info-box border-crimson">
+                            <h3>Isolation Forest Multivariado</h3>
+                            $$s(x, n) = 2^{-\frac{E(h(x))}{c(n)}}$$
+                            <p>Aisla observaciones seleccionando cortes aleatorios. Las anomalías requieren menor profundidad $h(x)$.</p>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/outliers_fare_dashboard.png" class="slide-img" alt="Outliers Titanic">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Caso Práctico Personas (Cédula vs Edad) -->
+        <section class="slide" id="slide-8">
+            <div class="clean-card">
+                <h2>Caso Práctico Real: Dataset Personas (`personas_202607262153.zip`)</h2>
+                <div class="info-box border-purple">
+                    <h3>Inferencia de Edad basada en el Número de Cédula de Identidad (CI)</h3>
+                    <p>En registros civiles, las Cédulas de Identidad son asignadas de forma secuencial en el tiempo. Por ello, existe una fuerte correlación monótona entre el número de Cédula y el Año de Nacimiento.</p>
+                </div>
+                <div class="split-content uneven" style="margin-top: 1rem;">
+                    <div>
+                        <div class="info-box border-green">
+                            <h3>Limpieza de Datos Masivos</h3>
+                            <ul>
+                                <li>Lectura automatizada desde archivo ZIP (~1 GB CSV).</li>
+                                <li>Eliminación directa (<code>dropna</code>) de nulos.</li>
+                                <li>Conversión DateTime con <code>utc=True</code> para evitar errores de zonas horarias mixtas.</li>
+                                <li>Filtrado de años corruptos out-of-range ($1900 \le \text{Año} \le 2026$).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/personas_cedula_age_correlation.png" class="slide-img" alt="Correlación Cédula vs Año Personas">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Resultados Detección Personas -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>Análisis Z-Score de Residuales y Normalidad en Personas</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <p>Modelo de Regresión Lineal $\text{Año Estimado} = f(\text{Cédula})$ y evaluación de residuales $Z > 3\sigma$:</p>
+                        <div class="info-box border-crimson">
+                            <h3>Identificación de Outliers</h3>
+                            <p>El análisis de residuales $e_i = y_i - \hat{y}_i$ con umbral de $3$ desviaciones estándar ($3\sigma$) aísla automáticamente las personas con cédulas o años corruptos antes de entrenar el estimador de edad.</p>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/personas_zscore_residuals.png" class="slide-img" alt="Z-Score Residuales Personas">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Análisis y Metadatos de Imágenes Reales -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>5. Análisis y Metadatos Físicos de Imágenes Reales</h2>
+                <p>Evaluación de calidad en el dataset <strong>Olivetti Real Faces</strong> ($64 \times 64$ píxeles):</p>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>Formulaciones de Metadatos Físicos</h3>
+                            <ul>
+                                <li><strong>Brillo Medio ($\mu_I$):</strong> $$\mu_I = \frac{1}{H \times W} \sum_{x=1}^W \sum_{y=1}^H I(x,y)$$</li>
+                                <li><strong>Contraste ($\sigma_I$):</strong> $$\sigma_I = \sqrt{\frac{1}{H \times W} \sum (I(x,y) - \mu_I)^2}$$</li>
+                                <li><strong>Nitidez / Blur Score:</strong> $$\text{Blur Score} = Var(\nabla^2 I)$$ varianza de la imagen filtrada con el operador Laplaciano $\nabla^2 I$.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/image_metadata_dashboard.png" class="slide-img" alt="Metadatos Olivetti Faces">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Reducción de Dimensionalidad con PCA -->
+        <section class="slide" id="slide-11">
+            <div class="clean-card">
+                <h2>6. Reducción de Dimensionalidad con PCA</h2>
+                <div class="info-box border-blue bg-light-blue">
+                    <h3>Análisis de Componentes Principales (Principal Component Analysis)</h3>
+                    <p>En datos de alta dimensionalidad ($64 \times 64 = 4096$ píxeles), PCA proyecta los datos al espacio latente de $K=15$ dimensiones mediante una <strong>Matriz Base de Autorrostros (Eigenfaces)</strong> $V_K \in \mathbb{R}^{K \times D}$.</p>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-green">
+                        <h3>Matriz Base de Componentes ($V_K$)</h3>
+                        $$\Sigma v_k = \lambda_k v_k$$
+                        $$V_K = [v_1, v_2, \dots, v_K]^T \in \mathbb{R}^{15 \times 4096}$$
+                        <p>Matriz de $15$ vectores ortogonales de máxima varianza aprendidos de caras normales de <em>Train</em>.</p>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Error MSE de Reconstrucción</h3>
+                        $$\hat{X} = Z V_K \in \mathbb{R}^{N \times D}$$
+                        $$e_i = \frac{1}{D} \sum_{j=1}^D (x_{scaled, i, j} - \hat{x}_{i, j})^2$$
+                        <p>Un error MSE alto indica la ausencia de soporte de la imagen en la matriz base (marcador de anomalía).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Varianza Explicada PCA -->
+        <section class="slide" id="slide-12">
+            <div class="clean-card">
+                <h2>PCA: Análisis de Varianza Explicada</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <p>Evaluación de la retención de varianza por autorrostro:</p>
+                        <div class="info-box border-blue">
+                            <h3>Varianza Explicada Proporcional ($VR_k$)</h3>
+                            $$VR_k = \frac{\lambda_k}{\sum_{j=1}^D \lambda_j}$$
+                            <ul>
+                                <li>Los primeros componentes capturan la estructura facial global e iluminación principal.</li>
+                                <li>Con solo $K=15$ componentes se retiene una alta proporción de la varianza total permitiendo una compresión eficiente.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/pca_variance_explained.png" class="slide-img" alt="Varianza Explicada PCA">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Matriz Base de Autorrostros (Eigenfaces) -->
+        <section class="slide" id="slide-13">
+            <div class="clean-card">
+                <h2>Matriz Base de Componentes (Autorrostros / Eigenfaces)</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <p>Visualización de la Matriz Base $V_K \in \mathbb{R}^{15 \times 4096}$ entrenada en <em>Train</em>:</p>
+                        <div class="info-box border-purple">
+                            <h3>Interpretación Física</h3>
+                            <ul>
+                                <li><strong>Componente #1:</strong> Iluminación global y silueta facial media.</li>
+                                <li><strong>Componentes #2-#5:</strong> Posición de ojos, nariz y contorno de mejillas.</li>
+                                <li><strong>Componentes superiores:</strong> Rasgos de alta frecuencia y sombras específicas.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/pca_eigenfaces_base_matrix.png" class="slide-img" alt="Matriz Base Autorrostros">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Reconstrucción Intuitiva PCA y Mapa de Diferencia Píxel a Píxel -->
+        <section class="slide" id="slide-14">
+            <div class="clean-card">
+                <h2>Demostración Intuitiva: Reconstrucción PCA y Mapa de Error</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-green">
+                            <h3>Rostros Normales vs. Anómalos</h3>
+                            <p>Imágenes normales reconstruyen con precisión. Imágenes anómalas generan diferencias de alta intensidad $|X - \hat{X}|$.</p>
+                        </div>
+                        <div class="img-container">
+                            <img src="img/pca_reconstruction_intuition.png" class="slide-img" alt="Reconstrucción Intuitiva PCA">
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/pca_reconstruction_difference.png" class="slide-img" alt="Mapa Diferencia Píxel a Píxel">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Verificación Cuantitativa en Test -->
+        <section class="slide" id="slide-15">
+            <div class="clean-card">
+                <h2>Verificación Cuantitativa en Conjunto de Test</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <p>Evaluación cuantitativa del detector de anomalías PCA:</p>
+                        <div class="info-box border-blue">
+                            <h3>Métricas de Evaluación</h3>
+                            $$Precision = \frac{TP}{TP + FP}, \quad Recall = \frac{TP}{TP + FN}$$
+                            $$F_1 = 2 \cdot \frac{Precision \cdot Recall}{Precision + Recall}$$
+                            <p>Recuadros verdes señalan predicciones normales verificadas y recuadros rojos señalan anomalías identificadas.</p>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/pca_test_gallery.png" class="slide-img" alt="Galería de Test PCA">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Pipeline de Producción -->
+        <section class="slide" id="slide-16">
+            <div class="clean-card">
+                <h2>7. Encapsulamiento en Pipeline de Producción</h2>
+                <div class="split-content uneven">
+                    <div>
+                        <div class="info-box border-blue bg-light-blue">
+                            <h3>ColumnTransformer y Pipeline Modular</h3>
+                            <p>En entornos de despliegue real, la imputación, la normalización estandarizada (<code>StandardScaler</code>) y la codificación categórica (<code>OneHotEncoder</code>) se encapsulan para garantizar reproducibilidad sin <em>Data Leakage</em>.</p>
+                        </div>
+                        <div class="info-box border-purple">
+                            <p><code>Pipeline([('imputer', KNNImputer()), ('scaler', StandardScaler())])</code></p>
+                        </div>
+                    </div>
+                    <div class="img-container">
+                        <img src="img/pipeline_flowchart_diagram.png" class="slide-img" alt="Diagrama Flujo Pipeline">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: Resumen Pedagógico y Cierre -->
+        <section class="slide center-align" id="slide-17">
+            <div class="clean-card">
+                <h2>Resumen Pedagógico - Clase 3</h2>
+                <div class="info-box border-green" style="max-width: 900px; text-align: left;">
+                    <ul>
+                        <li>✔ <strong>Ausencia de Datos:</strong> Distinguir mecanismos $MCAR, MAR, MNAR$ para aplicar <code>dropna</code> o <code>KNNImputer</code>.</li>
+                        <li>✔ <strong>Normalización:</strong> Seleccionar entre <code>StandardScaler</code>, <code>MinMaxScaler</code> y <code>RobustScaler</code> según la distribución y presencia de outliers.</li>
+                        <li>✔ <strong>Prevención de Data Leakage:</strong> Entrenar escaladores, imputadores y modelos de anomalía únicamente en <em>Train</em>.</li>
+                        <li>✔ <strong>Detección de Outliers:</strong> Utilizar criterios IQR, Isolation Forest y análisis de residuales $Z > 3\sigma$ en relaciones reales (Cédula vs. Edad).</li>
+                        <li>✔ <strong>PCA y Matriz Base:</strong> Explicar autorrostros ($V_K$), varianza explicada y el error MSE de reconstrucción para la detección de anomalías.</li>
+                    </ul>
+                </div>
+                <h3 style="margin-top: 1.5rem; color: #1F2937;">¡Muchas Gracias!</h3>
+                <p class="subtitle">Universidad Nacional de Asunción - Facultad de Ingeniería (Clase 3)</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Controles de Navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" title="Anterior">←</button>
+        <span class="slide-counter" id="slideCounter">1 / 17</span>
+        <button class="nav-btn" id="nextBtn" title="Siguiente">→</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('presentationContainer');
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.getElementById('slideCounter');
+        
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function updateCounter() {
+            counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function scrollToSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentSlide = index;
+            slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+            updateCounter();
+        }
+
+        prevBtn.addEventListener('click', () => scrollToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => scrollToSlide(currentSlide + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                scrollToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                scrollToSlide(currentSlide - 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                scrollToSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                scrollToSlide(totalSlides - 1);
+            }
+        });
+
+        container.addEventListener('scroll', () => {
+            const scrollPosition = container.scrollLeft;
+            const slideWidth = window.innerWidth;
+            const newIndex = Math.round(scrollPosition / slideWidth);
+            if (newIndex !== currentSlide) {
+                currentSlide = newIndex;
+                updateCounter();
+            }
+        });
+
+        updateCounter();
+    </script>
+</body>
+</html>
