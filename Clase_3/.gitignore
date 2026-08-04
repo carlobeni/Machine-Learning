@@ -1,0 +1,10 @@
+# Archivos de datos comprimidos
+*.zip
+personas_202607262153.zip
+
+# Scripts generadores de figuras de presentación
+generate_figures.py
+
+# Caché de Jupyter y Python
+.ipynb_checkpoints/
+__pycache__/
