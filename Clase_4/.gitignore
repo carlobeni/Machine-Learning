@@ -1,0 +1,9 @@
+# Ignorar todos los cuadernos .ipynb en Clase_4
+*.ipynb
+
+# Ignorar todos los subdirectorios en Clase_4 (reglamentonuevo, reglamentoviejo, etc.)
+*/
+
+# Excepciones permitidas
+!nb_practica_C4_preprocessing.ipynb
+!reglamento_nuevo_unificado.csv
