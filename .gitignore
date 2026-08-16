@@ -1,1 +1,9 @@
 *.pdf
+
+# Directorios de Clases ignorados en la rama TPs
+Clase_1/
+Clase_2/
+Clase_3/
+Clase_4/
+Clase_5/
+Clase_*/
