@@ -65,16 +65,6 @@ Muestra la clasificación en el conjunto de prueba (12,859 muestras) tras optimi
 
 ---
 
-## Métricas Clave Alcanzadas por el Modelo
-
-- **F1-Score**: **88.86%**
-- **Accuracy**: **86.03%**
-- **Precision**: **86.07%**
-- **Recall (Sensibilidad)**: **91.83%**
-- **ROC-AUC**: **0.9331**
-
----
-
 ## Instrucciones para la Entrega
 
 1. Clonar el repositorio oficial de la materia y posicionarse en la rama del trabajo práctico.
@@ -88,7 +78,7 @@ Muestra la clasificación en el conjunto de prueba (12,859 muestras) tras optimi
 
 | Componente | Ponderación | Criterios de Evaluación |
 | :--- | :---: | :--- |
-| **Parte 1: Preprocesamiento y Estadística** | **40%** | Mapeo correcto de las 27 siglas de carreras, limpieza no destructiva y precisión en el cálculo de las 6 preguntas estadísticas. |
-| **Parte 2: Regresión Logística y Evaluación** | **60%** | Construcción adecuada del Pipeline de Scikit-Learn, graficación de la Curva de Aprendizaje, optimización del umbral y análisis de la Matriz de Confusión. |
+| **Parte 1: Preprocesamiento y Estadística** | **35%** | Mapeo correcto de las 27 siglas de carreras, limpieza no destructiva y precisión en el cálculo de las 6 preguntas estadísticas. |
+| **Parte 2: Regresión Logística y Evaluación** | **65%** | Construcción adecuada del Pipeline de Scikit-Learn, graficación de la Curva de Aprendizaje, optimización del umbral y análisis de la Matriz de Confusión. |
 
 ---
