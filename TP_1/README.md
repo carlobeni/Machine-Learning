@@ -1,5 +1,17 @@
 # Trabajo Práctico 1 (TP1): Configuración del Repositorio y Ecosistema de Desarrollo
 
+<h2 align="center">Video guia de TP1</h2>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=Vz2Z-n-Cfk0">
+    <img
+      src="https://i.ytimg.com/vi/Vz2Z-n-Cfk0/maxresdefault.jpg"
+      alt="Project Demo"
+      width="900"
+    />
+  </a>
+</p>
+
 Para realizar con éxito este primer Trabajo Práctico, se recomienda haber leído y seguido en detalle la guía principal ubicada en el **`README.md` del directorio raíz en la rama `clases`** de este repositorio.
 
 En dicha guía oficial se aborda el procedimiento paso a paso para la configuración del ecosistema técnico que se utilizará a lo largo de todo el semestre en Machine Learning.
@@ -35,23 +47,10 @@ En lugar de clonar o crear de forma manual el proyecto en la web, aprovecharemos
 4. Haz clic en la opción nativa de **"Publish to GitHub"** o **"Publish Branch"** ofrecida de forma visual por Antigravity IDE.
    - El editor te guiará o autenticará si es la primera vez, y generará automáticamente de forma remota tu repositorio oficial de GitHub de manera instantánea, subiendo los archivos base.
 
-### Paso 3: Inicialización del Ecosistema de Dependencias (Poetry)
-1. Con el terminal integrado de Antigravity IDE abierto y tu entorno virtual de Conda debidamente activado, inicia el archivo de manifiesto de dependencias en la raíz del proyecto ejecutando:
-   ```bash
-   poetry init --no-interaction
-   ```
-2. Instala el conjunto elemental de bibliotecas para análisis científico de la materia mediante Poetry:
-   ```bash
-   poetry add numpy pandas matplotlib seaborn scikit-learn jupyter
-   ```
-   *(Esto generará los archivos automáticos `pyproject.toml` y `poetry.lock`, los cuales deberán versionarse mediante un nuevo commit desde el IDE).*
-
 ### Paso 4: Estructura Modular del Repositorio
 Organiza el directorio de tu Workspace creando las carpetas y módulos para los Trabajos Prácticos del semestre, los cuales deberán reposar directamente dentro de la carpeta raíz y sin contenedores intermedio:
 ```text
 ML1-2026-TPs/
-├── pyproject.toml
-├── poetry.lock
 ├── README.md
 ├── .gitignore
 ├── TP_1/
