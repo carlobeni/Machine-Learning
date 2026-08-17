@@ -278,3 +278,41 @@ pre code {
     line-height: 1.5;
     margin-bottom: 0;
 }
+
+
+/* Print & PDF Export Rules */
+@media print {
+    @page {
+        size: 16in 9in;
+        margin: 0;
+    }
+    html, body {
+        background: #F8FAFC !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .presentation-container {
+        display: block !important;
+        height: auto !important;
+        width: 100% !important;
+        overflow: visible !important;
+    }
+    .slide {
+        display: flex !important;
+        flex: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+    }
+    .nav-btn, .progress-bar, .controls, .slide-counter, .nav-container {
+        display: none !important;
+    }
+}

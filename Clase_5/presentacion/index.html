@@ -6,14 +6,19 @@
     <title>Presentación Clase 5 - Regresión Logística y Clasificación (Andrew Ng CS229 Cap. 2)</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        }
-      };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <!-- KaTeX CSS & Auto-render for robust LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\[', right: '\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false}
+                ],
+                throwOnError: false
+            }); window.katexRendered = true;"></script>
 </head>
 <body>
     <div class="presentation-container" id="presentationContainer">
