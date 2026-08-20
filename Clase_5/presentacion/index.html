@@ -70,7 +70,7 @@
         <!-- Slide 4: FIGURA 2 A PANTALLA COMPLETA -->
         <section class="slide center-align" id="slide-4">
             <div class="clean-card">
-                <h2>La Función Sigmoide $g(z)$ y su Derivada</h2>
+                <h2>La Función Sigmoide g(z) y su Derivada</h2>
                 <div class="full-img-container">
                     <img src="img/sigmoid_function.png" class="slide-img-full" alt="Función Sigmoide y su Derivada">
                     <p class="img-caption">Curva Sigmoide $g(z) = \frac{1}{1 + e^{-z}}$ (Azul) y su Derivada Fundamental $g'(z) = g(z)(1 - g(z))$ (Rojo Discontinuo)</p>
@@ -103,7 +103,7 @@
         <!-- Slide 6: FIGURA 3 A PANTALLA COMPLETA -->
         <section class="slide center-align" id="slide-6">
             <div class="clean-card">
-                <h2>Variación del Umbral de Decisión Probabilístico $\tau$</h2>
+                <h2>Variación del Umbral de Decisión Probabilístico τ</h2>
                 <div class="full-img-container">
                     <img src="img/intuitive_probability_threshold.png" class="slide-img-full" alt="Umbral de Decisión Tau">
                     <p class="img-caption">División del espacio probabilístico continuo en decisiones discretas ($y=1$ vs $y=0$) según el umbral de corte $\tau$</p>
@@ -114,7 +114,7 @@
         <!-- Slide 7: EXPLICACIÓN DIDÁCTICA 3 -->
         <section class="slide" id="slide-7">
             <div class="clean-card">
-                <h2>De Probabilidades a Decisiones Físicas: El Umbral $\tau$</h2>
+                <h2>De Probabilidades a Decisiones Físicas: El Umbral τ</h2>
                 <div class="info-box border-orange">
                     <h3>Regla de Decisión Discreta</h3>
                     <p>El modelo devuelve una probabilidad continua $P(y=1|x) \in [0, 1]$. Para tomar una decisión física (Aprobado vs. No Aprobado), fijamos un <strong>Umbral de Corte $\tau$</strong>:</p>
@@ -184,11 +184,11 @@
         <!-- Slide 11: FORMULACIÓN TEÓRICA CS229: GRADIENT DESCENT -->
         <section class="slide" id="slide-11">
             <div class="clean-card">
-                <h2>Optimización: Descenso del Gradiente (*Gradient Descent*)</h2>
+                <h2>Optimización: Descenso del Gradiente (Gradient Descent)</h2>
                 <div class="split-content">
                     <div>
                         <div class="info-box border-blue">
-                            <h3>Derivada del Costo $J(\theta)$</h3>
+                            <h3>Derivada del Costo J(θ)</h3>
                             <p>Derivando $J(\theta)$ con respecto al parámetro $\theta_j$:</p>
                             <p>$$\frac{\partial J(\theta)}{\partial \theta_j} = \frac{1}{m} \sum_{i=1}^m \left(h_\theta(x^{(i)}) - y^{(i)}\right) x_j^{(i)}$$</p>
                         </div>
@@ -204,7 +204,7 @@
                         <ul>
                             <li><strong>Optimización de 1º Orden:</strong> Utiliza únicamente derivadas primeras.</li>
                             <li><strong>Complejidad por Iteración:</strong> $\mathcal{O}(m \cdot n)$ (vectorización rápida).</li>
-                            <li><strong>Escalabilidad:</strong> Excelente para conjuntos de datos masivos ($m \gg 100,000$).</li>
+                            <li><strong>Escalabilidad:</strong> Excelente para conjuntos de datos masivos (m ≫ 100.000).</li>
                         </ul>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                 </div>
                 <div class="info-box border-blue">
                     <h3>Convergencia Cuadrática</h3>
-                    <p>Alcanza la solución óptima en muy pocas iteraciones ($<15$ iters). Sin embargo, invertir $H$ requiere $\mathcal{O}(n^3)$ operaciones de cálculo matricial.</p>
+                    <p>Alcanza la solución óptima en muy pocas iteraciones (&lt; 15 iters). Sin embargo, invertir $H$ requiere $\mathcal{O}(n^3)$ operaciones de cálculo matricial.</p>
                 </div>
             </div>
         </section>
@@ -243,7 +243,7 @@
         <!-- Slide 14: FIGURA 6 A PANTALLA COMPLETA -->
         <section class="slide center-align" id="slide-14">
             <div class="clean-card">
-                <h2>Interpretación Didáctica de Odds Ratios $\exp(\theta_j)$</h2>
+                <h2>Interpretación Didáctica de Odds Ratios exp(θ<sub>j</sub>)</h2>
                 <div class="full-img-container">
                     <img src="img/odds_ratio_interpretation.png" class="slide-img-full" alt="Interpretación de Odds Ratios">
                     <p class="img-caption">Factor de Multiplicación de las Opciones de Aprobación por cada incremento en los Atributos</p>
@@ -254,18 +254,18 @@
         <!-- Slide 15: EXPLICACIÓN DIDÁCTICA 5 -->
         <section class="slide" id="slide-15">
             <div class="clean-card">
-                <h2>Interpretación Didáctica: Coeficientes $\theta$ y Odds Ratios</h2>
+                <h2>Interpretación Didáctica: Coeficientes θ y Odds Ratios</h2>
                 <div class="info-box border-green">
-                    <h3>¿Qué representan los Coeficientes $\theta_j$?</h3>
+                    <h3>¿Qué representan los Coeficientes θ<sub>j</sub>?</h3>
                     <p>A diferencia de la regresión lineal, $\theta_j$ representa el cambio en el <strong>Logit (Log-Odds)</strong> por unidad de incremento en $x_j$:</p>
                     <p>$$\log \left( \frac{P(y=1|x)}{1 - P(y=1|x)} \right) = \theta_0 + \theta_1 x_1 + \dots + \theta_n x_n$$</p>
                 </div>
                 <div class="info-box border-purple">
-                    <h3>Interpretación del Odds Ratio $\exp(\theta_j)$</h3>
+                    <h3>Interpretación del Odds Ratio exp(θ<sub>j</sub>)</h3>
                     <p>$$\text{Odds Ratio} = e^{\theta_j}$$</p>
                     <ul>
-                        <li><strong>Si $e^{\theta_j} > 1$:</strong> Multiplica e incrementa las posibilidades de pertenecer a la clase positiva.</li>
-                        <li><strong>Si $e^{\theta_j} = 1$:</strong> Sin efecto en la predicción.</li>
+                        <li><strong>Si e<sup>θ<sub>j</sub></sup> &gt; 1:</strong> Multiplica e incrementa las posibilidades de pertenecer a la clase positiva.</li>
+                        <li><strong>Si e<sup>θ<sub>j</sub></sup> = 1:</strong> Sin efecto en la predicción.</li>
                     </ul>
                 </div>
             </div>
@@ -277,7 +277,7 @@
                 <h2>Geometría de la Frontera de Decisión Lineal</h2>
                 <div class="full-img-container">
                     <img src="img/decision_boundary_linear.png" class="slide-img-full" alt="Frontera de Decisión Lineal">
-                    <p class="img-caption">Hiperplano de Decisión Lineal $\theta_0 + \theta_1 x_1 + \theta_2 x_2 = 0$ separando Clase 0 y Clase 1</p>
+                    <p class="img-caption">Hiperplano de Decisión Lineal θ₀ + θ₁x₁ + θ₂x₂ = 0 separando Clase 0 y Clase 1</p>
                 </div>
             </div>
         </section>
@@ -288,7 +288,7 @@
                 <h2>Geometría de las Fronteras de Decisión Lineales</h2>
                 <div class="info-box border-blue">
                     <h3>Geometría del Hiperplano de Decisión</h3>
-                    <p>La frontera de decisión representa la región del espacio donde el modelo está en máxima incertidumbre ($P(y=1|x) = 0.5$):</p>
+                    <p>La frontera de decisión representa la región del espacio donde el modelo está en máxima incertidumbre (P(y=1|x) = 0.5):</p>
                     <p>$$h_\theta(x) = 0.5 \iff g(\theta^T x) = 0.5 \iff \theta^T x = 0$$</p>
                 </div>
                 <div class="info-box border-green">
@@ -322,10 +322,10 @@
         <!-- Slide 19: FIGURA 8 A PANTALLA COMPLETA -->
         <section class="slide center-align" id="slide-19">
             <div class="clean-card">
-                <h2>Impacto de la Regularización $L_2$ ($C = 1/\lambda$)</h2>
+                <h2>Impacto de la Regularización L<sub>2</sub> (C = 1/λ)</h2>
                 <div class="full-img-container">
                     <img src="img/decision_boundary_regularization.png" class="slide-img-full" alt="Regularización L2 en Fronteras No Lineales">
-                    <p class="img-caption">Efecto del Parámetro $C$: Underfitting ($C=0.01$) vs. Óptimo ($C=1.0$) vs. Overfitting ($C=100.0$)</p>
+                    <p class="img-caption">Efecto del Parámetro C: Underfitting (C = 0.01) vs. Óptimo (C = 1.0) vs. Overfitting (C = 100.0)</p>
                 </div>
             </div>
         </section>
@@ -333,17 +333,17 @@
         <!-- Slide 20: EXPLICACIÓN REGULARIZACIÓN L2 -->
         <section class="slide" id="slide-20">
             <div class="clean-card">
-                <h2>Regularización $L_2$ ($C = 1/\lambda$) y Control de Overfitting</h2>
+                <h2>Regularización L<sub>2</sub> (C = 1/λ) y Control de Overfitting</h2>
                 <div class="info-box border-red">
                     <h3>Función de Costo Regularizada</h3>
                     <p>Penaliza la magnitud de los parámetros $\theta_j$ (excluyendo el bias $\theta_0$):</p>
                     <p>$$J_{reg}(\theta) = J(\theta) + \frac{\lambda}{2m} \sum_{j=1}^n \theta_j^2 = J(\theta) + \frac{1}{2mC} \sum_{j=1}^n \theta_j^2$$</p>
                 </div>
                 <div class="info-box border-green">
-                    <h3>Interpretación del Hiperparámetro $C$</h3>
+                    <h3>Interpretación del Hiperparámetro C</h3>
                     <ul>
-                        <li><strong>$C \to 0$ ($\lambda \to \infty$):</strong> Regularización fuerte (evita el sobreajuste, frontera suave).</li>
-                        <li><strong>$C \to \infty$ ($\lambda \to 0$):</strong> Sin regularización (fronteras sinuosas y riesgo de *overfitting*).</li>
+                        <li><strong>C → 0 (λ → ∞):</strong> Regularización fuerte (evita el sobreajuste, frontera suave).</li>
+                        <li><strong>C → ∞ (λ → 0):</strong> Sin regularización (fronteras sinuosas y riesgo de *overfitting*).</li>
                     </ul>
                 </div>
             </div>
@@ -395,17 +395,17 @@
         <!-- Slide 24: EXPLICACIÓN SOFTMAX -->
         <section class="slide" id="slide-24">
             <div class="clean-card">
-                <h2>Clasificación Multiclase: Regresión Softmax ($K > 2$)</h2>
+                <h2>Clasificación Multiclase: Regresión Softmax (K &gt; 2)</h2>
                 <div class="info-box border-purple">
                     <h3>La Función Softmax</h3>
-                    <p>Para $K > 2$ clases discontinuas $y \in \{1, \dots, K\}$, generalizamos la sigmoide a la función **Softmax**:</p>
+                    <p>Para $K \gt 2$ clases discontinuas $y \in \{1, \dots, K\}$, generalizamos la sigmoide a la función **Softmax**:</p>
                     <p>$$P(y = k \mid x; \Theta) = \frac{e^{\theta^{(k)T} x}}{\sum_{j=1}^K e^{\theta^{(j)T} x}}$$</p>
                     <p>Garantiza que la suma de probabilidades sobre las $K$ clases sea exactamente $1.0$.</p>
                 </div>
                 <div class="info-box border-orange">
                     <h3>Estrategia One-vs-Rest (OvR)</h3>
                     <p>Entrena $K$ clasificadores binarios independientes. Asigna la muestra a la clase con mayor probabilidad:</p>
-                    <p>$$\hat{y} = \arg\max_{k \in \{1, \dots, K\}} h_{\theta^{(k)}}(x)$$</p>
+                    <p>$$\hat{y} = \operatorname*{argmax}_{k \in \{1, \dots, K\}} h_{\theta^{(k)}}(x)$$</p>
                 </div>
             </div>
         </section>
@@ -425,7 +425,7 @@
                     </div>
                     <div class="conclusion-card" style="border-top-color: #7C3AED;">
                         <h3>Regularización & Interpretación</h3>
-                        <p>El hiperparámetro $C=1/\lambda$ controla el sobreajuste, mientras que los Odds Ratios $e^{\theta_j}$ cuantifican el impacto de cada variable.</p>
+                        <p>El hiperparámetro C = 1/λ controla el sobreajuste, mientras que los Odds Ratios e<sup>θ<sub>j</sub></sup> cuantifican el impacto de cada variable.</p>
                     </div>
                 </div>
                 <div style="margin-top: 2rem;">
