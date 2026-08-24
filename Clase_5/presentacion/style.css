@@ -1,0 +1,318 @@
+:root {
+    --primary-bg: #FAFAFA;
+    --card-bg: #FFFFFF;
+    --text-main: #1F2937;
+    --text-muted: #4B5563;
+    --accent: #2563EB;
+    --accent-light: #DBEAFE;
+    
+    --color-super: #93C5FD;
+    --color-unsuper: #C4B5FD;
+    --color-rl: #A7F3D0;
+    --color-dl: #FCA5A5;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+    color: var(--text-main);
+    overflow: hidden; 
+}
+
+.presentation-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+
+.slide {
+    flex: 0 0 100vw;
+    min-height: 100vh;
+    width: 100vw;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    position: relative;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+}
+
+.clean-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2.2rem 3rem;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.center-align .clean-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cover h1 {
+    font-size: 3.5rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.cover h2 {
+    font-size: 1.8rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    border: none;
+    margin-bottom: 0.5rem;
+}
+
+.cover h3 {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+h2 {
+    font-size: 2.1rem;
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+    border-bottom: 2px solid var(--accent-light);
+    padding-bottom: 0.4rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: var(--accent);
+    margin-bottom: 0.7rem;
+    font-weight: 600;
+}
+
+p, li {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+}
+
+ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.2rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+.split-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.split-content.uneven {
+    grid-template-columns: 1.1fr 0.9fr;
+}
+
+.info-box {
+    padding: 1.2rem;
+    border-radius: 12px;
+    background: #F9FAFB;
+    border-left: 4px solid var(--accent);
+    margin-bottom: 1.2rem;
+}
+
+.border-blue { border-left-color: #2563EB; }
+.border-purple { border-left-color: #7C3AED; }
+.border-green { border-left-color: #10B981; }
+.border-orange { border-left-color: #F59E0B; }
+.border-crimson { border-left-color: #DC2626; }
+
+.bg-light-blue { background: #EFF6FF; }
+
+/* ESTILOS PARA FIGURAS A PANTALLA COMPLETA EN SLIDE SEPARADO */
+.full-img-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.slide-img-full {
+    max-width: 100%;
+    max-height: 68vh;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    object-fit: contain;
+}
+
+.img-caption {
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin-top: 0.6rem;
+    font-weight: 500;
+}
+
+.footnote {
+    font-size: 0.9rem;
+    color: #9CA3AF;
+    margin-top: 1rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+.badge-blue { background: var(--accent-light); color: var(--accent); }
+.badge-purple { background: #F3E8FF; color: #7C3AED; }
+.badge-green { background: #D1FAE5; color: #059669; }
+
+/* Controles de Navegación */
+.nav-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    align-items: center;
+}
+
+.nav-btn {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.slide-counter {
+    background: rgba(255,255,255,0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #E5E7EB;
+}
+
+code {
+    background: #F1F5F9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.95em;
+    color: #0F172A;
+}
+
+pre code {
+    display: block;
+    padding: 1rem;
+    overflow-x: auto;
+    line-height: 1.45;
+}
+
+/* Tarjeta de conclusiones simplificada */
+.conclusions-simple {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.conclusion-card {
+    background: #F9FAFB;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-top: 4px solid var(--accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.conclusion-card h3 {
+    margin-bottom: 0.6rem;
+    font-size: 1.15rem;
+}
+
+.conclusion-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+
+/* Print & PDF Export Rules */
+@media print {
+    @page {
+        size: 16in 9in;
+        margin: 0;
+    }
+    html, body {
+        background: #F8FAFC !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .presentation-container {
+        display: block !important;
+        height: auto !important;
+        width: 100% !important;
+        overflow: visible !important;
+    }
+    .slide {
+        display: flex !important;
+        flex: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+    }
+    .nav-btn, .progress-bar, .controls, .slide-counter, .nav-container {
+        display: none !important;
+    }
+}

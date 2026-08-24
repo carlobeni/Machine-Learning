@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase 6: Modelos Lineales vs No Lineales (Polinomiales & KNN), Regularización y GridSearchCV</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- KaTeX CSS & Auto-render for robust LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            }); window.katexRendered = true;"></script>
+</head>
+<body>
+    <div class="presentation-container" id="presentationContainer">
+        
+        <!-- Slide 1: Portada -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover" style="max-width: 900px; margin: 0 auto; padding: 3rem 2.5rem; text-align: center;">
+                <span class="badge badge-blue" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 1.2rem; display: inline-block;">Semana 6 | Clase 6</span>
+                <h1 style="font-size: 2.8rem; font-weight: 800; color: #1E293B; margin-bottom: 0.6rem; letter-spacing: -0.02em;">Machine Learning 1</h1>
+                <h2 style="font-size: 1.45rem; color: #2563EB; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.35;">Comparación de Modelos Lineales y No Lineales (Polinomiales & KNN) con/sin Regularización & Búsqueda en Malla (GridSearchCV)</h2>
+                <p style="color: #6B7280; font-size: 1.05rem; font-weight: 500; margin-bottom: 2rem;">Capacidad de Representación, Bias-Variance Tradeoff, Data Leakage y Optimización de Hiperparámetros</p>
+                <div style="border-top: 1px solid #E2E8F0; padding-top: 1.2rem; margin-top: 1.2rem;">
+                    <h3 style="font-size: 1.2rem; color: #334155; font-weight: 600; margin-bottom: 0.3rem;">Universidad Nacional de Asunción — FIUNA</h3>
+                    <p class="subtitle" style="color: #64748B; font-size: 0.95rem;">Ingeniería Electrónica — Séptimo Semestre</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Hoja de Ruta / Agenda -->
+        <section class="slide" id="slide-2">
+            <div class="clean-card">
+                <h2>Agenda de la Clase 6</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Parte 1: Modelos Lineales y Regularización</h3>
+                        <ul>
+                            <li>OLS vs. Ridge ($L_2$) vs. Lasso ($L_1$) vs. ElasticNet.</li>
+                            <li>Shrinkage de coeficientes y selección de variables (*sparsity*).</li>
+                            <li>Regresión Logística y fronteras de decisión rectilíneas.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Parte 2: Modelos No Lineales & Expansión</h3>
+                        <ul>
+                            <li>Expansión de características polinomiales (`PolynomialFeatures`).</li>
+                            <li>Regularización sobre polinomios de alto grado (Efecto Runge).</li>
+                            <li>$K$-Vecinos Más Cercanos (KNN Regressor y Classifier).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-green bg-light-green">
+                        <h3>Parte 3: Sesgo, Varianza y Data Leakage</h3>
+                        <ul>
+                            <li>Descomposición del error esperado: $\text{Bias}^2 + \text{Var} + \sigma^2$.</li>
+                            <li>Prevención de la Fuga de Datos con `sklearn.pipeline.Pipeline`.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Parte 4: Optimización de Hiperparámetros</h3>
+                        <ul>
+                            <li>`GridSearchCV` vs. `RandomizedSearchCV`.</li>
+                            <li>Mapas de calor de validación cruzada y evaluación en Holdout.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: El Espectro de Complejidad -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>El Espectro de Complejidad en Machine Learning</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Modelos Lineales (Alto Sesgo / Baja Varianza)</h3>
+                        <p>Asumen una relación aditiva lineal entre variables entradas $x$ y salida $y$:</p>
+                        <p>$$\hat{y} = \theta_0 + \theta_1 x_1 + \dots + \theta_n x_n = \theta^T x$$</p>
+                        <ul>
+                            <li><strong>Ventajas:</strong> Extremadamente rápidos, altamente interpretables, resistentes al sobreajuste.</li>
+                            <li><strong>Limitación:</strong> Incapaces de modelar interacciones complejas o curvaturas no lineales.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Modelos No Lineales (Bajo Sesgo / Alta Varianza)</h3>
+                        <p>Mapean fronteras complejas o arbitrarias mediante combinaciones polinomiales o estimaciones locales:</p>
+                        <ul>
+                            <li><strong>Polinomiales ($d \ge 2$):</strong> Introducen potencias $x_1^2, x_1 x_2, \dots, x_1^d$.</li>
+                            <li><strong>KNN ($K$-Vecinos):</strong> Asignan etiquetas o valores continuos según la densidad local de vecinos.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: FIGURA 1 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-4">
+            <div class="clean-card">
+                <h2>Comparativa Visual: Modelos Lineales vs Polinomiales & KNN</h2>
+                <div class="full-img-container">
+                    <img src="img/linear_vs_nonlinear_comparison.png" class="slide-img-full" alt="Comparación Lineal vs Polinomial">
+                    <p class="img-caption">Fallo de la Regresión Lineal OLS (Arriba Izq.) vs. Curvatura Polinomial d=3 (Arriba Der.) y Frontera Logística Polinomial No Lineal (Abajo Der.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Modelos Lineales y Regularización -->
+        <section class="slide" id="slide-5">
+            <div class="clean-card">
+                <h2>Regularización en Modelos Lineales ($L_1$ y $L_2$)</h2>
+                <div class="info-box border-blue bg-light-blue">
+                    <h3>¿Por qué regularizar?</h3>
+                    <p>Cuando tenemos muchas características ($n \gg m$) o colinealidad, Mínimos Cuadrados Ordinarios (OLS) sobreestima la magnitud de los pesos $\theta$, resultando en una **varianza gigante** y sensibilidad extrema al ruido.</p>
+                </div>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>Ridge Regression (Norma $L_2$)</h3>
+                        <p>Añade la suma de los cuadrados de los coeficientes:</p>
+                        <p>$$J(\theta) = \text{MSE}(\theta) + \lambda \sum_{j=1}^n \theta_j^2$$</p>
+                        <p>Comprime los pesos suavemente hacia cero sin anular ninguno por completo.</p>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Lasso Regression (Norma $L_1$)</h3>
+                        <p>Añade la suma del valor absoluto de los coeficientes:</p>
+                        <p>$$J(\theta) = \text{MSE}(\theta) + \lambda \sum_{j=1}^n |\theta_j|$$</p>
+                        <p>Fuerza coeficientes irrelevantes exactamente a <strong>0.0</strong> (Selección de Características).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Formulación Matemática de Shrinkage -->
+        <section class="slide" id="slide-6">
+            <div class="clean-card">
+                <h2>Formulación Matemática de Ridge, Lasso y ElasticNet</h2>
+                <div class="split-content">
+                    <div class="info-box border-orange">
+                        <h3>Solución Analítica de Ridge ($L_2$)</h3>
+                        <p>La solución en forma cerrada modifica la matriz normal agregando $\lambda I$:</p>
+                        <p>$$\hat{\theta}_{\text{Ridge}} = (X^T X + \lambda I)^{-1} X^T y$$</p>
+                        <p>Garantiza que la matriz sea siempre invertible, resolviendo la multicolinealidad.</p>
+                    </div>
+                    <div class="info-box border-crimson">
+                        <h3>ElasticNet: Combinando $L_1$ y $L_2$</h3>
+                        <p>Combina ambas penalizaciones controladas por el parámetro $\alpha$ y la proporción $r \in [0, 1]$:</p>
+                        <p>$$J(\theta) = \text{MSE}(\theta) + r \alpha \sum_{j=1}^n |\theta_j| + \frac{1-r}{2} \alpha \sum_{j=1}^n \theta_j^2$$</p>
+                        <p>Ideal cuando existen grupos de variables fuertemente correlacionadas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: FIGURA 2 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-7">
+            <div class="clean-card">
+                <h2>Evolución de Coeficientes: Ridge (Shrinkage) vs Lasso (Sparsity)</h2>
+                <div class="full-img-container">
+                    <img src="img/regularization_shrinkage_ridge_lasso.png" class="slide-img-full" alt="Shrinkage Path Ridge vs Lasso">
+                    <p class="img-caption">Trayectoria de Coeficientes vs Fuerza de Penalización $\alpha$: Contraimiento suave continuo en Ridge ($L_2$) vs Anulación exacta a Cero en Lasso ($L_1$)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Modelos No Lineales I: Polinomiales -->
+        <section class="slide" id="slide-8">
+            <div class="clean-card">
+                <h2>Modelos No Lineales I: Transformaciones Polinomiales</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Expansión del Espacio de Características</h3>
+                        <p>Un modelo lineal puede aprender relaciones no lineales si transformamos las entradas originales $x$ mediante combinaciones de potencias usando <code>PolynomialFeatures(degree=d)</code>:</p>
+                        <p>$$\phi(x) = [1, x_1, x_2, x_1^2, x_1 x_2, x_2^2, \dots, x_1^d, x_2^d]^T$$</p>
+                    </div>
+                    <div class="info-box border-red bg-light-red">
+                        <h3>Riesgo Exponencial de Explosión Dimensional</h3>
+                        <ul>
+                            <li>Para $n$ variables de entrada y grado $d$, el número de características crece combinatoriamente $\binom{n+d}{d}$.</li>
+                            <li>Sin regularización (Ridge/Lasso), un grado elevado $d \ge 5$ genera **sobreajuste severo (*Overfitting*)** y oscilaciones extremas (Efecto Runge).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Regularización sobre Polinomios de Alto Grado -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>Modelos No Lineales II: Regularizando Polinomios de Alto Grado</h2>
+                <div class="split-content">
+                    <div class="info-box border-green bg-light-green">
+                        <h3>Combinación Polinomial + Ridge / Lasso</h3>
+                        <p>Al aplicar regularización $L_2$ o $L_1$ sobre una expansión polinomial de alto grado ($d=8$ o $d=10$):</p>
+                        <ul>
+                            <li>El espacio hipotético conserva flexibilidad no lineal.</li>
+                            <li>La penalización $\lambda \sum \theta_j^2$ amortigua la magnitud de las potencias superiores, suavizando la curva.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Control del Sobreajuste Polinomial</h3>
+                        <p>El hiperparámetro $\alpha$ (o $\lambda$) actúa como un "freno" que impide que el polinomio oscile violentamente entre puntos de datos cercanos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Modelos No Lineales III: KNN -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>Modelos No Lineales III: K-Vecinos Más Cercanos (KNN)</h2>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>K-Vecinos Más Cercanos (KNN)</h3>
+                        <p>Algoritmo no paramétrico basado en la métrica de distancia Euclidiana o Manhattan:</p>
+                        <p>$$d(x, z) = \sqrt{\sum_{j=1}^n (x_j - z_j)^2}$$</p>
+                        <ul>
+                            <li><strong>$K=1$:</strong> Frontera hiper-reactiva e irregular (Memorización / Overfitting).</li>
+                            <li><strong>$K$ grande ($K=15$):</strong> Frontera suave basada en votación mayoritaria promedio.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-blue">
+                        <h3>Ponderación por Distancia (`weights='distance'`)</h3>
+                        <p>Asigna mayor peso de voto a los vecinos más cercanos:</p>
+                        <p>$$w_i = \frac{1}{d(x, x_i)}$$</p>
+                        <p>Permite fronteras más adaptativas manteniendo suavidad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: FIGURA 3 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-11">
+            <div class="clean-card">
+                <h2>Comparativa de Fronteras de Decisión en 2D</h2>
+                <div class="full-img-container">
+                    <img src="img/decision_boundaries_comparison.png" class="slide-img-full" alt="Fronteras de Decisión en Clasificación 2D">
+                    <p class="img-caption">Fronteras de Decisión sobre el dataset Moons: Lineal vs. Polinomial Grado 2, 3, 6 vs. KNN (K=1 vs K=15)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Compromiso Sesgo-Varianza -->
+        <section class="slide" id="slide-12">
+            <div class="clean-card">
+                <h2>El Compromiso Sesgo-Varianza (Bias-Variance Tradeoff)</h2>
+                <div class="info-box border-blue bg-light-blue">
+                    <h3>Descomposición Matemática del Error Esperado</h3>
+                    <p>Para cualquier modelo de regresión $\hat{f}(x)$ entrenado sobre un conjunto $D$, el error cuadrático medio esperado en un punto $x$ no visto se descompone en:</p>
+                    <p>$$E\left[(y - \hat{f}(x))^2\right] = \underbrace{\left(E[\hat{f}(x)] - f(x)\right)^2}_{\text{Bias}^2 \text{ (Sesgo)}} + \underbrace{E\left[\left(\hat{f}(x) - E[\hat{f}(x)]\right)^2\right]}_{\text{Variance } (\text{Varianza})} + \underbrace{\sigma^2}_{\text{Ruido Irreducible}}$$</p>
+                </div>
+                <div class="split-content">
+                    <div class="info-box border-red bg-light-red">
+                        <h3>Subajuste (High Bias)</h3>
+                        <p>Grado polinomial insuficiente ($d=1$). Error elevado tanto en entrenamiento como en validación.</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Sobreajuste (High Variance)</h3>
+                        <p>Grado polinomial excesivo ($d \ge 8$). Error bajo en train, pero el error en test se dispara por oscilaciones descontroladas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: FIGURA 4 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-13">
+            <div class="clean-card">
+                <h2>Curvas de Error, Sesgo, Varianza y Grado Polinomial</h2>
+                <div class="full-img-container">
+                    <img src="img/bias_variance_tradeoff.png" class="slide-img-full" alt="Curvas Bias Variance Tradeoff">
+                    <p class="img-caption">Descomposición Teórica de Error (Izquierda) y Experimento Real de MSE vs Grado Polinomial (Derecha)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Diagnóstico con Curvas de Validación -->
+        <section class="slide" id="slide-14">
+            <div class="clean-card">
+                <h2>Diagnóstico de Modelos mediante Curvas de Aprendizaje</h2>
+                <div class="split-content">
+                    <div class="info-box border-orange">
+                        <h3>Síntomas de Subajuste (High Bias)</h3>
+                        <ul>
+                            <li>La curva de entrenamiento y la de validación convergen tempranamente a un valor de error **muy alto** (o baja exactitud).</li>
+                            <li><strong>Solución:</strong> Aumentar el grado polinomial $d$, añadir interacciones de características, reducir la penalización $\alpha$.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-crimson">
+                        <h3>Síntomas de Sobreajuste (High Variance)</h3>
+                        <ul>
+                            <li>Existe una **brecha gigante (*gap*)** entre el error de entrenamiento (cercano a 0) y el de validación (alto).</li>
+                            <li><strong>Solución:</strong> Incrementar la penalización $\alpha$ (Ridge/Lasso), reducir el grado polinomial $d$, aumentar $K$ en KNN.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Validación Cruzada K-Fold y Data Leakage -->
+        <section class="slide" id="slide-15">
+            <div class="clean-card">
+                <h2>Validación Cruzada $K$-Fold y Fuga de Datos (*Data Leakage*)</h2>
+                <div class="info-box border-red bg-light-red">
+                    <h3>¡El Peligro de la Fuga de Datos (*Data Leakage*)!</h3>
+                    <p>Ocurre cuando información del conjunto de evaluación se filtra en la fase de entrenamiento. Ejemplo típico: calcular `StandardScaler.fit()` o `PolynomialFeatures.fit()` en <strong>todo el dataset</strong> antes de dividir en pliegues de CV.</p>
+                </div>
+                <div class="info-box border-green bg-light-green">
+                    <h3>Protocolo Estricto de Validación Cruzada ($K$-Fold CV)</h3>
+                    <p>El dataset de entrenamiento se divide en $K$ partes iguales (pliegues). En cada iteración $k$, el modelo se entrena sobre $K-1$ pliegues y se evalúa en el pliegue sobrante. El preprocesamiento debe ajustarse **únicamente** sobre los $K-1$ pliegues de entrenamiento de cada iteración.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: El Rol Crucial de Pipeline -->
+        <section class="slide" id="slide-16">
+            <div class="clean-card">
+                <h2>Encapsulamiento Modular con `Pipeline` en Scikit-Learn</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Estructura Interna de un Pipeline</h3>
+                        <p>Un <code>Pipeline</code> encadena secuencialmente transformadores (`StandardScaler`, `PolynomialFeatures`) con un estimador final:</p>
+                        <pre><code>from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.linear_model import Ridge
+
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('poly', PolynomialFeatures(degree=3)),
+    ('ridge', Ridge(alpha=1.0))
+])</code></pre>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Garantía de Aislamiento</h3>
+                        <p>Al pasar un <code>Pipeline</code> a <code>cross_val_score</code> o <code>GridSearchCV</code>, scikit-learn ejecuta automáticamente:</p>
+                        <ul>
+                            <li><code>scaler.fit_transform()</code> y <code>poly.fit_transform()</code> sobre el Train Fold de la iteración.</li>
+                            <li><code>scaler.transform()</code> y <code>poly.transform()</code> sobre el Validation Fold de la iteración.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: Búsqueda en Malla (GridSearchCV) -->
+        <section class="slide" id="slide-17">
+            <div class="clean-card">
+                <h2>Búsqueda en Malla Automatizada (`GridSearchCV`)</h2>
+                <div class="info-box border-blue">
+                    <h3>¿Cómo Funciona GridSearchCV?</h3>
+                    <p>Dada una lista de hiperparámetros declarados en una cuadrícula cartesiana (<code>param_grid</code>), `GridSearchCV` evalúa sistemáticamente **todas las combinaciones posibles** utilizando Validación Cruzada de $K$ pliegues.</p>
+                </div>
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Ejemplo de Espacio de Búsqueda para Polinomio + Ridge</h3>
+                        <pre><code>param_grid = {
+    'poly__degree': [1, 2, 3, 4, 5],
+    'ridge__alpha': [0.001, 0.01, 0.1, 1.0, 10.0]
+}
+# Total de combinaciones: 5 x 5 = 25 modelos
+# Con 5-Fold CV: 25 x 5 = 125 ajustes de modelo</code></pre>
+                    </div>
+                    <div class="info-box border-orange">
+                        <h3>Resultados e Inspección</h3>
+                        <ul>
+                            <li><code>best_params_</code>: Combinación que minimizó el MSE de CV.</li>
+                            <li><code>best_score_</code>: Puntuación de error promedio en CV.</li>
+                            <li><code>best_estimator_</code>: Modelo re-entrenado sobre todo el Train Set.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 18: FIGURA 5 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-18">
+            <div class="clean-card">
+                <h2>Optimización con GridSearchCV y Mapa de Calor</h2>
+                <div class="full-img-container">
+                    <img src="img/gridsearchcv_heatmap_pipeline.png" class="slide-img-full" alt="GridSearchCV Heatmap y Comparativa">
+                    <p class="img-caption">Mapa de Calor del Espacio de Hiperparámetros (Grado Polinomial vs Ridge Alpha) y Desempeño en Test Set</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 19: GridSearchCV vs RandomizedSearchCV -->
+        <section class="slide" id="slide-19">
+            <div class="clean-card">
+                <h2>`GridSearchCV` vs. `RandomizedSearchCV`</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>GridSearchCV</th>
+                            <th>RandomizedSearchCV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Estrategia</strong></td>
+                            <td>Exhaustiva (Cuadrícula completa)</td>
+                            <td>Muestreo estocástico aleatorio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Número de Evaluaciones</strong></td>
+                            <td>$N_1 \times N_2 \times \dots \times N_k$ (Exponencial)</td>
+                            <td>Fijo (Definido por <code>n_iter</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Espacio de Búsqueda</strong></td>
+                            <td>Discreto (Listas de valores)</td>
+                            <td>Continuo o Discreto (Distribuciones)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Eficiencia Computacional</strong></td>
+                            <td>Lenta para espacios grandes</td>
+                            <td>Alta eficiencia en dimensiones elevadas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Uso Recomendado</strong></td>
+                            <td>Pocos hiperparámetros (1 a 3)</td>
+                            <td>Muchos hiperparámetros continuos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 20: Flujo de Trabajo Profesional -->
+        <section class="slide" id="slide-20">
+            <div class="clean-card">
+                <h2>Flujo de Trabajo Profesional en Ingeniería de Machine Learning</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>1. Partición Holdout Estricta</h3>
+                        <p>Reserva el 20-30% del dataset original como **Holdout Test Set**. Mantén este conjunto guardado bajo llave hasta la evaluación final.</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>2. Encapsulamiento con Pipeline</h3>
+                        <p>Empaqueta todo el preprocesamiento (`StandardScaler`, `PolynomialFeatures`) y el estimador dentro de un `Pipeline` limpio.</p>
+                    </div>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>3. Optimización con CV</h3>
+                        <p>Aplica `GridSearchCV` o `RandomizedSearchCV` únicamente sobre el conjunto de entrenamiento usando 5-Fold CV.</p>
+                    </div>
+                    <div class="info-box border-green bg-light-green">
+                        <h3>4. Evaluación Final sin Sesgo</h3>
+                        <p>Evalúa el `best_estimator_` obtenido en el **Holdout Test Set** para reportar métricas realistas en producción.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 21: Matriz Comparativa Resumen -->
+        <section class="slide" id="slide-21">
+            <div class="clean-card">
+                <h2>Matriz Resumen de Algoritmos Evaluados</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Frontera de Decisión</th>
+                            <th>Sensibilidad Escala</th>
+                            <th>Sensibilidad Outliers</th>
+                            <th>Riesgo Overfit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Regresión Logística Lineal</strong></td>
+                            <td>Lineal (Hiperplano)</td>
+                            <td>Alta</td>
+                            <td>Moderada</td>
+                            <td>Bajo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Logística Polinomial ($d \ge 2$)</strong></td>
+                            <td>Curva Suave Contínua</td>
+                            <td>Muy Alta</td>
+                            <td>Muy Alta</td>
+                            <td>Muy Alto (con $d$ elevado)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Polinomial + Ridge / Lasso</strong></td>
+                            <td>Curva Suave Contínua</td>
+                            <td>Muy Alta</td>
+                            <td>Moderada</td>
+                            <td>Controlado mediante $\alpha$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>KNN Classifier / Regressor</strong></td>
+                            <td>Local Irregular</td>
+                            <td>Muy Alta</td>
+                            <td>Alta (con $K=1$)</td>
+                            <td>Alto (con $K=1$)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 22: Conclusiones -->
+        <section class="slide center-align" id="slide-22">
+            <div class="clean-card">
+                <h2>Conclusiones de la Clase 6</h2>
+                <div class="conclusions-simple">
+                    <div class="conclusion-card">
+                        <h3>Modelos & Regularización</h3>
+                        <p>Polinomios de alto grado capturan curvaturas no lineales pero requieren regularización ($L_1/L_2$) para evitar oscilaciones de sobreajuste.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #10B981;">
+                        <h3>Pipelines & Data Leakage</h3>
+                        <p>El uso de <code>Pipeline</code> es obligatorio para evitar la Fuga de Datos durante la transformación polinomial y la validación cruzada.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #7C3AED;">
+                        <h3>GridSearchCV & Tuning</h3>
+                        <p>Utiliza <code>GridSearchCV</code> para encontrar la combinación óptima de grado polinomial $d$, penalización $\alpha$ y vecinos $K$.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <span class="badge badge-purple" style="font-size: 1rem; padding: 0.5rem 1.2rem;">¡Muchas Gracias! ¿Preguntas?</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Controles de Navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" title="Diapositiva Anterior">❮</button>
+        <div class="slide-counter" id="slideCounter">1 / 22</div>
+        <button class="nav-btn" id="nextBtn" title="Siguiente Diapositiva">❯</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('presentationContainer');
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentIndex = index;
+            
+            slides[currentIndex].scrollIntoView({ behavior: 'smooth' });
+            slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+        }
+
+        prevBtn.addEventListener('click', () => updateSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => updateSlide(currentIndex + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                updateSlide(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                updateSlide(currentIndex - 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                updateSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                updateSlide(totalSlides - 1);
+            }
+        });
+
+        container.addEventListener('scroll', () => {
+            const scrollPosition = container.scrollLeft;
+            const slideWidth = window.innerWidth;
+            const newIndex = Math.round(scrollPosition / slideWidth);
+            if (newIndex !== currentIndex && newIndex >= 0 && newIndex < totalSlides) {
+                currentIndex = newIndex;
+                slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+            }
+        });
+    </script>
+</body>
+</html>

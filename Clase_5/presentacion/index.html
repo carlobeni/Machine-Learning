@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase 5: Regresión Logística y Clasificación Binaria</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+        <!-- KaTeX CSS & Auto-render for robust LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\[', right: '\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false}
+                ],
+                throwOnError: false
+            }); window.katexRendered = true;"></script>
+</head>
+<body>
+    <div class="presentation-container" id="presentationContainer">
+        
+        <!-- Slide 1: Portada -->
+                <!-- Slide 1: Portada Mejorada y Limpia -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover" style="max-width: 850px; margin: 0 auto; padding: 3rem 2.5rem; text-align: center;">
+                <span class="badge badge-blue" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 1.2rem; display: inline-block;">Semana 5 | Clase 5</span>
+                <h1 style="font-size: 2.8rem; font-weight: 800; color: #1E293B; margin-bottom: 0.6rem; letter-spacing: -0.02em;">Machine Learning 1</h1>
+                <h2 style="font-size: 1.45rem; color: #2563EB; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.35;">Clase 5: Regresión Logística, Optimización por Máxima Verosimilitud y Clasificación</h2>
+                <p style="color: #6B7280; font-size: 1.05rem; font-weight: 500; margin-bottom: 2rem;">Basado en el Capítulo 2 de CS229 (Andrew Ng)</p>
+                <div style="border-top: 1px solid #E2E8F0; padding-top: 1.2rem; margin-top: 1.2rem;">
+                    <h3 style="font-size: 1.2rem; color: #334155; font-weight: 600; margin-bottom: 0.3rem;">Universidad Nacional de Asunción</h3>
+                    <p class="subtitle" style="color: #64748B; font-size: 0.95rem;">Semestre Séptimo — Ingeniería Electrónica</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: FIGURA 1 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-2">
+            <div class="clean-card">
+                <h2>El Problema de la Clasificación vs. Regresión Lineal</h2>
+                <div class="full-img-container">
+                    <img src="img/problem_classification_vs_regression.png" class="slide-img-full" alt="Regresión Lineal vs Regresión Logística">
+                    <p class="img-caption">Comparativa: Vulnerabilidad de la Regresión Lineal ante Outliers (Izquierda) vs. Curva Sigmoide Logística Acotada $[0, 1]$ (Derecha)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: EXPLICACIÓN DIDÁCTICA 1 -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>Intuición: El Problema de la Clasificación Binaria</h2>
+                <div class="info-box border-red">
+                    <h3>¿Por qué falla la Regresión Lineal en Clasificación?</h3>
+                    <ul>
+                        <li><strong>Salidas No Acotadas:</strong> Una recta $y = wx + b$ produce valores como $-2.5$ o $+3.8$, imposibles de interpretar como probabilidades.</li>
+                        <li><strong>Sensibilidad Severa a Outliers:</strong> Un solo valor atípico lejano aplasta la pendiente de la recta, desplazando el umbral $y=0.5$ y arruinando las predicciones.</li>
+                    </ul>
+                </div>
+                <div class="info-box border-green">
+                    <h3>La Solución: La Regresión Logística</h3>
+                    <p>En lugar de ajustar una recta continua, ajustamos una <strong>curva suave en forma de "S" (Sigmoide)</strong> que comprime cualquier valor real al rango probabilístico estricto <strong>$[0, 1]$</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: FIGURA 2 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-4">
+            <div class="clean-card">
+                <h2>La Función Sigmoide g(z) y su Derivada</h2>
+                <div class="full-img-container">
+                    <img src="img/sigmoid_function.png" class="slide-img-full" alt="Función Sigmoide y su Derivada">
+                    <p class="img-caption">Curva Sigmoide $g(z) = \frac{1}{1 + e^{-z}}$ (Azul) y su Derivada Fundamental $g'(z) = g(z)(1 - g(z))$ (Rojo Discontinuo)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: EXPLICACIÓN DIDÁCTICA 2 -->
+        <section class="slide" id="slide-5">
+            <div class="clean-card">
+                <h2>De la Entrada a la Probabilidad: La Función Sigmoide</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Definición Matemática del Activador</h3>
+                        <p>Dado un puntaje z de combinación lineal $z = \theta^T x = \theta_0 + \theta_1 x_1 + \dots + \theta_n x_n$:</p>
+                        <p>$$g(z) = \frac{1}{1 + e^{-z}}$$</p>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Propiedades Clave y Derivada Fundamental</h3>
+                        <ul>
+                            <li><strong>Punto Central:</strong> Si $z = 0 \implies g(z) = 0.5$ (Máxima incertidumbre).</li>
+                            <li><strong>Límites Estrictos:</strong> Si $z \to +\infty \implies g(z) \to 1$. Si $z \to -\infty \implies g(z) \to 0$.</li>
+                            <li><strong>Derivada Elegante:</strong> $$g'(z) = g(z)(1 - g(z))$$</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: FIGURA 3 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-6">
+            <div class="clean-card">
+                <h2>Variación del Umbral de Decisión Probabilístico τ</h2>
+                <div class="full-img-container">
+                    <img src="img/intuitive_probability_threshold.png" class="slide-img-full" alt="Umbral de Decisión Tau">
+                    <p class="img-caption">División del espacio probabilístico continuo en decisiones discretas ($y=1$ vs $y=0$) según el umbral de corte $\tau$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: EXPLICACIÓN DIDÁCTICA 3 -->
+        <section class="slide" id="slide-7">
+            <div class="clean-card">
+                <h2>De Probabilidades a Decisiones Físicas: El Umbral τ</h2>
+                <div class="info-box border-orange">
+                    <h3>Regla de Decisión Discreta</h3>
+                    <p>El modelo devuelve una probabilidad continua $P(y=1|x) \in [0, 1]$. Para tomar una decisión física (Aprobado vs. No Aprobado), fijamos un <strong>Umbral de Corte $\tau$</strong>:</p>
+                    <p>$$\hat{y} = \begin{cases} 1 & \text{si } P(y=1|x) \ge \tau \\ 0 & \text{si } P(y=1|x) < \tau \end{cases}$$</p>
+                </div>
+                <div class="info-box border-green">
+                    <h3>Flexibilidad del Umbral según la Aplicación</h3>
+                    <ul>
+                        <li><strong>$\tau = 0.5$ (Estándar):</strong> Balance neutro entre clases.</li>
+                        <li><strong>$\tau = 0.3$ (Sensible / Conservador):</strong> Prioriza detectar todos los casos positivos (ej. Detección temprana de fallas en ingeniería o diagnóstico médico).</li>
+                        <li><strong>$\tau = 0.7$ (Estricto):</strong> Exige alta certeza antes de clasificar como positivo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: FIGURA 4 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-8">
+            <div class="clean-card">
+                <h2>Penalización de Costo Binary Cross-Entropy (BCE Loss)</h2>
+                <div class="full-img-container">
+                    <img src="img/bce_loss_intuition.png" class="slide-img-full" alt="Intuición de Pérdida Binary Cross-Entropy">
+                    <p class="img-caption">Curvas de Penalización Convexas: Costo cuando $y=1$ (Izquierda) vs. Costo cuando $y=0$ (Derecha)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: EXPLICACIÓN DIDÁCTICA 4 -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>¿Cómo Mide el Modelo sus Errores? (BCE Loss)</h2>
+                <div class="info-box border-crimson">
+                    <h3>¿Por qué no usar el Error Cuadrático Medio (MSE)?</h3>
+                    <p>En regresión logística, la combinación del MSE con la sigmoide produce una función de costo <strong>no convexa</strong> con múltiples mínimos locales donde el gradiente se atasca.</p>
+                </div>
+                <div class="info-box border-blue">
+                    <h3>La Penalización Logarítmica Convexa</h3>
+                    <ul>
+                        <li>Si la clase real es $y = 1$, el costo es $-\log(h_\theta(x))$. Si el modelo predice $h \to 0$, ¡la penalización tiende a $+\infty$!</li>
+                        <li>Si la clase real es $y = 0$, el costo es $-\log(1 - h_\theta(x))$. Si el modelo predice $h \to 1$, ¡la penalización tiende a $+\infty$!</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: FORMULACIÓN TEÓRICA CS229: MLE -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>Formulación Probabilística y Máxima Verosimilitud (MLE)</h2>
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Modelo de Bernoulli Unificado</h3>
+                        <p>La probabilidad condicional para $y \in \{0, 1\}$ se escribe de forma compacta como:</p>
+                        <p>$$p(y \mid x; \theta) = \left(h_\theta(x)\right)^y \left(1 - h_\theta(x)\right)^{1-y}$$</p>
+                        <p>donde $h_\theta(x) = g(\theta^T x) = \frac{1}{1 + e^{-\theta^T x}}$.</p>
+                    </div>
+                    <div class="info-box border-orange">
+                        <h3>Función de Log-Verosimilitud y Costo</h3>
+                        <p>Para $m$ muestras i.i.d., maximizamos la <strong>Log-Verosimilitud</strong> $l(\theta)$:</p>
+                        <p>$$l(\theta) = \sum_{i=1}^m \left[ y^{(i)} \log h_\theta(x^{(i)}) + (1 - y^{(i)}) \log (1 - h_\theta(x^{(i)})) \right]$$</p>
+                        <p>Minimizar la costo $J(\theta) = -\frac{1}{m} l(\theta)$ equivale exactamente a la función de verosimilitud MLE.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: FORMULACIÓN TEÓRICA CS229: GRADIENT DESCENT -->
+        <section class="slide" id="slide-11">
+            <div class="clean-card">
+                <h2>Optimización: Descenso del Gradiente (Gradient Descent)</h2>
+                <div class="split-content">
+                    <div>
+                        <div class="info-box border-blue">
+                            <h3>Derivada del Costo J(θ)</h3>
+                            <p>Derivando $J(\theta)$ con respecto al parámetro $\theta_j$:</p>
+                            <p>$$\frac{\partial J(\theta)}{\partial \theta_j} = \frac{1}{m} \sum_{i=1}^m \left(h_\theta(x^{(i)}) - y^{(i)}\right) x_j^{(i)}$$</p>
+                        </div>
+                        <div class="info-box border-purple">
+                            <h3>Expresión Matricial Vectorizada</h3>
+                            <p>$$\nabla_\theta J(\theta) = \frac{1}{m} X^T \left(h_\theta(X) - y\right)$$</p>
+                            <p>Regla de actualización con tasa de aprendizaje $\alpha > 0$:</p>
+                            <p>$$\theta := \theta - \alpha \nabla_\theta J(\theta)$$</p>
+                        </div>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Características Algorítmicas</h3>
+                        <ul>
+                            <li><strong>Optimización de 1º Orden:</strong> Utiliza únicamente derivadas primeras.</li>
+                            <li><strong>Complejidad por Iteración:</strong> $\mathcal{O}(m \cdot n)$ (vectorización rápida).</li>
+                            <li><strong>Escalabilidad:</strong> Excelente para conjuntos de datos masivos (m ≫ 100.000).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: FIGURA 5 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-12">
+            <div class="clean-card">
+                <h2>Convergencia de Gradient Descent vs. Newton-Raphson</h2>
+                <div class="full-img-container">
+                    <img src="img/cost_convergence_comparison.png" class="slide-img-full" alt="Convergencia Gradient Descent vs Newton-Raphson">
+                    <p class="img-caption">Comparación de Convergencia: Gradient Descent (Azul, 300 iters) vs. Método de Newton-Raphson (Naranja, <15 iters)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: FORMULACIÓN TEÓRICA CS229: NEWTON RAPHSON -->
+        <section class="slide" id="slide-13">
+            <div class="clean-card">
+                <h2>Optimización: Método de Newton-Raphson (IRLS)</h2>
+                <div class="info-box border-orange">
+                    <h3>Optimización de Segundo Orden</h3>
+                    <p>Aprovecha la curvatura local mediante la <strong>Matriz Hessiana</strong> $H \in \mathbb{R}^{(n+1) \times (n+1)}$:</p>
+                    <p>$$\theta := \theta - H^{-1} \nabla_\theta J(\theta)$$</p>
+                    <p><strong>Matriz Hessiana Vectorizada:</strong></p>
+                    <p>$$H = \frac{1}{m} X^T D X, \quad D_{ii} = h_\theta(x^{(i)})(1 - h_\theta(x^{(i)}))$$</p>
+                </div>
+                <div class="info-box border-blue">
+                    <h3>Convergencia Cuadrática</h3>
+                    <p>Alcanza la solución óptima en muy pocas iteraciones (&lt; 15 iters). Sin embargo, invertir $H$ requiere $\mathcal{O}(n^3)$ operaciones de cálculo matricial.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: FIGURA 6 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-14">
+            <div class="clean-card">
+                <h2>Interpretación Didáctica de Odds Ratios exp(θ<sub>j</sub>)</h2>
+                <div class="full-img-container">
+                    <img src="img/odds_ratio_interpretation.png" class="slide-img-full" alt="Interpretación de Odds Ratios">
+                    <p class="img-caption">Factor de Multiplicación de las Opciones de Aprobación por cada incremento en los Atributos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: EXPLICACIÓN DIDÁCTICA 5 -->
+        <section class="slide" id="slide-15">
+            <div class="clean-card">
+                <h2>Interpretación Didáctica: Coeficientes θ y Odds Ratios</h2>
+                <div class="info-box border-green">
+                    <h3>¿Qué representan los Coeficientes θ<sub>j</sub>?</h3>
+                    <p>A diferencia de la regresión lineal, $\theta_j$ representa el cambio en el <strong>Logit (Log-Odds)</strong> por unidad de incremento en $x_j$:</p>
+                    <p>$$\log \left( \frac{P(y=1|x)}{1 - P(y=1|x)} \right) = \theta_0 + \theta_1 x_1 + \dots + \theta_n x_n$$</p>
+                </div>
+                <div class="info-box border-purple">
+                    <h3>Interpretación del Odds Ratio exp(θ<sub>j</sub>)</h3>
+                    <p>$$\text{Odds Ratio} = e^{\theta_j}$$</p>
+                    <ul>
+                        <li><strong>Si e<sup>θ<sub>j</sub></sup> &gt; 1:</strong> Multiplica e incrementa las posibilidades de pertenecer a la clase positiva.</li>
+                        <li><strong>Si e<sup>θ<sub>j</sub></sup> = 1:</strong> Sin efecto en la predicción.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: FIGURA 7 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-16">
+            <div class="clean-card">
+                <h2>Geometría de la Frontera de Decisión Lineal</h2>
+                <div class="full-img-container">
+                    <img src="img/decision_boundary_linear.png" class="slide-img-full" alt="Frontera de Decisión Lineal">
+                    <p class="img-caption">Hiperplano de Decisión Lineal θ₀ + θ₁x₁ + θ₂x₂ = 0 separando Clase 0 y Clase 1</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: EXPLICACIÓN Y GEOMETRÍA LINEAL -->
+        <section class="slide" id="slide-17">
+            <div class="clean-card">
+                <h2>Geometría de las Fronteras de Decisión Lineales</h2>
+                <div class="info-box border-blue">
+                    <h3>Geometría del Hiperplano de Decisión</h3>
+                    <p>La frontera de decisión representa la región del espacio donde el modelo está en máxima incertidumbre (P(y=1|x) = 0.5):</p>
+                    <p>$$h_\theta(x) = 0.5 \iff g(\theta^T x) = 0.5 \iff \theta^T x = 0$$</p>
+                </div>
+                <div class="info-box border-green">
+                    <h3>Ecuación del Hiperplano 2D</h3>
+                    <p>$$\theta_0 + \theta_1 x_1 + \theta_2 x_2 = 0 \implies x_2 = -\frac{\theta_1}{\theta_2} x_1 - \frac{\theta_0}{\theta_2}$$</p>
+                    <p>El vector de parámetros $\theta = [\theta_1, \theta_2]^T$ es perpendicular (ortogonal) a la frontera de decisión.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 18: EXPLICACIÓN NO LINEAL -->
+        <section class="slide" id="slide-18">
+            <div class="clean-card">
+                <h2>Fronteras No Lineales mediante Expansión Polinomial</h2>
+                <div class="info-box border-purple">
+                    <h3>Mapeo a Espacios de Mayor Dimensión</h3>
+                    <p>Para conjuntos de datos no separables linealmente, mapeamos $x \in \mathbb{R}^n$ a un vector extendido $\phi(x) \in \mathbb{R}^d$ con términos polinomiales:</p>
+                    <p>$$\phi(x) = [1, x_1, x_2, x_1^2, x_1 x_2, x_2^2, x_1^3, \dots]$$</p>
+                    <p>El modelo sigue siendo <strong>lineal en los parámetros $\theta$</strong>, pero produce fronteras complejas en el espacio original.</p>
+                </div>
+                <div class="info-box border-orange">
+                    <h3>Ejemplos de Geometrías No Lineales</h3>
+                    <ul>
+                        <li><strong>Frontera Circular:</strong> $\theta_0 + \theta_1 x_1^2 + \theta_2 x_2^2 = 0 \implies x_1^2 + x_2^2 = r^2$.</li>
+                        <li><strong>Frontera Elíptica:</strong> $\theta_0 + \theta_1 x_1^2 + \theta_2 x_2^2 + \theta_3 x_1 x_2 = 0$.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 19: FIGURA 8 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-19">
+            <div class="clean-card">
+                <h2>Impacto de la Regularización L<sub>2</sub> (C = 1/λ)</h2>
+                <div class="full-img-container">
+                    <img src="img/decision_boundary_regularization.png" class="slide-img-full" alt="Regularización L2 en Fronteras No Lineales">
+                    <p class="img-caption">Efecto del Parámetro C: Underfitting (C = 0.01) vs. Óptimo (C = 1.0) vs. Overfitting (C = 100.0)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: EXPLICACIÓN REGULARIZACIÓN L2 -->
+        <section class="slide" id="slide-20">
+            <div class="clean-card">
+                <h2>Regularización L<sub>2</sub> (C = 1/λ) y Control de Overfitting</h2>
+                <div class="info-box border-red">
+                    <h3>Función de Costo Regularizada</h3>
+                    <p>Penaliza la magnitud de los parámetros $\theta_j$ (excluyendo el bias $\theta_0$):</p>
+                    <p>$$J_{reg}(\theta) = J(\theta) + \frac{\lambda}{2m} \sum_{j=1}^n \theta_j^2 = J(\theta) + \frac{1}{2mC} \sum_{j=1}^n \theta_j^2$$</p>
+                </div>
+                <div class="info-box border-green">
+                    <h3>Interpretación del Hiperparámetro C</h3>
+                    <ul>
+                        <li><strong>C → 0 (λ → ∞):</strong> Regularización fuerte (evita el sobreajuste, frontera suave).</li>
+                        <li><strong>C → ∞ (λ → 0):</strong> Sin regularización (fronteras sinuosas y riesgo de *overfitting*).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 21: FIGURA 9 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-21">
+            <div class="clean-card">
+                <h2>Los Cuadrantes de la Matriz de Confusión</h2>
+                <div class="full-img-container">
+                    <img src="img/confusion_matrix_didactic.png" class="slide-img-full" alt="Matriz de Confusión Didáctica">
+                    <p class="img-caption">Estructura Didáctica de Verdaderos Positivos, Verdaderos Negativos, Falsos Positivos y Falsos Negativos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 22: EXPLICACIÓN MATRIZ DE CONFUSIÓN -->
+        <section class="slide" id="slide-22">
+            <div class="clean-card">
+                <h2>Evaluación Didáctica: Métricas de Clasificación</h2>
+                <div class="info-box border-blue">
+                    <h3>Los 4 Cuadrantes de Evaluación</h3>
+                    <ul>
+                        <li><strong>Verdaderos Positivos (TP):</strong> Predicho Aprobado, Real Aprobado.</li>
+                        <li><strong>Verdaderos Negativos (TN):</strong> Predicho Reprobado, Real Reprobado.</li>
+                        <li><strong>Falsos Positivos (FP - Error Tipo I):</strong> Predicho Aprobado, Real Reprobado.</li>
+                        <li><strong>Falsos Negativos (FN - Error Tipo II):</strong> Predicho Reprobado, Real Aprobado.</li>
+                    </ul>
+                </div>
+                <div class="info-box border-green">
+                    <h3>Métricas Derivadas Fundamentales</h3>
+                    <p>$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}, \quad \text{Precision} = \frac{TP}{TP + FP}$$</p>
+                    <p>$$\text{Recall} = \frac{TP}{TP + FN}, \quad F_1\text{-Score} = 2 \frac{\text{Prec} \cdot \text{Rec}}{\text{Prec} + \text{Rec}}$$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 23: FIGURA 10 A PANTALLA COMPLETA -->
+        <section class="slide center-align" id="slide-23">
+            <div class="clean-card">
+                <h2>Regiones de Decisión Multiclase Softmax (Dataset Iris)</h2>
+                <div class="full-img-container">
+                    <img src="img/multiclass_softmax_iris.png" class="slide-img-full" alt="Regresión Softmax Multiclase Iris">
+                    <p class="img-caption">Fronteras Multiclase ($K=3$) generadas por la Función Softmax en el espacio 2D de Iris</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 24: EXPLICACIÓN SOFTMAX -->
+        <section class="slide" id="slide-24">
+            <div class="clean-card">
+                <h2>Clasificación Multiclase: Regresión Softmax (K &gt; 2)</h2>
+                <div class="info-box border-purple">
+                    <h3>La Función Softmax</h3>
+                    <p>Para $K \gt 2$ clases discontinuas $y \in \{1, \dots, K\}$, generalizamos la sigmoide a la función **Softmax**:</p>
+                    <p>$$P(y = k \mid x; \Theta) = \frac{e^{\theta^{(k)T} x}}{\sum_{j=1}^K e^{\theta^{(j)T} x}}$$</p>
+                    <p>Garantiza que la suma de probabilidades sobre las $K$ clases sea exactamente $1.0$.</p>
+                </div>
+                <div class="info-box border-orange">
+                    <h3>Estrategia One-vs-Rest (OvR)</h3>
+                    <p>Entrena $K$ clasificadores binarios independientes. Asigna la muestra a la clase con mayor probabilidad:</p>
+                    <p>$$\hat{y} = \operatorname*{argmax}_{k \in \{1, \dots, K\}} h_{\theta^{(k)}}(x)$$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 25: CONCLUSIONES SIMPLIFICADAS -->
+        <section class="slide center-align" id="slide-25">
+            <div class="clean-card">
+                <h2>Conclusiones de la Clase 5</h2>
+                <div class="conclusions-simple">
+                    <div class="conclusion-card">
+                        <h3>Curva Sigmoide & Umbral</h3>
+                        <p>Comprime cualquier entrada continua a una probabilidad en $[0, 1]$, permitiendo tomar decisiones mediante el umbral $\tau$.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #10B981;">
+                        <h3>Optimización Convexa</h3>
+                        <p>La pérdida BCE elimina falsos mínimos. Newton-Raphson logra convergencia cuadrática en pocos pasos con el Hessiano.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #7C3AED;">
+                        <h3>Regularización & Interpretación</h3>
+                        <p>El hiperparámetro C = 1/λ controla el sobreajuste, mientras que los Odds Ratios e<sup>θ<sub>j</sub></sup> cuantifican el impacto de cada variable.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <span class="badge badge-purple" style="font-size: 1rem; padding: 0.5rem 1.2rem;">¡Muchas Gracias!</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Controles de Navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" title="Diapositiva Anterior">❮</button>
+        <div class="slide-counter" id="slideCounter">1 / 25</div>
+        <button class="nav-btn" id="nextBtn" title="Siguiente Diapositiva">❯</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('presentationContainer');
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentIndex = index;
+            
+            slides[currentIndex].scrollIntoView({ behavior: 'smooth' });
+            slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+        }
+
+        prevBtn.addEventListener('click', () => updateSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => updateSlide(currentIndex + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                updateSlide(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                updateSlide(currentIndex - 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                updateSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                updateSlide(totalSlides - 1);
+            }
+        });
+
+        container.addEventListener('scroll', () => {
+            const scrollPosition = container.scrollLeft;
+            const slideWidth = window.innerWidth;
+            const newIndex = Math.round(scrollPosition / slideWidth);
+            if (newIndex !== currentIndex && newIndex >= 0 && newIndex < totalSlides) {
+                currentIndex = newIndex;
+                slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+            }
+        });
+    </script>
+</body>
+</html>
