@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase 7: Máquinas de Vectores de Soporte (Support Vector Machines - SVM)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- KaTeX CSS & Auto-render for robust LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            }); window.katexRendered = true;"></script>
+</head>
+<body>
+    <div class="presentation-container" id="presentationContainer">
+        
+        <!-- Slide 1: Portada -->
+        <section class="slide center-align" id="slide-1">
+            <div class="clean-card cover" style="max-width: 920px; margin: 0 auto; padding: 3rem 2.5rem; text-align: center;">
+                <span class="badge badge-purple" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 1.2rem; display: inline-block;">Semana 7 | Clase 7</span>
+                <h1 style="font-size: 2.8rem; font-weight: 800; color: #1E293B; margin-bottom: 0.6rem; letter-spacing: -0.02em;">Machine Learning 1</h1>
+                <h2 style="font-size: 1.45rem; color: #2563EB; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.35;">Máquinas de Vectores de Soporte (Support Vector Machines — SVM)</h2>
+                <p style="color: #6B7280; font-size: 1.05rem; font-weight: 500; margin-bottom: 2rem;">Basado en las notas de CS229 (Andrew Ng - Capítulo 6): Márgenes, Dualidad de Lagrange, Condiciones KKT, Truco del Kernel y Algoritmo SMO</p>
+                <div style="border-top: 1px solid #E2E8F0; padding-top: 1.2rem; margin-top: 1.2rem;">
+                    <h3 style="font-size: 1.2rem; color: #334155; font-weight: 600; margin-bottom: 0.3rem;">Universidad Nacional de Asunción — FIUNA</h3>
+                    <p class="subtitle" style="color: #64748B; font-size: 0.95rem;">Ingeniería Electrónica — Séptimo Semestre</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Agenda -->
+        <section class="slide" id="slide-2">
+            <div class="clean-card">
+                <h2>Agenda de la Clase 7</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>Parte 1: Intuición de Márgenes y Clasificador Óptimo</h3>
+                        <ul>
+                            <li>Margen Funcional vs. Margen Geométrico.</li>
+                            <li>Formulación Primal del Clasificador de Margen Máximo.</li>
+                            <li>Geometría del hiperplano de separación $w^T x + b = 0$.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Parte 2: Dualidad de Lagrange y Condiciones KKT</h3>
+                        <ul>
+                            <li>Multiplicadores de Lagrange $\alpha_i$ y Lagrangiano primal.</li>
+                            <li>Condiciones Karush-Kuhn-Tucker (KKT) y Complementariedad Dual.</li>
+                            <li>Identificación teórica de los Vectores de Soporte ($\alpha_i > 0$).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-green bg-light-green">
+                        <h3>Parte 3: El Truco del Kernel (Kernel Trick)</h3>
+                        <ul>
+                            <li>Mapeo de características $\phi(x)$ a espacios de alta dimensión.</li>
+                            <li>Teorema de Mercer y Matrices Gram Semi-definidas Positivas.</li>
+                            <li>Kernels: Lineal, Polinomial, RBF / Gausiano y Sigmoide.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Parte 4: Soft-Margin, Algoritmo SMO & Práctica</h3>
+                        <ul>
+                            <li>Variables de holgura $\xi_i$ y parámetro de regularización $C$.</li>
+                            <li>Algoritmo SMO (Sequential Minimal Optimization) de John Platt.</li>
+                            <li>Implementación práctica con `sklearn.svm.SVC` y `SVR`.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Introducción y Notación CS229 -->
+        <section class="slide" id="slide-3">
+            <div class="clean-card">
+                <h2>Introducción y Notación (Andrew Ng - Sec. 6.2)</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Revisión de Notación para SVM</h3>
+                        <p>A diferencia de Regresión Logística donde las etiquetas $y \in \{0, 1\}$, en SVM se define:</p>
+                        <p>$$y^{(i)} \in \{-1, +1\}$$</p>
+                        <p>Los parámetros del hiperplano separador se expresan explícitamente mediante el vector de pesos $w$ y el sesgo (bias) $b$:</p>
+                        <p>$$h_{w,b}(x) = g(w^T x + b)$$</p>
+                        <p>donde $g(z) = +1$ si $z \ge 0$, y $g(z) = -1$ si $z < 0$.</p>
+                    </div>
+                    <div class="info-box border-purple">
+                        <h3>Intuición de Confianza de Clasificación</h3>
+                        <p>Si $y^{(i)} = +1$, queremos que $w^T x^{(i)} + b \gg 0$ (un número positivo grande).</p>
+                        <p>Si $y^{(i)} = -1$, queremos que $w^T x^{(i)} + b \ll 0$ (un número negativo grande).</p>
+                        <p>En general, buscamos que el producto:</p>
+                        <p>$$y^{(i)}(w^T x^{(i)} + b) \gg 0$$</p>
+                        <p>sea un número positivo grande para todas las muestras $i=1,\dots,m$.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Margen Funcional y Margen Geométrico -->
+        <section class="slide" id="slide-4">
+            <div class="clean-card">
+                <h2>Margen Funcional y Margen Geométrico (Sec. 6.3)</h2>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>Margen Funcional ($\hat{\gamma}$)</h3>
+                        <p>El margen funcional de $(w, b)$ respecto al ejemplo $i$ es:</p>
+                        <p>$$\hat{\gamma}^{(i)} = y^{(i)}(w^T x^{(i)} + b)$$</p>
+                        <p>El margen funcional del conjunto de datos es $\hat{\gamma} = \min_i \hat{\gamma}^{(i)}$.</p>
+                        <p><em>Limitación:</em> Reescalar $(w, b) \to (2w, 2b)$ duplica $\hat{\gamma}$ sin cambiar la frontera de decisión.</p>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Margen Geométrico ($\gamma$)</h3>
+                        <p>Es la distancia euclidiana física desde el punto $x^{(i)}$ al hiperplano separador:</p>
+                        <p>$$\gamma^{(i)} = y^{(i)} \left( \frac{w^T x^{(i)} + b}{\|w\|} \right) = \frac{\hat{\gamma}^{(i)}}{\|w\|}$$</p>
+                        <p>El margen geométrico del conjunto es $\gamma = \min_i \gamma^{(i)}$. Es **invariante al reescalado** de $w$ y $b$.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: FIGURA 1 - Intuición de Márgenes y SV -->
+        <section class="slide center-align" id="slide-5">
+            <div class="clean-card">
+                <h2>Geometría del Clasificador de Margen Óptimo</h2>
+                <div class="full-img-container">
+                    <img src="img/svm_margins_intuition.png" class="slide-img-full" alt="Intuición de Márgenes SVM">
+                    <p class="img-caption">Hiperplano Separador $w^T x + b = 0$, Hiperplanos Límite $w^T x + b = \pm 1$, Vector Normal $w$ y Vectores de Soporte ($\alpha_i > 0$)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: El Clasificador de Margen Óptimo (Hard Margin) -->
+        <section class="slide" id="slide-6">
+            <div class="clean-card">
+                <h2>El Clasificador de Margen Óptimo (Hard Margin - Sec. 6.4)</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Formulación Inicial (Maximizar $\gamma$)</h3>
+                        <p>Buscamos maximizar el margen geométrico $\gamma$ sujeto a que cada ejemplo tenga un margen mayor o igual a $\gamma$:</p>
+                        <p>$$\max_{\gamma, w, b} \gamma \quad \text{s.t.} \quad y^{(i)}\left(\frac{w^T x^{(i)}+b}{\|w\|}\right) \ge \gamma, \quad i=1,\dots,m$$</p>
+                        <p>Esta formulación es no convexa debido al término $\|w\|$ dividiendo.</p>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Formulación Convexa Canónica</h3>
+                        <p>Fijando el margen funcional $\hat{\gamma} = 1$, la distancia geométrica es $\gamma = \frac{1}{\|w\|}$. Maximizar $\frac{1}{\|w\|}$ equivale a minimizar $\frac{1}{2}\|w\|^2$:</p>
+                        <p>$$\min_{w,b} \frac{1}{2} \|w\|^2 \quad \text{s.t.} \quad y^{(i)}(w^T x^{(i)} + b) \ge 1, \quad i=1,\dots,m$$</p>
+                        <p>¡Este es un problema de **Programación Cuadrática (QP)** con solución única global!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Dualidad de Lagrange y KKT -->
+        <section class="slide" id="slide-7">
+            <div class="clean-card">
+                <h2>Dualidad de Lagrange & Condiciones KKT (Sec. 6.5)</h2>
+                <div class="info-box border-purple bg-light-purple">
+                    <h3>El Lagrangiano Primal</h3>
+                    <p>Introduciendo multiplicadores de Lagrange $\alpha_i \ge 0$ para las restricciones de desigualdad $g_i(w,b) = 1 - y^{(i)}(w^T x^{(i)}+b) \le 0$:</p>
+                    <p>$$\mathcal{L}(w, b, \alpha) = \frac{1}{2}\|w\|^2 - \sum_{i=1}^m \alpha_i \left[ y^{(i)}(w^T x^{(i)} + b) - 1 \right]$$</p>
+                </div>
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Condiciones Karush-Kuhn-Tucker (KKT)</h3>
+                        <ol style="margin-left: 1.2rem; font-size: 0.95rem;">
+                            <li>$\nabla_w \mathcal{L} = 0 \implies w = \sum_{i=1}^m \alpha_i y^{(i)} x^{(i)}$</li>
+                            <li>$\frac{\partial \mathcal{L}}{\partial b} = 0 \implies \sum_{i=1}^m \alpha_i y^{(i)} = 0$</li>
+                            <li>$\alpha_i \ge 0, \quad i=1,\dots,m$</li>
+                            <li>$y^{(i)}(w^T x^{(i)} + b) - 1 \ge 0$</li>
+                        </ol>
+                    </div>
+                    <div class="info-box border-crimson bg-light-red">
+                        <h3>Complementariedad Dual (KKT Dual)</h3>
+                        <p>$$\alpha_i \left[ y^{(i)}(w^T x^{(i)} + b) - 1 \right] = 0$$</p>
+                        <p><strong>Consecuencia Fundamental:</strong> Si $y^{(i)}(w^T x^{(i)}+b) > 1$, se cumple estrictamente y se **requiere** que $\alpha_i = 0$.</p>
+                        <p>Solo los puntos sobre el margen exacto tienen $\alpha_i > 0$. ¡Son los <strong>Vectores de Soporte</strong>!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Formulación Dual de SVM -->
+        <section class="slide" id="slide-8">
+            <div class="clean-card">
+                <h2>Formulación Dual de SVM (Sec. 6.6)</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Sustitución en el Lagrangiano</h3>
+                        <p>Sustituyendo $w = \sum_{i=1}^m \alpha_i y^{(i)} x^{(i)}$ en $\mathcal{L}(w,b,\alpha)$ y simplificando con $\sum \alpha_i y^{(i)} = 0$, obtenemos la función dual $W(\alpha)$:</p>
+                        <p>$$W(\alpha) = \sum_{i=1}^m \alpha_i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m y^{(i)} y^{(j)} \alpha_i \alpha_j \langle x^{(i)}, x^{(j)} \rangle$$</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Problema de Optimización Dual</h3>
+                        <p>$$\max_{\alpha} W(\alpha) \quad \text{s.t.} \quad \alpha_i \ge 0, \quad i=1,\dots,m \quad \text{y} \quad \sum_{i=1}^m \alpha_i y^{(i)} = 0$$</p>
+                        <p>Notice that the optimization problem depends **ONLY on the inner products** $\langle x^{(i)}, x^{(j)} \rangle$ between pairs of feature vectors!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Predicción y Esparsidad (Support Vectors) -->
+        <section class="slide" id="slide-9">
+            <div class="clean-card">
+                <h2>Propiedades de los Vectores de Soporte & Predicción</h2>
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Regla de Predicción Dispersa</h3>
+                        <p>Para clasificar una nueva muestra $x$, evaluamos:</p>
+                        <p>$$f(x) = \operatorname{sign}(w^T x + b) = \operatorname{sign}\left( \sum_{i=1}^m \alpha_i y^{(i)} \langle x^{(i)}, x \rangle + b \right)$$</p>
+                        <p>Dado que $\alpha_i = 0$ para todos los puntos fuera del margen, la suma se reduce **únicamente a los Vectores de Soporte** ($i \in SV$).</p>
+                    </div>
+                    <div class="info-box border-orange">
+                        <h3>Cálculo del Sesgo (Bias $b$)</h3>
+                        <p>Usando cualquier vector de soporte $k$ con $\alpha_k > 0$ (donde $y^{(k)}(w^T x^{(k)} + b) = 1$):</p>
+                        <p>$$b^* = y^{(k)} - \sum_{i \in SV} \alpha_i y^{(i)} \langle x^{(i)}, x^{(k)} \rangle$$</p>
+                        <p>En la práctica se promedia sobre todos los vectores de soporte para mayor estabilidad numérica.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: El Truco del Kernel (Kernel Trick) -->
+        <section class="slide" id="slide-10">
+            <div class="clean-card">
+                <h2>El Truco del Kernel (Kernel Trick - Sec. 6.7)</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Transformación de Características $\phi(x)$</h3>
+                        <p>Si los datos no son separables linealmente en el espacio original $\mathbb{R}^d$, se aplica una transformación no lineal a un espacio de mayor dimensión $\mathcal{H}$:</p>
+                        <p>$$x \mapsto \phi(x)$$</p>
+                        <p>El producto interno en $\mathcal{H}$ pasa a ser $\langle \phi(x^{(i)}), \phi(x^{(j)}) \rangle$.</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>El "Kernel Trick"</h3>
+                        <p>Una **Función Kernel** $K(x, z)$ calcula directamente el producto interno en el espacio transformado sin calcular explícitamente vector $\phi(x)$:</p>
+                        <p>$$K(x, z) = \langle \phi(x), \phi(z) \rangle$$</p>
+                        <p>¡Permite trabajar en espacios de **dimensión infinita** con costo computacional $O(d)$!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: FIGURA 3 - Kernel Trick 3D -->
+        <section class="slide center-align" id="slide-11">
+            <div class="clean-card">
+                <h2>Visualización de la Transformación del Kernel</h2>
+                <div class="full-img-container">
+                    <img src="img/kernel_trick_transformation.png" class="slide-img-full" alt="Mapeo del Kernel a 3D">
+                    <p class="img-caption">Mapeo No Lineal $\phi(x_1, x_2) = (x_1, x_2, x_1^2 + x_2^2)$: Círculos Concentricos en 2D se separan mediante un plano lineal en 3D</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Familias de Kernels y Teorema de Mercer -->
+        <section class="slide" id="slide-12">
+            <div class="clean-card">
+                <h2>Familias de Funciones Kernel y Teorema de Mercer</h2>
+                <div class="split-content">
+                    <div class="info-box border-green">
+                        <h3>Kernels Más Utilizados</h3>
+                        <ul>
+                            <li><strong>Lineal:</strong> $K(x, z) = x^T z$</li>
+                            <li><strong>Polinomial:</strong> $K(x, z) = (x^T z + c)^d$</li>
+                            <li><strong>RBF / Gausiano:</strong> $K(x, z) = \exp\left(-\gamma \|x - z\|^2\right)$</li>
+                            <li><strong>Sigmoide:</strong> $K(x, z) = \tanh(\alpha x^T z + c)$</li>
+                        </ul>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Teorema de Mercer (Sec. 6.7.1)</h3>
+                        <p>Una función $K: \mathbb{R}^d \times \mathbb{R}^d \to \mathbb{R}$ es un Kernel válido si y solo si para cualquier conjunto $\{x^{(1)}, \dots, x^{(m)}\}$, la **Matriz Gram** $K_{ij} = K(x^{(i)}, x^{(j)})$ es **simétrica y semi-definida positiva** ($K \succeq 0$):</p>
+                        <p>$$z^T K z \ge 0, \quad \forall z \in \mathbb{R}^m$$</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: FIGURA 4 - Comparativa de Kernels -->
+        <section class="slide center-align" id="slide-13">
+            <div class="clean-card">
+                <h2>Comparativa Visual de Fronteras según el Kernel</h2>
+                <div class="full-img-container">
+                    <img src="img/svm_kernel_comparison_boundaries.png" class="slide-img-full" alt="Fronteras de Decisión según Kernel">
+                    <p class="img-caption">Fronteras en Dataset Moons: Lineal vs. Polinomial ($d=3$) vs. RBF ($\gamma=1.0$) vs. RBF Sobreajustado ($\gamma=25.0$)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Soft-Margin SVM y Regularización C -->
+        <section class="slide" id="slide-14">
+            <div class="clean-card">
+                <h2>Caso No Separable & Soft-Margin SVM (Sec. 6.8)</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Variables de Holgura (Slack Variables $\xi_i$)</h3>
+                        <p>Para admitir datos ruidosos o solapados, permitimos que algunos puntos violen el margen pagando una penalización lineal $\xi_i \ge 0$:</p>
+                        <p>$$y^{(i)}(w^T x^{(i)} + b) \ge 1 - \xi_i, \quad \xi_i \ge 0$$</p>
+                        <p>El problema primal reformulado es:</p>
+                        <p>$$\min_{w,b,\xi} \frac{1}{2}\|w\|^2 + C \sum_{i=1}^m \xi_i$$</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>Restricción de Caja Dual (Box Constraint)</h3>
+                        <p>Al aplicar dualidad de Lagrange, el problema dual mantiene la misma función $W(\alpha)$ pero impone una **cota superior $C$** a los multiplicadores:</p>
+                        <p>$$\max_{\alpha} W(\alpha) \quad \text{s.t.} \quad 0 \le \alpha_i \le C, \quad \sum_{i=1}^m \alpha_i y^{(i)} = 0$$</p>
+                        <p><strong>Parámetro $C$:</strong> Trade-off entre maximizar el margen (varianza) y minimizar errores (sesgo).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: FIGURA 2 - Hard Margin vs Soft Margin -->
+        <section class="slide center-align" id="slide-15">
+            <div class="clean-card">
+                <h2>Impacto del Parámetro $C$ en la Robustez al Ruido</h2>
+                <div class="full-img-container">
+                    <img src="img/hard_margin_vs_soft_margin.png" class="slide-img-full" alt="Hard vs Soft Margin">
+                    <p class="img-caption">Efecto de $C$: $C \to \infty$ (Sensible a Outliers) vs. $C=1.0$ (Balance Robusto) vs. $C=0.01$ (Subajuste / Margen Tolerante)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Algoritmo SMO (Sequential Minimal Optimization) -->
+        <section class="slide" id="slide-16">
+            <div class="clean-card">
+                <h2>El Algoritmo SMO de John Platt (Sec. 6.9)</h2>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>Motivación: Subida de Coordenadas</h3>
+                        <p>El algoritmo Coordinate Ascent optimiza una variable $\alpha_i$ a la vez manteniendo las demás fijas.</p>
+                        <p><em>Obstáculo en SVM:</em> La restricción $\sum_{i=1}^m \alpha_i y^{(i)} = 0$ exige que no se pueda actualizar una sola $\alpha_i$ aislando las demás.</p>
+                        <p><strong>Solución de SMO:</strong> ¡Optimizar **dos multiplicadores** $(\alpha_1, \alpha_2)$ simultáneamente en cada iteración!</p>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Pasos de una Iteración de SMO</h3>
+                        <ol style="margin-left: 1.2rem; font-size: 0.95rem;">
+                            <li>Seleccionar un par de multiplicadores $\alpha_i, \alpha_j$ mediante heurísticas.</li>
+                            <li>Fijar todos los demás $\alpha_k$ ($k \neq i,j$).</li>
+                            <li>Resolver la optimización cuadrática 1D analíticamente para el par.</li>
+                            <li>Recortar el resultado a la caja de restricciones $[L, H]$.</li>
+                            <li>Actualizar el vector de sesgo $b$.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: FIGURA 5 - Geometría de SMO -->
+        <section class="slide center-align" id="slide-17">
+            <div class="clean-card">
+                <h2>Geometría de la Optimización de Parejas en SMO</h2>
+                <div class="full-img-container">
+                    <img src="img/smo_coordinate_ascent.png" class="slide-img-full" alt="Optimización en SMO">
+                    <p class="img-caption">Restricción de Línea $\alpha_1 y^{(1)} + \alpha_2 y^{(2)} = \zeta$ dentro de la Caja $[0,C] \times [0,C]$ con Cotas $L$ y $H$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 18: Detalles Matemáticos de SMO (Cotas L, H y Sesgo b) -->
+        <section class="slide" id="slide-18">
+            <div class="clean-card">
+                <h2>Detalles del Algoritmo SMO: Cotas $L, H$ y Sesgo $b$</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Límites de Recorte ($L$ y $H$)</h3>
+                        <p>Si $y^{(1)} \neq y^{(2)}$ (la línea tiene pendiente +1):</p>
+                        <p>$$L = \max(0, \alpha_2 - \alpha_1), \quad H = \min(C, C + \alpha_2 - \alpha_1)$$</p>
+                        <p>Si $y^{(1)} = y^{(2)}$ (la línea tiene pendiente -1):</p>
+                        <p>$$L = \max(0, \alpha_2 + \alpha_1 - C), \quad H = \min(C, \alpha_2 + \alpha_1)$$</p>
+                        <p>$$\alpha_2^{\text{new}} = \operatorname{clip}\left(\alpha_2^{\text{new, unclipped}}, L, H\right)$$</p>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Actualización Analítica del Sesgo ($b$)</h3>
+                        <p>Tras actualizar el par $(\alpha_1, \alpha_2)$, el sesgo $b_1^{\text{new}}$ derivado del primer vector se calcula como:</p>
+                        <p>$$b_1^{\text{new}} = b^{\text{old}} - E_1 - y^{(1)}(\alpha_1^{\text{new}} - \alpha_1^{\text{old}})K_{11} - y^{(2)}(\alpha_2^{\text{new}} - \alpha_2^{\text{old}})K_{12}$$</p>
+                        <p>donde $E_i = f(x^{(i)}) - y^{(i)}$ es el error de predicción actual.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 19: Support Vector Regression (SVR) y Multiclase -->
+        <section class="slide" id="slide-19">
+            <div class="clean-card">
+                <h2>Support Vector Regression (SVR) & Clasificación Multiclase</h2>
+                <div class="split-content">
+                    <div class="info-box border-purple">
+                        <h3>Support Vector Regression (SVR)</h3>
+                        <p>Busca una función $f(x) = w^T x + b$ que tenga una desviación máxima de $\varepsilon$ respecto a las dianas $y_i$ ($\varepsilon$-insensitive loss tube):</p>
+                        <p>$$\min_{w,b,\xi,\xi^*} \frac{1}{2}\|w\|^2 + C \sum_{i=1}^m (\xi_i + \xi_i^*)$$</p>
+                        <p>Los errores menores a $\varepsilon$ **no pagan penalización alguna**.</p>
+                    </div>
+                    <div class="info-box border-green">
+                        <h3>Estrategias Multiclase ($K > 2$)</h3>
+                        <ul>
+                            <li><strong>One-vs-One (OvO):</strong> Entrena $\frac{K(K-1)}{2}$ clasificadores binarios. Se elige por votación de mayoría. (Default en `SVC`).</li>
+                            <li><strong>One-vs-Rest (OvR):</strong> Entrena $K$ clasificadores (uno por clase vs. las demás). (Utilizado en `LinearSVC`).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: Implementación Práctica en Scikit-Learn -->
+        <section class="slide" id="slide-20">
+            <div class="clean-card">
+                <h2>Práctica en Scikit-Learn & Flujo Metodológico</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue">
+                        <h3>Recomendaciones de Escalado</h3>
+                        <p><strong>¡CRÍTICO!</strong> SVM se basa estrictamente en distancias euclidianas y productos internos. Siempre escalar características con <code>StandardScaler</code>:</p>
+                        <pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+model = make_pipeline(StandardScaler(), SVC(C=1.0, kernel='rbf', gamma='scale'))</code></pre>
+                    </div>
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>Optimización con GridSearchCV</h3>
+                        <p>Búsqueda conjunta del espacio logarítmico $(C, \gamma)$:</p>
+                        <pre><code>param_grid = {
+    'svc__C': [0.1, 1, 10, 100],
+    'svc__gamma': ['scale', 0.01, 0.1, 1.0],
+    'svc__kernel': ['rbf', 'poly']
+}
+grid = GridSearchCV(model, param_grid, cv=5)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 21: Tabla Comparativa Algorítmica -->
+        <section class="slide" id="slide-21">
+            <div class="clean-card">
+                <h2>Tabla Comparativa: SVM vs. Logistic Regression vs. KNN</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Criterio / Algoritmo</th>
+                            <th>Support Vector Machines (SVM)</th>
+                            <th>Regresión Logística</th>
+                            <th>K-Vecinos Más Cercanos (KNN)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Frontera de Decisión</strong></td>
+                            <td>Max-margin lineal o no lineal (vía Kernels)</td>
+                            <td>Lineal (o polinomial si se expanden features)</td>
+                            <td>No paramétrica / Local arbitraria</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complejidad Entrenamiento</strong></td>
+                            <td>$O(m^2 \cdot d)$ a $O(m^3)$ con Kernels (SMO es $O(m^2)$)</td>
+                            <td>$O(m \cdot d)$ muy rápido</td>
+                            <td>$O(1)$ (No hay entrenamiento explícito)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sensibilidad a Outliers</strong></td>
+                            <td>Robusto en Soft-Margin ($C$ pequeño)</td>
+                            <td>Sensible a valores atípicos severos</td>
+                            <td>Sensible si $K$ es pequeño ($K=1$)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Esparsidad de la Solución</strong></td>
+                            <td>Alta (Solo requiere Vectores de Soporte)</td>
+                            <td>Baja (Usa todos los datos)</td>
+                            <td>Nula (Almacena todo el dataset)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interpretabilidad</strong></td>
+                            <td>Baja con Kernels RBF; Media en Lineal</td>
+                            <td>Alta (Coeficientes u Odds Ratios)</td>
+                            <td>Baja / Explicaciones locales</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 22: Conclusiones -->
+        <section class="slide center-align" id="slide-22">
+            <div class="clean-card">
+                <h2>Conclusiones de la Clase 7</h2>
+                <div class="conclusions-simple">
+                    <div class="conclusion-card">
+                        <h3>Márgenes & Dualidad</h3>
+                        <p>SVM busca el hiperplano que maximiza el margen geométrico $\frac{2}{\|w\|}$. La dualidad de Lagrange demuestra que solo los Vectores de Soporte ($\alpha_i > 0$) determinan la solución.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #10B981;">
+                        <h3>El Truco del Kernel</h3>
+                        <p>Permite operar implícitamente en espacios de características de dimensión infinita mediante funciones $K(x, z) = \langle \phi(x), \phi(z) \rangle$ sin pagar costo computacional exponencial.</p>
+                    </div>
+                    <div class="conclusion-card" style="border-top-color: #7C3AED;">
+                        <h3>SMO & Práctica</h3>
+                        <p>El algoritmo SMO optimiza analíticamente pares de multiplicadores $(\alpha_i, \alpha_j)$. En la práctica, es esencial escalar con `StandardScaler` y ajustar $(C, \gamma)$ con `GridSearchCV`.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <span class="badge badge-purple" style="font-size: 1rem; padding: 0.5rem 1.2rem;">¡Muchas Gracias! ¿Preguntas?</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Controles de Navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" title="Diapositiva Anterior">❮</button>
+        <div class="slide-counter" id="slideCounter">1 / 22</div>
+        <button class="nav-btn" id="nextBtn" title="Siguiente Diapositiva">❯</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('presentationContainer');
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentIndex = index;
+            
+            slides[currentIndex].scrollIntoView({ behavior: 'smooth' });
+            slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+        }
+
+        prevBtn.addEventListener('click', () => updateSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => updateSlide(currentIndex + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                updateSlide(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                updateSlide(currentIndex - 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                updateSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                updateSlide(totalSlides - 1);
+            }
+        });
+
+        container.addEventListener('scroll', () => {
+            const scrollPosition = container.scrollLeft;
+            const slideWidth = window.innerWidth;
+            const newIndex = Math.round(scrollPosition / slideWidth);
+            if (newIndex !== currentIndex && newIndex >= 0 && newIndex < totalSlides) {
+                currentIndex = newIndex;
+                slideCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+            }
+        });
+    </script>
+</body>
+</html>
