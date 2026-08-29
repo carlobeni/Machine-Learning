@@ -121,7 +121,7 @@
                 <h2>Regularización en Modelos Lineales ($L_1$ y $L_2$)</h2>
                 <div class="info-box border-blue bg-light-blue">
                     <h3>¿Por qué regularizar?</h3>
-                    <p>Cuando tenemos muchas características ($n \gg m$) o colinealidad, Mínimos Cuadrados Ordinarios (OLS) sobreestima la magnitud de los pesos $\theta$, resultando en una **varianza gigante** y sensibilidad extrema al ruido.</p>
+                    <p>Cuando tenemos muchas características en relación con el número de muestras ($n \gg m$, #{n: número de características / variables, m: número de muestras / observaciones}) o presencia de multicolinealidad, Mínimos Cuadrados Ordinarios (OLS) sobreestima la magnitud de los pesos $\theta$, resultando en una **varianza gigante** y sensibilidad extrema al ruido.</p>
                 </div>
                 <div class="split-content">
                     <div class="info-box border-purple">
@@ -156,6 +156,33 @@
                         <p>Combina ambas penalizaciones controladas por el parámetro $\alpha$ y la proporción $r \in [0, 1]$:</p>
                         <p>$$J(\theta) = \text{MSE}(\theta) + r \alpha \sum_{j=1}^n |\theta_j| + \frac{1-r}{2} \alpha \sum_{j=1}^n \theta_j^2$$</p>
                         <p>Ideal cuando existen grupos de variables fuertemente correlacionadas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6B: Interpretación Práctica y Comparativa de Regularización -->
+        <section class="slide" id="slide-6b">
+            <div class="clean-card">
+                <h2>Interpretación Práctica de Estrategias de Regularización</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>1. OLS (Sin Regularizar)</h3>
+                        <p><strong>Minimiza solo el MSE.</strong> Propenso a explotar coeficientes ($\|\theta\|_2 \to \infty$) ante colinealidad o ruido en alta dimensión.</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>2. Ridge (Norma $L_2$) — Shrinkage</h3>
+                        <p><strong>Contraimiento suave.</strong> Reduce proporcionalmente la magnitud de todos los pesos. Mantiene <strong>todas las variables activas</strong> sin anular a 0.0.</p>
+                    </div>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-green bg-light-green">
+                        <h3>3. Lasso (Norma $L_1$) — Sparsity</h3>
+                        <p><strong>Selección de variables.</strong> Anula coeficientes de características irrelevantes fijándolos en <strong>exactamente 0.0</strong>.</p>
+                    </div>
+                    <div class="info-box border-crimson bg-light-red">
+                        <h3>4. ElasticNet ($L_1 + L_2$) — Balance</h3>
+                        <p><strong>Combinación óptima.</strong> Mezcla contraimiento de Ridge y selección de Lasso. Ideal para grupos de variables correlacionadas.</p>
                     </div>
                 </div>
             </div>
@@ -509,6 +536,33 @@ pipe = Pipeline([
             </div>
         </section>
 
+        <!-- Slide 21B: Observaciones Clave y Análisis Crítico -->
+        <section class="slide" id="slide-21b">
+            <div class="clean-card">
+                <h2>Observaciones Clave y Análisis Crítico</h2>
+                <div class="split-content">
+                    <div class="info-box border-blue bg-light-blue">
+                        <h3>1. Rigidez vs. Flexibilidad</h3>
+                        <p>Los modelos rectilíneos ($d=1$) sufren alto sesgo insuperable en curvas senoidales o Moons. Los polinomios aportan flexibilidad, pero requieren regularización para no desestabilizar $\Phi^T \Phi$.</p>
+                    </div>
+                    <div class="info-box border-purple bg-light-purple">
+                        <h3>2. Filtro Topológico ($L_1$ vs $L_2$)</h3>
+                        <p>Ridge ($L_2$) resuelve la multicolinealidad atenuando magnitudes sin anular. Lasso ($L_1$) actúa como filtro topológico eliminando variables irrelevantes (*sparsity*).</p>
+                    </div>
+                </div>
+                <div class="split-content" style="margin-top: 1rem;">
+                    <div class="info-box border-orange bg-light-orange">
+                        <h3>3. Escalado en KNN</h3>
+                        <p>KNN es no paramétrico y su complejidad depende de $K$ ($K=1$ overfit, $K=15$ suave). Requiere estandarización estricta ($\mu=0, \sigma=1$) para no sesgar distancias.</p>
+                    </div>
+                    <div class="info-box border-red bg-light-red">
+                        <h3>4. Protocolo Anti-Data Leakage</h3>
+                        <p>Ejecutar transformaciones fuera de <code>Pipeline</code> contamina los pliegues de CV. `Pipeline` es la única garantía metodológica de aislamiento real.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Slide 22: Conclusiones -->
         <section class="slide center-align" id="slide-22">
             <div class="clean-card">
@@ -538,7 +592,7 @@ pipe = Pipeline([
     <!-- Controles de Navegación -->
     <div class="nav-controls">
         <button class="nav-btn" id="prevBtn" title="Diapositiva Anterior">❮</button>
-        <div class="slide-counter" id="slideCounter">1 / 22</div>
+        <div class="slide-counter" id="slideCounter">1 / 24</div>
         <button class="nav-btn" id="nextBtn" title="Siguiente Diapositiva">❯</button>
     </div>
 
