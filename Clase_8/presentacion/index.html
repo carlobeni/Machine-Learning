@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase 8: Singular Value Decomposition (SVD)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="presentation-container">
+
+    <!-- Diapositiva 1: Título -->
+    <div class="slide active" id="slide-1">
+        <div class="slide-content text-center d-flex flex-column justify-content-center align-items-center h-100">
+            <div class="badge bg-primary mb-3">Clase 8</div>
+            <h1 class="display-4 fw-bold text-dark mb-4">Singular Value Decomposition (SVD)</h1>
+            <p class="lead text-secondary mb-5">El algoritmo fundamental de Machine Learning impulsado por datos.</p>
+            
+            <div class="clean-card w-50 p-4 border-primary bg-light-primary text-start">
+                <h5 class="fw-bold mb-3">Basado en:</h5>
+                <p class="mb-1"><strong>Data-Driven Science and Engineering</strong> (Capítulo 1)</p>
+                <p class="mb-0 text-muted">J. Nathan Kutz & Steven L. Brunton (2019)</p>
+            </div>
+            <div class="mt-5 text-muted">
+                <p>FIUNA - Machine Learning 1</p>
+                <p>Docente Práctica: Carlos Benítez</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 2: Introducción -->
+    <div class="slide" id="slide-2">
+        <h2 class="slide-title">1.1 Perspectiva General</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p class="lead">La SVD es una factorización matricial única y numéricamente estable. Constituye la base del <strong>Análisis de Componentes Principales (PCA)</strong>.</p>
+                    <div class="info-box border-success bg-light-success">
+                        <h5>Para qué se usa:</h5>
+                        <ul>
+                            <li>Resolver sistemas de ecuaciones lineales sobre/sub-determinados.</li>
+                            <li>Reducción de dimensionalidad (Compresión de datos).</li>
+                            <li>Extracción de características dominantes (PCA/EOF/KLT).</li>
+                            <li>Alineamiento de datos espaciales y temporales.</li>
+                        </ul>
+                    </div>
+                    <p>Dada $X \in \mathbb{C}^{n \times m}$, su SVD es: $X = U \Sigma V^*$</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_1_svd_full_economy.png" alt="SVD Completa vs Económica" class="slide-img-full shadow">
+                    <p class="img-caption">Fig. 1.1: SVD completa vs económica cuando $n > m$ (más variables que muestras).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 3: Teorema de Eckart-Young -->
+    <div class="slide" id="slide-3">
+        <h2 class="slide-title">1.2 Aproximación de Matrices</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p class="lead">El <strong>Teorema de Eckart-Young-Mirsky</strong> garantiza que la SVD truncada proporciona la <em>mejor aproximación posible de rango $r$</em> de una matriz.</p>
+                    <div class="info-box border-warning bg-light-warning">
+                        <h5>Aproximación por suma de rango 1:</h5>
+                        <p class="mb-0 text-center">$$ X \approx \tilde{X} = \sum_{k=1}^r \sigma_k u_k v_k^* $$</p>
+                    </div>
+                    <p>Al truncar a los primeros $r$ modos (aquellos con $\sigma_k$ grande), nos quedamos con la señal principal y filtramos el ruido.</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_2_truncation_schematic.png" alt="SVD Truncada" class="slide-img-full shadow">
+                    <p class="img-caption">Fig. 1.2: Esquema del truncamiento, descartando las columnas con valores singulares pequeños.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 4: Compresión de Imagen -->
+    <div class="slide" id="slide-4">
+        <h2 class="slide-title">Compresión de Imágenes</h2>
+        <div class="slide-content">
+            <p>Al mantener sólo unos pocos modos ($r$), podemos recuperar la estructura visual con mucha menos memoria.</p>
+            <div class="full-img-container mt-4">
+                <img src="img/fig_1_3_image_compression.png" alt="Compresión de Imagen" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 5: Espectro y Energía -->
+    <div class="slide" id="slide-5">
+        <h2 class="slide-title">Espectro de Valores Singulares</h2>
+        <div class="slide-content">
+            <p>Los valores singulares decaen rápidamente, lo que permite la compresión. La energía explicada permite elegir $r$.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_4_singular_values.png" alt="Espectro" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 6: Varianza Explicada -->
+    <div class="slide" id="slide-6">
+        <h2 class="slide-title">Varianza Explicada ($\sigma_k^2$)</h2>
+        <div class="slide-content">
+            <p>La varianza explicada por cada modo es proporcional al <strong>cuadrado</strong> del valor singular: $\sigma_k^2$.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/svd_explained_variance_curve.png" alt="Varianza Explicada" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 7: Propiedades (Sec 1.3) -->
+    <div class="slide" id="slide-7">
+        <h2 class="slide-title">1.3 Matrices de Correlación</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>Las columnas de $U$ (modos espaciales) y $V$ (modos temporales) son los autovectores de las matrices de correlación:</p>
+                    <ul>
+                        <li>$XX^* U = U \Sigma^2$ (Correlación entre filas, $n \times n$)</li>
+                        <li>$X^*X V = V \Sigma^2$ (Correlación entre columnas, $m \times m$)</li>
+                    </ul>
+                    <div class="info-box border-info bg-light-info">
+                        <h5>Método de los Snapshots (Sirovich)</h5>
+                        <p>Si $n \gg m$, es más eficiente calcular la SVD de la matriz pequeña $X^*X$ para hallar $V$ y $\Sigma$, y luego recuperar $U$:</p>
+                        <p class="text-center mb-0">$$ \tilde{U} = X \tilde{V} \tilde{\Sigma}^{-1} $$</p>
+                    </div>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_5_correlation_matrices.png" alt="Matrices de Correlación" class="slide-img-full shadow mt-4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 8: Geometría -->
+    <div class="slide" id="slide-8">
+        <h2 class="slide-title">Interpretación Geométrica de la SVD</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p class="lead">Toda matriz $X \in \mathbb{R}^{n \times m}$ mapea la esfera unitaria de $\mathbb{R}^m$ a un hiperelipsoide en $\mathbb{R}^n$.</p>
+                    <ul class="mt-3">
+                        <li>Los vectores $v_k$ son direcciones ortogonales principales en la esfera original.</li>
+                        <li>Los vectores $u_k$ indican las direcciones de los semiejes principales del elipsoide resultante.</li>
+                        <li>Los valores $\sigma_k$ son exactamente las longitudes de dichos semiejes.</li>
+                        <li>Por ende, el <strong>volumen</strong> del elipsoide es proporcional a $\prod \sigma_k$.</li>
+                    </ul>
+                </div>
+                <div class="image-content mt-3">
+                    <img src="img/fig_1_8_sphere_ellipsoid.png" alt="Geometría" class="slide-img-full shadow" style="max-height: 400px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 9: Regresión 1D -->
+    <div class="slide" id="slide-9">
+        <h2 class="slide-title">1.4 Pseudo-inversa y Regresión</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>La pseudo-inversa de Moore-Penrose $X^\dagger = V \Sigma^{-1} U^*$ resuelve el problema de Mínimos Cuadrados para sistemas ruidosos: $\min_x \|X x - b\|_2$.</p>
+                    <p>La solución óptima es $\tilde{x} = X^\dagger b$.</p>
+                    <div class="info-box border-danger bg-light-danger mt-4">
+                        <h5>Precaución</h5>
+                        <p class="mb-0">Cuando la SVD es truncada, $U U^* \neq I$. En cambio, $U^* U = I$ sí se mantiene.</p>
+                    </div>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_9_regression_1d.png" alt="Regresión 1D" class="slide-img-full shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 10: Regresión Multilineal -->
+    <div class="slide" id="slide-10">
+        <h2 class="slide-title">Regresión Multilineal</h2>
+        <div class="slide-content">
+            <p>Usando $X^\dagger$ podemos realizar regresión en datos multidimensionales y estudiar la importancia de cada variable.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_11_multilinear_regression.png" alt="Regresión Multilineal" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 11: PCA -->
+    <div class="slide" id="slide-11">
+        <h2 class="slide-title">1.5 PCA: Componentes Principales</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>El <strong>Análisis de Componentes Principales (PCA)</strong> es estadísticamente equivalente a calcular la SVD sobre la matriz de datos <em>centrada respecto a la media</em>.</p>
+                    <p>$$ B = X - \bar{X} $$</p>
+                    <p>Las componentes principales identifican las direcciones de mayor varianza en los datos.</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_13_pca_gaussian.png" alt="PCA" class="slide-img-full shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 12: PCA en Cáncer -->
+    <div class="slide" id="slide-12">
+        <h2 class="slide-title">PCA en Datos Reales (Breast Cancer)</h2>
+        <div class="slide-content">
+            <p>Aun sin usar etiquetas durante el PCA, las proyecciones en los primeros modos suelen revelar la estructura y agrupaciones intrínsecas (clusters) en datos de alta dimensionalidad.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_14_pca_cancer.png" alt="PCA Cancer" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 13: Eigenfaces (1.6) -->
+    <div class="slide" id="slide-13">
+        <h2 class="slide-title">1.6 Eigenfaces (Reconocimiento Facial)</h2>
+        <div class="slide-content">
+            <p>Al organizar caras como columnas de $X$ y aplicar PCA, extraemos los "Rostros Propios" (Eigenfaces). Usaremos el dataset de Olivetti (40 personas).</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_16_faces_grid.png" alt="Caras" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 14: Esquema Eigenfaces -->
+    <div class="slide" id="slide-14">
+        <h2 class="slide-title">Construcción de los Eigenfaces</h2>
+        <div class="slide-content">
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_17_eigenfaces_schematic.png" alt="Eigenfaces Esquema" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 15: Reconstrucción -->
+    <div class="slide" id="slide-15">
+        <h2 class="slide-title">Reconstrucción de un Rostro</h2>
+        <div class="slide-content">
+            <p>Podemos proyectar un rostro nuevo (test) sobre la base $U_r$ generada por los rostros de entrenamiento, y reconstruirlo con unos pocos coeficientes.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_18_reconstruction.png" alt="Reconstrucción Eigenfaces" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 16: No-rostro -->
+    <div class="slide" id="slide-16">
+        <h2 class="slide-title">¿Qué pasa con algo que no es un rostro?</h2>
+        <div class="slide-content">
+            <p>Los eigenfaces capturan <em>sólo</em> variaciones de rostros humanos. Una imagen arbitraria (ej. perro/montaña) no puede ser reconstruida correctamente, lo que sirve para detectar anomalías.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_19_non_face.png" alt="No rostro" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 17: Truncamiento Óptimo -->
+    <div class="slide" id="slide-17">
+        <h2 class="slide-title">1.7 Truncamiento Óptimo</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>¿Dónde truncar $r$? Las heurísticas de "90% de energía" o el "codo" son subjetivas.</p>
+                    <p>Para ruido aditivo y matriz ruidosa de dimensión $n \times n$ (con $\gamma$ conocido), el umbral óptimo de Hard Thresholding es:</p>
+                    <p class="text-center">$$ \tau = \frac{4}{\sqrt{3}} \sqrt{n} \gamma $$</p>
+                    <p>Si la matriz es rectangular con ratio $\beta = m/n$, $\tau$ escala por una función $\lambda(\beta)$.</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_22_toy_truncation.png" alt="Toy Truncation" class="slide-img-full shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 18: Ruido Desconocido -->
+    <div class="slide" id="slide-18">
+        <h2 class="slide-title">Gavish-Donoho (Ruido Desconocido)</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>En el mundo real no conocemos $\gamma$. Gavish y Donoho proponen usar la <strong>mediana de los valores singulares</strong> ajustada por un factor asintótico $\omega(\beta)$ de la distribución de Marchenko-Pastur:</p>
+                    <div class="info-box border-success bg-light-success text-center">
+                        <h4 class="mb-0">$$ \tau = \omega(\beta) \sigma_{med} $$</h4>
+                    </div>
+                    <p class="mt-3 text-muted">Para matrices cuadradas ($\beta = 1$), $\omega(1) \approx 2.858$.</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_24_unknown_noise.png" alt="Ruido Desconocido" class="slide-img-full shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 19: Alineamiento -->
+    <div class="slide" id="slide-19">
+        <h2 class="slide-title">SVD y Rotaciones (Desalineamiento)</h2>
+        <div class="slide-content">
+            <p>La SVD asume variaciones que pueden escribirse como sumas bilineales. Es muy sensible a traslaciones o rotaciones espaciales: el rango "explota" ante el más mínimo cambio de orientación.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_25_rotation_img.png" alt="Rotación" class="slide-img-full shadow" style="height:250px; width:auto; margin:0 auto; display:block;">
+                <img src="img/fig_1_26_rotation_spectra.png" alt="Rotación Spectra" class="slide-img-full shadow mt-2" style="height:250px; width:auto; margin:0 auto; display:block;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 20: rSVD -->
+    <div class="slide" id="slide-20">
+        <h2 class="slide-title">1.8 SVD Aleatoria (rSVD)</h2>
+        <div class="slide-content">
+            <p>Para matrices "gigantes", el algoritmo de Halko-Martinsson-Tropp reduce la complejidad al encontrar una base aproximada sobre proyecciones aleatorias.</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_27_rsvd_schematic.png" alt="rSVD Esquema" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 21: Compresión rSVD -->
+    <div class="slide" id="slide-21">
+        <h2 class="slide-title">Rendimiento de rSVD</h2>
+        <div class="slide-content">
+            <p>Con un ligero sobremuestreo $p$ y algunas iteraciones de potencia $q$, el error de la rSVD es casi idéntico al de la SVD determinista, ¡pero mucho más rápido!</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_28_rsvd_image.png" alt="rSVD Comparación" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 22: Tensores (1.9) -->
+    <div class="slide" id="slide-22">
+        <h2 class="slide-title">1.9 Introducción a Tensores</h2>
+        <div class="slide-content">
+            <div class="split-content">
+                <div class="text-content">
+                    <p>Muchas bases de datos (ej. videos o dominios espaciales 2D a lo largo del tiempo) tienen naturalmente $\ge 3$ dimensiones.</p>
+                    <p>Aplanarlas en una matriz destruye la estructura intrínseca de los datos. Descomposiciones como la <strong>CP (CANDECOMP/PARAFAC)</strong> evitan esto.</p>
+                </div>
+                <div class="image-content">
+                    <img src="img/fig_1_29_tensor_schematic.png" alt="Tensores Esquema" class="slide-img-full shadow mt-4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 23: Descomposición Tensor -->
+    <div class="slide" id="slide-23">
+        <h2 class="slide-title">Extracción de Modos Tensoriales</h2>
+        <div class="slide-content">
+            <p>El tensor $F(x, y, t)$ (multidimensional) es separado en factores 1D en cada dirección geométrica ($a \circ b \circ c$).</p>
+            <div class="full-img-container mt-3">
+                <img src="img/fig_1_30_tensor_snapshots.png" alt="Tensores" class="slide-img-full shadow">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 24: Conclusiones -->
+    <div class="slide" id="slide-24">
+        <h2 class="slide-title">Conclusiones (Práctica SVD)</h2>
+        <div class="slide-content">
+            <div class="conclusions-simple mt-4">
+                <p>La SVD es matemáticamente la <strong>base del Machine Learning de características</strong>.</p>
+                <p>Permite aproximaciones, regresiones y reconocimiento de patrones robustos y óptimos.</p>
+                <p>Soluciona problemas inestables y "gigantes" con versiones truncadas y proyecciones aleatorias (rSVD).</p>
+                <p>La heurística Gavish-Donoho $\omega(\beta)\sigma_{med}$ es el estado del arte para truncar con ruido desconocido.</p>
+                <p>¡Ve a revisar el Cuaderno Práctico para programar y explorar esto en Python!</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navegación y Contador -->
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" title="Anterior (Flecha Izquierda)"></button>
+    <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">24</span></div>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" title="Siguiente (Flecha Derecha o Espacio)"></button>
+</div>
+
+<!-- Lógica JavaScript -->
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    document.getElementById('total-slides').textContent = totalSlides;
+
+    function showSlide(index) {
+        if (index >= totalSlides) index = totalSlides - 1;
+        if (index < 0) index = 0;
+        
+        slides.forEach(s => s.classList.remove('active'));
+        slides[index].classList.add('active');
+        currentSlide = index;
+        
+        document.getElementById('current-slide').textContent = currentSlide + 1;
+        
+        document.getElementById('prevBtn').disabled = (currentSlide === 0);
+        document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
+    }
+
+    function changeSlide(direction) {
+        showSlide(currentSlide + direction);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            changeSlide(1);
+        } else if (e.key === 'ArrowLeft') {
+            changeSlide(-1);
+        }
+    });
+    
+    // Inicializar
+    showSlide(0);
+</script>
+
+</body>
+</html>
