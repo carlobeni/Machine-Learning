@@ -45,16 +45,3 @@
 2. Completar todos los bloques indicados con comentarios de resolución.
 3. Ejecutar todas las celdas asegurando que los gráficos, imágenes reconstruidas y tablas métricas se visualicen correctamente.
 4. Guardar los cambios y realizar el commit y push correspondiente a su repositorio en GitHub.
-
----
-
-## Evaluación y Criterios de Calificación
-
-El Trabajo Práctico 3 equivale al **25% de la calificación total de Trabajos Prácticos (2.5 puntos sobre 10)**:
-
-| Componente | Ponderación | Criterios de Evaluación |
-| :--- | :---: | :--- |
-| **Preprocesamiento y SVD/PCA** | **35%** | Correcta implementación de la descomposición, cálculo de varianza explicada y visualización de reconstrucciones. |
-| **Modelado y Clasificación** | **45%** | Implementación del clasificador, ajuste sobre componentes principales y cálculo riguroso de métricas de desempeño. |
-| **Análisis Comparativo y Conclusiones** | **20%** | Interpretación crítica de la relación entre compresión de datos, tiempo de cómputo y exactitud diagnóstica. |
-| **TOTAL** | **100% (2.5 pts)** | Ponderación completa del TP3 dentro de la evaluación de Trabajos Prácticos. |
