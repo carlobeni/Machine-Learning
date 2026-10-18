@@ -76,9 +76,12 @@ Muestra la clasificación en el conjunto de prueba (12,859 muestras) tras optimi
 
 ## Evaluación y Criterios de Calificación
 
+El Trabajo Práctico 2 equivale al **25% de la calificación total de Trabajos Prácticos (2.5 puntos sobre 10)**:
+
 | Componente | Ponderación | Criterios de Evaluación |
 | :--- | :---: | :--- |
 | **Parte 1: Preprocesamiento y Estadística** | **35%** | Mapeo correcto de las 27 siglas de carreras, limpieza no destructiva y precisión en el cálculo de las 6 preguntas estadísticas. |
 | **Parte 2: Regresión Logística y Evaluación** | **65%** | Construcción adecuada del Pipeline de Scikit-Learn, graficación de la Curva de Aprendizaje, optimización del umbral y análisis de la Matriz de Confusión. |
+| **TOTAL** | **100% (2.5 pts)** | Ponderación completa del TP2 dentro de la evaluación de Trabajos Prácticos. |
 
 ---

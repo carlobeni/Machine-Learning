@@ -20,7 +20,7 @@ En dicha guía oficial se aborda el procedimiento paso a paso para la configurac
 
 ## Objetivo General del TP1
 
-El objetivo central del **Trabajo Práctico 1** es preparar tu identidad académica en el ecosistema de control de versiones y estructurar de manera guiada el **repositorio maestro en GitHub** que utilizarás para gestionar las sucesivas entregas prácticas de la asignatura (desde el TP1 hasta el TP6 y los experimentos del proyecto).
+El objetivo central del **Trabajo Práctico 1** es preparar tu identidad académica en el ecosistema de control de versiones y estructurar de manera guiada el **repositorio maestro en GitHub** que utilizarás para gestionar las sucesivas entregas prácticas de la asignatura (desde el TP1 hasta el TP4 y los experimentos del proyecto).
 
 La creación y vinculación remota del repositorio se realizará de manera simplificada y directa aprovechando las funcionalidades nativas de la interfaz gráfica de **Antigravity IDE**, sin necesidad de ejecutar comandos complejos en consola ni de crear manualmente la estructura previa en la web de GitHub.
 
@@ -48,7 +48,7 @@ En lugar de clonar o crear de forma manual el proyecto en la web, aprovecharemos
    - El editor te guiará o autenticará si es la primera vez, y generará automáticamente de forma remota tu repositorio oficial de GitHub de manera instantánea, subiendo los archivos base.
 
 ### Paso 4: Estructura Modular del Repositorio
-Organiza el directorio de tu Workspace creando las carpetas y módulos para los Trabajos Prácticos del semestre, los cuales deberán reposar directamente dentro de la carpeta raíz y sin contenedores intermedio:
+Organiza el directorio de tu Workspace creando las carpetas y módulos para los Trabajos Prácticos del semestre, los cuales deberán reposar directamente dentro de la carpeta raíz y sin contenedores intermedios:
 ```text
 ML1-2026-TPs/
 ├── README.md
@@ -57,9 +57,7 @@ ML1-2026-TPs/
 │   └── notebook_test_tp1.ipynb
 ├── TP_2/
 ├── TP_3/
-├── TP_4/
-├── TP_5/
-└── TP_6/
+└── TP_4/
 ```
 
 ### Paso 5: Verificación y Primer Notebook Experimental
@@ -81,10 +79,23 @@ ML1-2026-TPs/
 
 ---
 
-## 4. Modalidad y Entrega
+## Modalidad y Entrega
 
 - **Canal de Entrega:** Se deberá subir a la plataforma virtual del curso el enlace web oficial (URL) que apunte al repositorio de GitHub recién publicado por el estudiante o grupo.
 - **Criterios de Validación Técnica:** Durante la evaluación del Trabajo Práctico 1, el equipo docente comprobará rigurosamente que:
   1. El perfil de usuario en GitHub cuente de forma visible y clara con la **foto real** del estudiante y su correspondiente **descripción biográfica/académica**.
   2. El repositorio disponga del archivo `pyproject.toml` y `poetry.lock`, certificando el manejo formal del ecosistema con Poetry de acuerdo con la guía de clases.
-  3. Los directorios correspondientes (`TP_1` a `TP_6`) estén distribuidos de forma limpia en la raíz del proyecto de GitHub y el cuaderno experimental presente su ejecución verificable de manera pública.
+  3. Los directorios correspondientes (`TP_1` a `TP_4`) estén distribuidos de forma limpia en la raíz del proyecto de GitHub y el cuaderno experimental presente su ejecución verificable de manera pública.
+
+---
+
+## Evaluación y Criterios de Calificación
+
+El Trabajo Práctico 1 equivale al **25% de la calificación total de Trabajos Prácticos (2.5 puntos sobre 10)**:
+
+| Criterio | Ponderación | Descripción |
+| :--- | :---: | :--- |
+| **Perfil en GitHub** | **20%** | Foto real y descripción académica/biográfica formal y actualizada en el perfil de GitHub. |
+| **Estructura y Gestión con Poetry** | **40%** | Presencia y correcta configuración de `pyproject.toml`, `poetry.lock`, `.gitignore` y directorios `TP_1` a `TP_4`. |
+| **Cuaderno Experimental y Verificación** | **40%** | Cuaderno Jupyter en `TP_1/` ejecutado correctamente con verificación de versiones del stack de Machine Learning. |
+| **TOTAL** | **100% (2.5 pts)** | Ponderación completa del TP1 dentro de la evaluación de Trabajos Prácticos. |
