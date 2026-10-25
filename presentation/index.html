@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa Técnica: Clasificación de Cítricos | ML1 FIUNA</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1 -->
+        <div class="slide active" id="slide-1">
+            <div class="badge">Machine Learning 1 – Segundo Parcial</div>
+            <h1>Clasificación Automatizada de Cítricos</h1>
+            <h2>Naranjas, Pomelos y Limones mediante Visión Computacional</h2>
+            <div class="author">Ing. Carlos Benitez | Dr. Diego Stalder | FIUNA 2026</div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" id="slide-2">
+            <h2>1. El Desafío de la Industria Citrícola</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Problema</h3>
+                    <p>La selección manual de cítricos en cintas transportadoras presenta fatiga humana, inconsistencias en clasificación por color y retrasos operativos.</p>
+                </div>
+                <div class="card">
+                    <h3>Objetivo</h3>
+                    <p>Desarrollar un sistema de clasificación óptico no invasivo capaz de inferir la variedad con latencias menores a 1 ms y exactitud superior al 95%.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" id="slide-3">
+            <h2>2. Extracción de Descriptores Discriminativos</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3>Espacio HSV</h3>
+                    <p>Histograma de Tono (Hue) para aislar la longitud de onda de reflexión: amarillo (limón), naranja y rosado (pomelo).</p>
+                </div>
+                <div class="card">
+                    <h3>Morfometría</h3>
+                    <p>Relación de aspecto (W/H) para detectar la excentricidad del limón vs la esfericidad de la naranja.</p>
+                </div>
+                <div class="card">
+                    <h3>Espacial SVD</h3>
+                    <p>Descomposición en valores singulares sobre la imagen completa para extraer autovectores espaciales.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" id="slide-4">
+            <h2>3. Resultados del Benchmark</h2>
+            <table class="styled-table">
+                <thead>
+                    <tr><th>Algoritmo</th><th>Accuracy</th><th>F1-Score</th><th>Latencia</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Regresión Logística</td><td class="highlight">100.0%</td><td>1.000</td><td>0.03 ms</td></tr>
+                    <tr><td>SVM Kernel RBF</td><td class="highlight">100.0%</td><td>1.000</td><td>0.03 ms</td></tr>
+                    <tr><td>SVD (Eigen-Citrus)</td><td>93.3%</td><td>0.933</td><td>0.12 ms</td></tr>
+                    <tr><td>XGBoost Forest</td><td class="highlight">100.0%</td><td>1.000</td><td>0.08 ms</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" id="slide-5">
+            <h2>4. Conclusiones y Despliegue</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Ecosistema Completo</h3>
+                    <p>Modelos serializados con soporte de inferencia vía CLI, API REST (FastAPI) y Dashboard interactivo (Streamlit).</p>
+                </div>
+                <div class="card">
+                    <h3>Impacto</h3>
+                    <p>Demostración práctica de cómo técnicas lineales (SVD, Regresión) y no lineales (SVM, Boosting) resuelven un problema real de ingeniería.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button onclick="prevSlide()" class="btn">◀ Anterior</button>
+            <span id="slide-indicator" class="indicator">1 / 5</span>
+            <button onclick="nextSlide()" class="btn">Siguiente ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 5;
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide-' + n).classList.add('active');
+            document.getElementById('slide-indicator').innerText = n + ' / ' + totalSlides;
+        }
+        function nextSlide() { if(currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+        function prevSlide() { if(currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

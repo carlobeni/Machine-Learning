@@ -1,0 +1,5 @@
+Modelo,Accuracy,F1_Score,Latencia_ms,Tiempo_Fit_s
+Regresion Logistica,1.000,1.000,0.03,0.015
+SVM Kernel RBF,1.000,1.000,0.03,0.003
+SVD Eigen-Citrus,0.933,0.933,0.12,0.006
+XGBoost Forest,1.000,1.000,0.08,0.055
