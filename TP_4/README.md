@@ -42,6 +42,9 @@ El sitio web desplegado en GitHub Pages deberá ser claro, navegable y estructur
 - Procedimiento de ajuste y optimización de hiperparámetros (ej.: `GridSearchCV`, `RandomizedSearchCV` u `Optuna`).
 - Justificación de las métricas de evaluación seleccionadas (Accuracy, F1-Score, AUC-ROC, Precision-Recall, RMSE, MAE, etc.).
 
+> [!NOTE]
+> Estos apartados deben integrarse si el trabajo es presentado como examen final, es decir con todas las partes para la exoneracion de la materia.
+
 ### 5. Resultados, Comparativa y Discusión
 - **Tabla comparativa de modelos:** Presentación clara del rendimiento de cada algoritmo sobre los conjuntos de validación/prueba.
 - **Gráficos de desempeño:** Curvas de Aprendizaje (*Learning Curves*), Matrices de Confusión normalizadas, Curvas ROC o Precision-Recall.
