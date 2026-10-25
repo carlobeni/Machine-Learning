@@ -40,11 +40,6 @@ El proyecto cuenta con todos sus directorios completos y listos para producción
 │   ├── confusion_matrices.png       # Gráfico de matrices de confusión
 │   ├── svd_eigen_citrus.png         # Modos singulares espaciales
 │   └── predict.py                   # Herramienta CLI de inferencia
-├── api/
-│   ├── app.py               # API REST con FastAPI (/predict, /models, /health)
-│   ├── test_api.py          # Cliente de prueba en Python
-│   ├── Dockerfile           # Contenedor para despliegue
-│   └── requirements.txt     # Dependencias de la API
 ├── dashboard/
 │   ├── app.py               # Aplicación interactiva con Streamlit
 │   └── requirements.txt     # Dependencias del Dashboard
@@ -88,23 +83,13 @@ python models/predict.py --image data/raw/naranjas/naranja_01.jpg --model all
 python models/predict.py --image data/raw/limones/limon_01.jpg --model svm
 ```
 
-### 2. Iniciar la API REST (FastAPI)
-```bash
-uvicorn api.app:app --reload --port 8000
-```
-- Documentación interactiva Swagger: **http://127.0.0.1:8000/docs**
-- Clasificar vía curl:
-```bash
-curl -X POST "http://127.0.0.1:8000/predict?model_name=all" -F "file=@data/raw/pomelos/pomelo_01.jpg"
-```
-
-### 3. Iniciar el Dashboard Interactivo (Streamlit)
+### 2. Iniciar el Dashboard Interactivo (Streamlit)
 ```bash
 streamlit run dashboard/app.py
 ```
 Abre automáticamente tu navegador en **http://localhost:8501** permitiéndote subir imágenes, comparar los cuatro clasificadores y explorar las proyecciones SVD.
 
-### 4. Visualizar la Presentación Técnica
+### 3. Visualizar la Presentación Técnica
 Abre en tu navegador el archivo `presentation/index.html` o sirve el directorio con:
 ```bash
 python -m http.server 8080 --directory presentation
@@ -116,5 +101,5 @@ python -m http.server 8080 --directory presentation
 - **Visión Computacional:** OpenCV, PIL / Pillow.
 - **Modelado Científico:** Scikit-Learn, NumPy, SciPy, Pandas.
 - **Ensambles:** XGBoost.
-- **Servicios Web:** FastAPI, Uvicorn, Streamlit.
+- **Aplicación Web:** Streamlit.
 - **Visualización:** Matplotlib, Seaborn, Tailwind CSS.
