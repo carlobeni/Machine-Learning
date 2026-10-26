@@ -1,14 +1,13 @@
-# Dataset de Imágenes de Cítricos (Raw Data)
+# Dataset de Fotografías Reales de Cítricos (Raw Data)
 
-Este directorio contiene las imágenes crudas de alta resolución para la tarea de clasificación multiclase de tres variedades de cítricos:
+Este conjunto de datos está constituido por **150 fotografías reales auténticas** provenientes del repositorio de investigación académica **`Fruit-Images-Dataset`** (Horea Mureșan & Mihai Oltean, Universitatea Babeș-Bolyai):
 
-## Clases y Distribución
-- `naranjas/`: 40 imágenes de Naranjas (*Citrus × sinensis*). Fruto esférico de color naranja intenso, cáscara finamente porosa y pulpa anaranjada.
-- `pomelos/`: 40 imágenes de Pomelos / Toronjas (*Citrus × paradisi*). Fruto de mayor tamaño, ligeramente achatado en los polos, con tonalidades rosadas/rojizas y pulpa rojo rubí.
-- `limones/`: 40 imágenes de Limones (*Citrus × limon*). Fruto ovalado/elipsoidal con ápices prominentes en los extremos (mamelones), de color amarillo brillante y pulpa translúcida.
+## Distribución de Clases Reales
+- `data/raw/naranjas/`: 50 fotografías reales de Naranjas (*Orange*).
+- `data/raw/pomelos/`: 50 fotografías reales de Pomelos Rosados (*Grapefruit Pink*).
+- `data/raw/limones/`: 50 fotografías reales de Limones (*Lemon*).
 
-## Características Técnicas de las Imágenes
-- **Formato:** JPEG estándar (.jpg)
-- **Resolución:** 224 × 224 píxeles, 3 canales (RGB)
-- **Variabilidad:** Incluye frutos enteros en diversas orientaciones y cortes transversales (25%) que exponen el albedo y la pulpa segmentada radialmente.
-- **Condiciones:** Iluminación controlada, sombras suaves y ligeras perturbaciones de ruido gaussiano para emular condiciones reales de adquisición industrial en cintas transportadoras.
+## Especificaciones
+- **Tipo:** Fotografías reales capturadas con cámara digital de alta definición sobre fondo neutro en múltiples ángulos de rotación.
+- **Formato:** JPEG estándar (.jpg).
+- **Procesamiento:** Redimensionadas y normalizadas mediante `data/processed/preprocessor.py`.

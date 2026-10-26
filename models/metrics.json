@@ -4,98 +4,99 @@
     "naranja",
     "pomelo"
   ],
-  "n_samples": 120,
-  "test_samples": 30,
+  "n_samples": 150,
+  "test_samples": 38,
+  "source": "Horea94/Fruit-Images-Dataset (Fotografias Reales de C\u00edtricos)",
   "models": {
     "Regresion Logistica": {
       "accuracy": 1.0,
       "f1_score": 1.0,
-      "fit_time_seconds": 0.014971256256103516,
-      "inference_latency_ms": 0.03135999043782552,
+      "fit_time_seconds": 0.009305477142333984,
+      "inference_latency_ms": 0.01407924451326069,
       "confusion_matrix": [
         [
-          10,
+          12,
           0,
           0
         ],
         [
           0,
-          10,
+          13,
           0
         ],
         [
           0,
           0,
-          10
+          13
         ]
       ]
     },
     "SVM (Kernel RBF)": {
       "accuracy": 1.0,
       "f1_score": 1.0,
-      "fit_time_seconds": 0.009739160537719727,
-      "inference_latency_ms": 0.032798449198404946,
+      "fit_time_seconds": 0.01292276382446289,
+      "inference_latency_ms": 0.021752558256450453,
       "confusion_matrix": [
         [
-          10,
+          12,
           0,
           0
         ],
         [
           0,
-          10,
+          13,
           0
         ],
         [
           0,
           0,
-          10
+          13
         ]
       ]
     },
     "SVD (Eigen-Citrus)": {
-      "accuracy": 0.9333333333333333,
-      "f1_score": 0.9333333333333333,
-      "fit_time_seconds": 0.10212874412536621,
-      "inference_latency_ms": 0.11648337046305339,
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "fit_time_seconds": 0.08106637001037598,
+      "inference_latency_ms": 0.09312755183169716,
       "confusion_matrix": [
         [
-          10,
+          12,
           0,
           0
         ],
         [
           0,
-          9,
-          1
+          13,
+          0
         ],
         [
           0,
-          1,
-          9
+          0,
+          13
         ]
       ]
     },
     "XGBoost Forest": {
       "accuracy": 1.0,
       "f1_score": 1.0,
-      "fit_time_seconds": 0.4185292720794678,
-      "inference_latency_ms": 0.07960001627604167,
+      "fit_time_seconds": 0.2394421100616455,
+      "inference_latency_ms": 0.07862166354530736,
       "confusion_matrix": [
         [
-          10,
+          12,
           0,
           0
         ],
         [
           0,
-          10,
+          13,
           0
         ],
         [
           0,
           0,
-          10
+          13
         ]
       ]
     }
