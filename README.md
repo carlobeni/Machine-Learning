@@ -1,90 +1,51 @@
-# Clasificador de Perros y Gatos (Dogs vs Cats ML) 🐕 🐱
+# Clasificador de Gatos y Perros: Subespacios SVD (Menor Norma) y Machine Learning
 
-Proyecto integral de Machine Learning y Visión por Computador para la clasificación binaria de fotografías reales de **perros** y **gatos**, optimizado para alcanzar más del **80% de Exactitud**.
-
----
-
-## 📌 Aspectos Destacados
-- **Dataset Ampliado de Imágenes Reales (360 Fotos):** Descargadas del repositorio público de GitHub ([niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard](https://github.com/niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard)) derivado de Kaggle Dogs vs Cats.
-- **Inserción en Matriz Negra (Letterbox Zero-Padding):** Todas las imágenes están estandarizadas a $256 \times 256 \times 3$ preservando la relación de aspecto espacial original sin deformación de orejas ni hocicos.
-- **Ingeniería de Rasgos Avanzada:**
-  - **HOG (Histogram of Oriented Gradients):** Captura contornos morfoscópicos (orejas puntiagudas en gatos vs caídas/anchas en perros).
-  - **Pirámides de Color Espaciales (Cuadrantes 2x2):** Diferenciación cromática entre región craneal y corporal.
-  - **Histogramas HSV:** Distribución de matiz, saturación y brillo.
-  - **SVD Espectral:** Reducción latente de dimensionalidad ($k=35$ componentes singulares / Eigen-Animals).
-- **Dashboard Streamlit Interactivo:** Exploración de imágenes procesadas en matriz negra, predicción en tiempo real con barras de confianza y comparación multi-modelo.
-- **CLI de Inferencia (`models/predict.py`):** Detección rápida por línea de comandos.
+Proyecto desarrollado en notebooks Jupyter (`.ipynb`) documentados, enfocado en el método algebraico de subespacios lineales (**SVD Subspace Method / Menor Norma Residual**), ingeniería de características visuales y comparación rigurosa contra modelos supervisados (SVM RBF, XGBoost Forest y Regresión Logística).
 
 ---
 
-## 📊 Tabla Comparativa de Rendimiento (Test Set 72 Muestras)
+## Estructura del Repositorio (100% Notebooks Documentados)
 
-| Modelo | Accuracy | Precision | Recall | F1-Score |
-|---|---|---|---|---|
-| **SVM (Kernel RBF Calibrado)** | **80.56%** | **80.94%** | **80.56%** | **80.50%** |
-| **SVD + Clasificador Espectral** | **79.17%** | **79.19%** | **79.17%** | **79.16%** |
-| **XGBoost Forest (150 Estimadores)** | **76.39%** | **76.91%** | **76.39%** | **76.27%** |
-| **Regresión Logística ($L_2$)** | **75.00%** | **75.71%** | **75.00%** | **74.83%** |
-
----
-
-## 🚀 Guía de Uso
-
-### 1. Iniciar el Dashboard
-```bash
-streamlit run dashboard/app.py
 ```
-
-### 2. Inferencia por Consola (CLI)
-```bash
-# Ejemplo gato:
-python models/predict.py --image "data/processed/gatos/gato_000.jpg" --model svm
-
-# Ejemplo perro:
-python models/predict.py --image "data/processed/perros/perro_000.jpg" --model svm
-```
-
----
-
-## 🗂️ Estructura del Repositorio
-```
-├── dashboard/
-│   ├── app.py                  # Dashboard interactivo en Streamlit
-│   ├── requirements.txt
-│   └── README.md
+.
 ├── data/
-│   ├── raw/
-│   │   ├── gatos/              # 180 imágenes crudas
-│   │   ├── perros/             # 180 imágenes crudas
-│   │   ├── dataset_info.json
-│   │   └── README.md
+│   ├── preprocesamiento_datos.ipynb       # Notebook de preprocesamiento, Letterbox 256x256 y extracción de 349 características HOG/Color/Textura
+│   ├── features_dataset.csv               # Dataset tabular extraído (360 muestras x 349 features)
 │   └── processed/
-│       ├── gatos/              # 180 imágenes en matriz negra (256x256)
-│       ├── perros/             # 180 imágenes en matriz negra (256x256)
-│       ├── preprocessor.py     # HOG + padding + extracción
-│       ├── features_animales.csv
-│       ├── dataset_animales.npz
-│       └── README.md
+│       ├── gatos/                         # 180 imágenes de gatos en matriz negra 256x256
+│       └── perros/                        # 180 imágenes de perros en matriz negra 256x256
 ├── models/
-│   ├── logistic_regression.joblib
-│   ├── svm_rbf.joblib
-│   ├── svd_pipeline.joblib
-│   ├── xgboost_forest.joblib
-│   ├── scaler.joblib
-│   ├── label_encoder.joblib
-│   ├── metrics.json
-│   ├── confusion_matrices.png
-│   ├── svd_eigen_animals.png
-│   └── predict.py
-├── docs/
-│   ├── index.html
-│   └── arquitectura_tecnica.md
-├── reports/
-│   ├── informe_clasificacion.md
-│   ├── metricas_resumen.csv
-│   └── README.md
-├── presentation/
-│   ├── index.html
-│   └── README.md
-└── README.md
+│   ├── clasificacion_subespacios_svd_y_modelos.ipynb  # Notebook principal: Justificación PCA/SVD, entrenamiento y evaluación de modelos
+│   ├── svd_curva_seleccion_dimension.png  # Curva de varianza explicada, Scree Plot y CV vs k
+│   ├── svd_eigen_animals.png              # Visualización de Eigen-Gatos vs. Eigen-Perros
+│   ├── confusion_matrices.png             # Matrices de confusión en test (N=72)
+│   ├── svd_pipeline.joblib                # Modelo SVD Subespacios entrenado
+│   ├── svm_rbf.joblib                     # Modelo SVM RBF
+│   ├── xgboost_forest.joblib              # Modelo XGBoost Forest
+│   └── logistic_regression.joblib        # Modelo Regresión Logística
+├── docs/                                  # Arquitectura técnica y documentación conceptual
+├── presentation/                          # Diapositivas HTML interactivas
+└── reports/                               # Informe formal y resumen de métricas en CSV
 ```
+
+---
+
+## Formulación del Clasificador SVD por Subespacios (Menor Norma)
+
+1. **Construcción de Matrices por Clase**: Se separan los datos de entrenamiento en $\mathbf{X}_{cat}$ y $\mathbf{X}_{dog}$.
+2. **Centrado y Descomposición SVD**:
+   $$\tilde{\mathbf{X}}_{cat}^T = \mathbf{U}_{cat} \mathbf{\Sigma}_{cat} \mathbf{V}_{cat}^T, \quad \tilde{\mathbf{X}}_{dog}^T = \mathbf{U}_{dog} \mathbf{\Sigma}_{dog} \mathbf{V}_{dog}^T$$
+   Se retienen las bases ortonormales $\mathbf{U}_{cat}^{(k)}$ y $\mathbf{U}_{dog}^{(k)}$ con $k=20$ (justificado mediante Scree Plot y Validación Cruzada).
+3. **Proyección y Reconstrucción de Test**:
+   $$\hat{\mathbf{z}}_c = \mathbf{U}_c^{(k)} (\mathbf{U}_c^{(k)})^T (\mathbf{z} - \boldsymbol{\mu}_c) + \boldsymbol{\mu}_c$$
+4. **Norma Residual y Criterio de Menor Norma**:
+   $$\|\mathbf{e}_c\|_2 = \|\mathbf{z} - \hat{\mathbf{z}}_c\|_2, \qquad \hat{y} = \arg\min_{c \in \{cat, dog\}} \|\mathbf{e}_c\|_2$$
+
+---
+
+## Rendimiento en Test ($N=72$)
+
+- **XGBoost Forest**: **84.72% Accuracy** (F1: 85.71%)
+- **SVD Subespacios (Menor Norma)**: **79.17% Accuracy** (Precision: 83.87%, F1: 77.61%)
+- **SVM (Kernel RBF)**: **77.78% Accuracy** (F1: 77.14%)
+- **Regresión Logística ($L_2$)**: **75.00% Accuracy** (F1: 76.92%)
