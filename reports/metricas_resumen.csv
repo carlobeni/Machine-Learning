@@ -1,5 +1,5 @@
 Modelo,Exactitud (Accuracy),Precision (Precision),Sensibilidad (Recall),F1-Score
 SVM (Kernel RBF),0.8056,0.8094,0.8056,0.805
-SVD + Clasificador Espectral,0.7917,0.7919,0.7917,0.7916
+SVD Subespacios (Menor Norma),0.7917,0.7974,0.7917,0.7907
 XGBoost Forest,0.7639,0.7691,0.7639,0.7627
 Regresion Logistica,0.75,0.7571,0.75,0.7483
