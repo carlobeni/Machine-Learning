@@ -1,5 +1,5 @@
 Modelo,Exactitud (Accuracy),Precision (Precision),Sensibilidad (Recall),F1-Score
-Regresion Logistica,0.5417,0.5632,0.5417,0.4991
-SVM (RBF),0.625,0.6513,0.625,0.608
-SVD + Linear SVC,0.5833,0.6111,0.5833,0.5556
-XGBoost Forest,0.625,0.6333,0.625,0.619
+SVM (Kernel RBF),0.8056,0.8094,0.8056,0.805
+SVD + Clasificador Espectral,0.7917,0.7919,0.7917,0.7916
+XGBoost Forest,0.7639,0.7691,0.7639,0.7627
+Regresion Logistica,0.75,0.7571,0.75,0.7483

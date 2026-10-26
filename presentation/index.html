@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentación: Clasificador Perros vs Gatos</title>
+    <title>Presentación: Clasificador Optimizado Perros vs Gatos</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #090d16;
             --slide-bg: #111827;
             --primary: #38bdf8;
-            --accent: #f43f5e;
+            --accent: #10b981;
             --text: #f3f4f6;
             --muted: #9ca3af;
         }
@@ -20,10 +20,10 @@
         .slide { display: none; animation: fadeIn 0.4s ease-in-out; }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
         h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; }
         p { font-size: 1.15rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-        .badge { display: inline-block; padding: 6px 14px; background: rgba(244, 63, 94, 0.15); color: var(--accent); border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; }
+        .badge { display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.15); color: var(--accent); border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; }
         .nav-controls { position: absolute; bottom: 25px; right: 40px; display: flex; gap: 12px; }
         button { background: rgba(56, 189, 248, 0.15); color: var(--primary); border: 1px solid var(--primary); padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         button:hover { background: var(--primary); color: #000; }
@@ -37,59 +37,49 @@
     <div class="slide-container">
         <!-- Slide 1 -->
         <div class="slide active">
-            <span class="badge">PROYECTO MACHINE LEARNING</span>
-            <h1>Clasificador Inteligente:<br>Perros vs Gatos</h1>
-            <p>Entrenamiento de 4 modelos de aprendizaje automático (Regresión, SVM, SVD y XGBoost) utilizando imágenes reales y normalización mediante matriz negra.</p>
+            <span class="badge">MACHINE LEARNING OPTIMIZADO</span>
+            <h1>Clasificador Inteligente:<br>Perros vs Gatos (80%+ Acc)</h1>
+            <p>Evolución del pipeline con descriptores HOG, pirámides espaciales y dataset expandido a 360 imágenes en matriz negra.</p>
             <p style="color: var(--primary); font-weight: 600;">Autor: Carlos Benitez • Octubre 2026</p>
         </div>
 
         <!-- Slide 2 -->
         <div class="slide">
-            <h2>El Desafío del Preprocesamiento</h2>
-            <p><strong>El problema del resize tradicional:</strong> Comprime desproporcionadamente las proporciones de animales con orejas altas o siluetas alargadas.</p>
-            <p><strong>Nuestra Solución (Matriz Negra):</strong></p>
+            <h2>El Salto de Calidad</h2>
+            <p><strong>El problema original:</strong> Con solo 120 imágenes y rasgos básicos, los modelos rondaban ~58% de exactitud.</p>
+            <p><strong>Soluciones implementadas:</strong></p>
             <ul style="margin-left: 25px; color: var(--muted); font-size: 1.1rem; line-height: 1.8;">
-                <li>Cálculo de factor de escala invariante $s = \min(256/W, 256/H)$</li>
-                <li>Inserción centrada en un lienzo negro de $256 	imes 256$ píxeles</li>
-                <li>Preservación matemática exacta de la relación de aspecto</li>
+                <li>Expansión a <strong>360 imágenes</strong> reales de GitHub</li>
+                <li>Inserción con <strong>letterbox en matriz negra ($256 	imes 256$)</strong></li>
+                <li>Descriptores <strong>HOG de forma</strong> (orejas y hocicos) + cuadrantes espaciales 2x2</li>
             </ul>
         </div>
 
         <!-- Slide 3 -->
         <div class="slide">
-            <h2>Extracción de Rasgos & SVD</h2>
-            <p><strong>Pipeline Dual de Características:</strong></p>
-            <ul style="margin-left: 25px; color: var(--muted); font-size: 1.05rem; line-height: 1.7;">
-                <li><strong>Rasgos Tabulares:</strong> Momentos de color en RGB y HSV, histogramas normalizados, magnitudes de gradiente Sobel y varianza Laplaciana de nitidez.</li>
-                <li><strong>Espacio Espectral (SVD):</strong> Descomposición en 20 componentes singulares de las imágenes planas de 64x64 (Eigen-Animals).</li>
-            </ul>
-        </div>
-
-        <!-- Slide 4 -->
-        <div class="slide">
-            <h2>Resultados de Evaluación (Test Set)</h2>
+            <h2>Resultados Finales Optimizados</h2>
             <table>
                 <thead>
                     <tr><th>Modelo</th><th>Exactitud</th><th>Precisión</th><th>F1-Score</th></tr>
                 </thead>
                 <tbody>
-                    <tr style="color: #38bdf8; font-weight: bold;"><td>XGBoost Forest</td><td>66.67%</td><td>68.75%</td><td>65.71%</td></tr>
-                    <tr><td>SVM (RBF)</td><td>62.50%</td><td>65.13%</td><td>60.80%</td></tr>
-                    <tr><td>SVD + Linear SVC</td><td>58.33%</td><td>61.11%</td><td>55.56%</td></tr>
-                    <tr><td>Regresión Logística</td><td>58.33%</td><td>61.11%</td><td>55.56%</td></tr>
+                    <tr style="color: #10b981; font-weight: bold;"><td>SVM (RBF Kernel)</td><td>80.56%</td><td>80.94%</td><td>80.50%</td></tr>
+                    <tr style="color: #38bdf8; font-weight: bold;"><td>SVD + Clasificador Espectral</td><td>79.17%</td><td>79.19%</td><td>79.16%</td></tr>
+                    <tr><td>XGBoost Forest</td><td>76.39%</td><td>76.91%</td><td>76.27%</td></tr>
+                    <tr><td>Regresión Logística</td><td>75.00%</td><td>75.71%</td><td>74.83%</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Slide 5 -->
+        <!-- Slide 4 -->
         <div class="slide">
-            <h2>Conclusiones & Demo</h2>
-            <p>✅ <strong>Robustez:</strong> XGBoost Forest lidera la clasificación binaria combinando eficazmente textura y colorimetría.</p>
-            <p>✅ <strong>Demostrador Interactivo:</strong> Aplicación Streamlit con soporte de inferencia en tiempo real y selector de galería.</p>
-            <p>✅ <strong>Código Abierto:</strong> Repositorio versionado con Git en la rama <code>project-test</code>.</p>
+            <h2>Demostración & Plataforma</h2>
+            <p>✅ <strong>Dashboard Streamlit:</strong> Inferencia en tiempo real con selector de fotos procesadas en matriz negra o fotos crudas.</p>
+            <p>✅ <strong>CLI de Predicción:</strong> <code>python models/predict.py --image ... --model svm</code></p>
+            <p>✅ <strong>Control de Versiones:</strong> Todo sincronizado en la rama <code>project-test</code> de GitHub.</p>
         </div>
 
-        <div class="counter" id="slide-num">1 / 5</div>
+        <div class="counter" id="slide-num">1 / 4</div>
         <div class="nav-controls">
             <button onclick="prevSlide()">← Anterior</button>
             <button onclick="nextSlide()">Siguiente →</button>

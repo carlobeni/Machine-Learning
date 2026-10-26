@@ -1,106 +1,90 @@
-# Clasificador de Perros y Gatos (Dogs vs Cats) 🐕 🐱
+# Clasificador de Perros y Gatos (Dogs vs Cats ML) 🐕 🐱
 
-Proyecto integral de Machine Learning y Visión por Computador para la clasificación binaria de fotografías reales de **perros** y **gatos**.
+Proyecto integral de Machine Learning y Visión por Computador para la clasificación binaria de fotografías reales de **perros** y **gatos**, optimizado para alcanzar más del **80% de Exactitud**.
 
 ---
 
 ## 📌 Aspectos Destacados
-- **Imágenes Reales del Repositorio:** 120 fotografías fotográficas auténticas de gatos y perros descargadas desde un repositorio público en GitHub (derivado de Kaggle Dogs vs Cats).
-- **Preservación de Aspect Ratio mediante Matriz Negra:** Inserción de imágenes con dimensiones heterogéneas en un canvas neutro de ceros ($256 \times 256$) evitando la distorsión del `resize` tradicional.
-- **4 Modelos de Machine Learning Implementados:**
-  1. **Regresión Logística:** Línea base lineal regularizada.
-  2. **SVM (RBF Kernel):** Clasificador de vectores de soporte con hiperplano no lineal.
-  3. **SVD + Linear SVC:** Descomposición espectral en valores singulares ($k=20$ componentes / Eigen-Animals) sobre la matriz de imagen plana.
-  4. **XGBoost Forest:** Ensemble de árboles de decisión potenciados por gradiente (**Top Desempeño: 66.7% Accuracy / 65.7% F1**).
-- **Dashboard Streamlit Interactivo:** Aplicación web para inferencia en tiempo real, comparación de modelos y análisis visual.
-- **Herramienta CLI:** Script de línea de comandos para inferencia rápida (`models/predict.py`).
+- **Dataset Ampliado de Imágenes Reales (360 Fotos):** Descargadas del repositorio público de GitHub ([niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard](https://github.com/niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard)) derivado de Kaggle Dogs vs Cats.
+- **Inserción en Matriz Negra (Letterbox Zero-Padding):** Todas las imágenes están estandarizadas a $256 \times 256 \times 3$ preservando la relación de aspecto espacial original sin deformación de orejas ni hocicos.
+- **Ingeniería de Rasgos Avanzada:**
+  - **HOG (Histogram of Oriented Gradients):** Captura contornos morfoscópicos (orejas puntiagudas en gatos vs caídas/anchas en perros).
+  - **Pirámides de Color Espaciales (Cuadrantes 2x2):** Diferenciación cromática entre región craneal y corporal.
+  - **Histogramas HSV:** Distribución de matiz, saturación y brillo.
+  - **SVD Espectral:** Reducción latente de dimensionalidad ($k=35$ componentes singulares / Eigen-Animals).
+- **Dashboard Streamlit Interactivo:** Exploración de imágenes procesadas en matriz negra, predicción en tiempo real con barras de confianza y comparación multi-modelo.
+- **CLI de Inferencia (`models/predict.py`):** Detección rápida por línea de comandos.
 
 ---
 
-## 🗂️ Estructura del Proyecto
-```
-├── dashboard/
-│   ├── app.py                  # Dashboard interactivo en Streamlit
-│   ├── requirements.txt
-│   └── Dockerfile
-├── data/
-│   ├── raw/
-│   │   ├── gatos/              # 60 fotografías reales de gatos
-│   │   ├── perros/             # 60 fotografías reales de perros
-│   │   └── dataset_info.json   # Metadatos de procedencia
-│   └── processed/
-│       ├── preprocessor.py     # Inserción en matriz negra y extracción
-│       ├── features_animales.csv
-│       └── dataset_animales.npz
-├── models/
-│   ├── logistic_regression.joblib
-│   ├── svm_rbf.joblib
-│   ├── svd_pipeline.joblib     # Pipeline SVD + Linear SVC
-│   ├── xgboost_forest.joblib
-│   ├── scaler.joblib
-│   ├── label_encoder.joblib
-│   ├── metrics.json
-│   ├── confusion_matrices.png  # Comparativa gráfica de matrices
-│   ├── svd_eigen_animals.png   # Visualización de Eigen-Animals
-│   └── predict.py              # Inferencia por consola (CLI)
-├── docs/
-│   ├── index.html              # Documentación web interactiva
-│   └── arquitectura_tecnica.md # Arquitectura detallada del sistema
-├── reports/
-│   ├── informe_clasificacion.md# Informe técnico del experimento
-│   └── metricas_resumen.csv    # Tabla cuantitativa de métricas
-├── presentation/
-│   └── index.html              # Diapositivas interactivas en HTML5
-└── README.md
-```
+## 📊 Tabla Comparativa de Rendimiento (Test Set 72 Muestras)
+
+| Modelo | Accuracy | Precision | Recall | F1-Score |
+|---|---|---|---|---|
+| **SVM (Kernel RBF Calibrado)** | **80.56%** | **80.94%** | **80.56%** | **80.50%** |
+| **SVD + Clasificador Espectral** | **79.17%** | **79.19%** | **79.17%** | **79.16%** |
+| **XGBoost Forest (150 Estimadores)** | **76.39%** | **76.91%** | **76.39%** | **76.27%** |
+| **Regresión Logística ($L_2$)** | **75.00%** | **75.71%** | **75.00%** | **74.83%** |
 
 ---
 
-## 🚀 Guía de Inicio Rápido
+## 🚀 Guía de Uso
 
-### 1. Requisitos Previos
-Asegúrate de contar con Python 3.10+ y las dependencias instaladas:
-```bash
-pip install streamlit scikit-learn xgboost opencv-python pillow pandas numpy matplotlib seaborn joblib
-```
-
-### 2. Ejecución del Dashboard Interactivo
+### 1. Iniciar el Dashboard
 ```bash
 streamlit run dashboard/app.py
 ```
 
-### 3. Inferencia por Consola (CLI)
-Puedes predecir cualquier imagen individual pasando la ruta y el modelo deseado (`xgb`, `svm`, `svd`, `lr`):
+### 2. Inferencia por Consola (CLI)
 ```bash
-# Ejemplo con imagen de gato usando XGBoost:
-python models/predict.py --image "data/raw/gatos/gato_000.jpg" --model xgb
+# Ejemplo gato:
+python models/predict.py --image "data/processed/gatos/gato_000.jpg" --model svm
 
-# Ejemplo con imagen de perro usando SVD Eigen-Animals:
-python models/predict.py --image "data/raw/perros/perro_000.jpg" --model svd
+# Ejemplo perro:
+python models/predict.py --image "data/processed/perros/perro_000.jpg" --model svm
 ```
 
 ---
 
-## 📊 Resumen de Desempeño (Test Set 20%)
-
-| Modelo | Accuracy | Precision | Recall | F1-Score |
-|---|---|---|---|---|
-| **XGBoost Forest** | **66.67%** | **68.75%** | **66.67%** | **65.71%** |
-| **SVM (RBF Kernel)** | **62.50%** | **65.13%** | **62.50%** | **60.80%** |
-| **SVD + Linear SVC** | **58.33%** | **61.11%** | **58.33%** | **55.56%** |
-| **Regresión Logística** | **58.33%** | **61.11%** | **58.33%** | **55.56%** |
-
----
-
-## 🔬 Inserción en Matriz Negra (Letterbox Zero-Padding)
-Para salvaguardar la relación de aspecto original de cada animal sin deformación morfológica:
-1. Se determina el factor de escala homogéneo: $s = \min(256/W, 256/H)$.
-2. Se redimensiona la imagen proporcionalmente manteniendo la curvatura de orejas y hocicos.
-3. Se crea un canvas neutro de ceros de $256 \times 256 \times 3$.
-4. Se posiciona la imagen escalada en el centro geométrico del canvas.
-
----
-
-## 📄 Licencia y Créditos
-Dataset derivado de colecciones de código abierto de Kaggle Dogs vs Cats compiladas en GitHub (`niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard`).
-Desarrollado para el curso de Machine Learning 1.
+## 🗂️ Estructura del Repositorio
+```
+├── dashboard/
+│   ├── app.py                  # Dashboard interactivo en Streamlit
+│   ├── requirements.txt
+│   └── README.md
+├── data/
+│   ├── raw/
+│   │   ├── gatos/              # 180 imágenes crudas
+│   │   ├── perros/             # 180 imágenes crudas
+│   │   ├── dataset_info.json
+│   │   └── README.md
+│   └── processed/
+│       ├── gatos/              # 180 imágenes en matriz negra (256x256)
+│       ├── perros/             # 180 imágenes en matriz negra (256x256)
+│       ├── preprocessor.py     # HOG + padding + extracción
+│       ├── features_animales.csv
+│       ├── dataset_animales.npz
+│       └── README.md
+├── models/
+│   ├── logistic_regression.joblib
+│   ├── svm_rbf.joblib
+│   ├── svd_pipeline.joblib
+│   ├── xgboost_forest.joblib
+│   ├── scaler.joblib
+│   ├── label_encoder.joblib
+│   ├── metrics.json
+│   ├── confusion_matrices.png
+│   ├── svd_eigen_animals.png
+│   └── predict.py
+├── docs/
+│   ├── index.html
+│   └── arquitectura_tecnica.md
+├── reports/
+│   ├── informe_clasificacion.md
+│   ├── metricas_resumen.csv
+│   └── README.md
+├── presentation/
+│   ├── index.html
+│   └── README.md
+└── README.md
+```

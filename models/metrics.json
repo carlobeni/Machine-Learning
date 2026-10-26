@@ -1,65 +1,65 @@
 {
-  "Regresion Logistica": {
-    "accuracy": 0.5417,
-    "precision": 0.5632,
-    "recall": 0.5417,
-    "f1_score": 0.4991,
+  "SVM (Kernel RBF)": {
+    "accuracy": 0.8056,
+    "precision": 0.8094,
+    "recall": 0.8056,
+    "f1_score": 0.805,
     "confusion_matrix": [
       [
-        3,
-        9
+        31,
+        5
       ],
       [
-        2,
-        10
+        9,
+        27
       ]
     ]
   },
-  "SVM (RBF)": {
-    "accuracy": 0.625,
-    "precision": 0.6513,
-    "recall": 0.625,
-    "f1_score": 0.608,
+  "SVD + Clasificador Espectral": {
+    "accuracy": 0.7917,
+    "precision": 0.7919,
+    "recall": 0.7917,
+    "f1_score": 0.7916,
     "confusion_matrix": [
       [
-        5,
+        29,
         7
       ],
       [
-        2,
-        10
-      ]
-    ]
-  },
-  "SVD + Linear SVC": {
-    "accuracy": 0.5833,
-    "precision": 0.6111,
-    "recall": 0.5833,
-    "f1_score": 0.5556,
-    "confusion_matrix": [
-      [
-        4,
-        8
-      ],
-      [
-        2,
-        10
+        8,
+        28
       ]
     ]
   },
   "XGBoost Forest": {
-    "accuracy": 0.625,
-    "precision": 0.6333,
-    "recall": 0.625,
-    "f1_score": 0.619,
+    "accuracy": 0.7639,
+    "precision": 0.7691,
+    "recall": 0.7639,
+    "f1_score": 0.7627,
     "confusion_matrix": [
       [
-        6,
-        6
+        25,
+        11
       ],
       [
-        3,
-        9
+        6,
+        30
+      ]
+    ]
+  },
+  "Regresion Logistica": {
+    "accuracy": 0.75,
+    "precision": 0.7571,
+    "recall": 0.75,
+    "f1_score": 0.7483,
+    "confusion_matrix": [
+      [
+        24,
+        12
+      ],
+      [
+        6,
+        30
       ]
     ]
   }

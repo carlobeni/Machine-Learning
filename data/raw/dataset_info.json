@@ -1,12 +1,13 @@
 {
-  "dataset_name": "Cats vs Dogs Real Photography Benchmark",
+  "dataset_name": "Cats vs Dogs High-Performance Photography Benchmark",
   "source_type": "GitHub Repository / Kaggle Dogs vs Cats curated subset",
   "repository_url": "https://github.com/niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard",
-  "num_cats": 60,
-  "num_dogs": 60,
+  "num_cats": 180,
+  "num_dogs": 180,
+  "total_samples": 360,
   "classes": [
     "gatos",
     "perros"
   ],
-  "description": "Real photographic images of domestic cats and dogs featuring variable resolutions, orientations, natural domestic environments, and diverse fur textures."
+  "description": "360 domestic cat and dog real photographs, padded into 256x256 zero black-matrix canvases with preserved aspect ratio, enriched with HOG and spatial color descriptors."
 }
