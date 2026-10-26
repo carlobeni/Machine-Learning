@@ -1,104 +1,66 @@
 {
-  "classes": [
-    "limon",
-    "naranja",
-    "pomelo"
-  ],
-  "n_samples": 150,
-  "test_samples": 38,
-  "source": "Horea94/Fruit-Images-Dataset (Fotografias Reales de C\u00edtricos)",
-  "models": {
-    "Regresion Logistica": {
-      "accuracy": 1.0,
-      "f1_score": 1.0,
-      "fit_time_seconds": 0.009305477142333984,
-      "inference_latency_ms": 0.01407924451326069,
-      "confusion_matrix": [
-        [
-          12,
-          0,
-          0
-        ],
-        [
-          0,
-          13,
-          0
-        ],
-        [
-          0,
-          0,
-          13
-        ]
+  "Regresi\u00f3n Log\u00edstica": {
+    "accuracy": 0.5833,
+    "precision": 0.6111,
+    "recall": 0.5833,
+    "f1_score": 0.5556,
+    "confusion_matrix": [
+      [
+        4,
+        8
+      ],
+      [
+        2,
+        10
       ]
-    },
-    "SVM (Kernel RBF)": {
-      "accuracy": 1.0,
-      "f1_score": 1.0,
-      "fit_time_seconds": 0.01292276382446289,
-      "inference_latency_ms": 0.021752558256450453,
-      "confusion_matrix": [
-        [
-          12,
-          0,
-          0
-        ],
-        [
-          0,
-          13,
-          0
-        ],
-        [
-          0,
-          0,
-          13
-        ]
+    ]
+  },
+  "SVM (RBF)": {
+    "accuracy": 0.625,
+    "precision": 0.6513,
+    "recall": 0.625,
+    "f1_score": 0.608,
+    "confusion_matrix": [
+      [
+        5,
+        7
+      ],
+      [
+        2,
+        10
       ]
-    },
-    "SVD (Eigen-Citrus)": {
-      "accuracy": 1.0,
-      "f1_score": 1.0,
-      "fit_time_seconds": 0.08106637001037598,
-      "inference_latency_ms": 0.09312755183169716,
-      "confusion_matrix": [
-        [
-          12,
-          0,
-          0
-        ],
-        [
-          0,
-          13,
-          0
-        ],
-        [
-          0,
-          0,
-          13
-        ]
+    ]
+  },
+  "SVD + Linear SVC": {
+    "accuracy": 0.5833,
+    "precision": 0.6111,
+    "recall": 0.5833,
+    "f1_score": 0.5556,
+    "confusion_matrix": [
+      [
+        4,
+        8
+      ],
+      [
+        2,
+        10
       ]
-    },
-    "XGBoost Forest": {
-      "accuracy": 1.0,
-      "f1_score": 1.0,
-      "fit_time_seconds": 0.2394421100616455,
-      "inference_latency_ms": 0.07862166354530736,
-      "confusion_matrix": [
-        [
-          12,
-          0,
-          0
-        ],
-        [
-          0,
-          13,
-          0
-        ],
-        [
-          0,
-          0,
-          13
-        ]
+    ]
+  },
+  "XGBoost Forest": {
+    "accuracy": 0.6667,
+    "precision": 0.6875,
+    "recall": 0.6667,
+    "f1_score": 0.6571,
+    "confusion_matrix": [
+      [
+        6,
+        6
+      ],
+      [
+        2,
+        10
       ]
-    }
+    ]
   }
 }

@@ -1,5 +1,5 @@
-Modelo,Accuracy,F1_Score,Latencia_ms,Tiempo_Fit_s
-Regresion Logistica,1.000,1.000,0.01,0.009
-SVM (Kernel RBF),1.000,1.000,0.02,0.013
-SVD (Eigen-Citrus),1.000,1.000,0.09,0.081
-XGBoost Forest,1.000,1.000,0.08,0.239
+Modelo,Exactitud (Accuracy),Precisión (Precision),Sensibilidad (Recall),F1-Score
+Regresión Logística,0.5833,0.6111,0.5833,0.5556
+SVM (RBF),0.625,0.6513,0.625,0.608
+SVD + Linear SVC,0.5833,0.6111,0.5833,0.5556
+XGBoost Forest,0.6667,0.6875,0.6667,0.6571

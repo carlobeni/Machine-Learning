@@ -3,139 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citrus AI Vision - Clasificación de Cítricos | FIUNA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <title>Clasificador Perros vs Gatos | Machine Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .gradient-text { background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #38bdf8;
+            --accent: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(56, 189, 248, 0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 16px; padding: 28px; backdrop-filter: blur(10px); transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
+        .card h3 { color: var(--primary); font-size: 1.3rem; margin-bottom: 12px; }
+        .tag { display: inline-block; padding: 4px 10px; background: rgba(56, 189, 248, 0.15); color: var(--primary); border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 15px; }
+        .code-box { background: #020617; border-radius: 8px; padding: 14px; font-family: monospace; font-size: 0.9rem; color: #38bdf8; overflow-x: auto; margin-top: 15px; }
+        footer { text-align: center; margin-top: 60px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Navbar -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <span class="text-3xl">🍊</span>
-            <span class="text-xl font-bold tracking-tight">Citrus<span class="text-orange-500">Vision</span> AI</span>
-            <span class="text-xs bg-orange-500/20 text-orange-400 px-2.5 py-0.5 rounded-full border border-orange-500/30">ML1 - FIUNA</span>
-        </div>
-        <nav class="flex space-x-6 text-sm font-medium text-slate-300">
-            <a href="#arquitectura" class="hover:text-orange-400 transition">Arquitectura</a>
-            <a href="#modelos" class="hover:text-orange-400 transition">Modelos</a>
-            <a href="#benchmark" class="hover:text-orange-400 transition">Benchmark</a>
-            <a href="#demo" class="hover:text-orange-400 transition">Demo Interactiva</a>
-        </nav>
-    </header>
+<body>
+    <div class="container">
+        <header>
+            <span class="tag">Machine Learning & Computer Vision</span>
+            <h1>Clasificador Inteligente: Perros vs Gatos</h1>
+            <p class="subtitle">Pipeline de aprendizaje supervisado con 4 modelos (Regresión Logística, SVM RBF, SVD Eigen-Animals y XGBoost Forest) y preservación de aspecto mediante inserción en matriz negra.</p>
+        </header>
 
-    <!-- Hero -->
-    <section class="max-w-6xl mx-auto px-6 py-20 text-center">
-        <div class="inline-block px-4 py-1.5 rounded-full bg-slate-800 text-slate-300 text-sm mb-6 border border-slate-700">
-            Proyecto de Inteligencia Artificial & Visión Computacional
-        </div>
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Clasificación Multiclase de Cítricos:<br>
-            <span class="gradient-text">Naranjas, Pomelos y Limones</span>
-        </h1>
-        <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Pipeline integral de inspección óptica automatizada que fusiona descriptores morfológicos y espectrales HSV con cuatro paradigmas de Machine Learning: Regresión Logística, SVM, SVD (Eigen-Citrus) y XGBoost Forest.
-        </p>
-        <div class="flex justify-center gap-4">
-            <a href="#demo" class="bg-orange-600 hover:bg-orange-500 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-orange-600/30 transition">
-                Probar Demo Interactiva
-            </a>
-            <a href="https://github.com/carlobeni/Machine-Learning/tree/project-test" target="_blank" class="glass-card hover:bg-slate-800 text-slate-200 font-semibold px-8 py-3.5 rounded-xl transition">
-                Ver Repositorio GitHub
-            </a>
-        </div>
-    </section>
-
-    <!-- Modelos -->
-    <section id="modelos" class="max-w-6xl mx-auto px-6 py-16">
-        <h2 class="text-3xl font-bold mb-10 text-center">4 Modelos de Clasificación Evaluados</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-emerald-500">
-                <span class="text-3xl mb-3 block">📈</span>
-                <h3 class="text-lg font-bold mb-2">Regresión Logística</h3>
-                <p class="text-slate-400 text-sm mb-4">Modelo lineal probabilístico multinomial. Excelente interpretabilidad mediante pesos espectrales.</p>
-                <div class="mono text-xs text-emerald-400 font-bold">Accuracy: 100.0% | Latencia: 0.03ms</div>
+        <div class="grid">
+            <div class="card">
+                <h3>🖼️ Inserción en Matriz Negra</h3>
+                <p>Las fotografías de gatos y perros poseen orientaciones y dimensiones dispares. En lugar de deformar la silueta con un redimensionado plano, la imagen se inserta escalada proporcionalmente en un lienzo neutro de ceros de 256x256.</p>
+                <div class="code-box">s = min(256/W, 256/H)<br>canvas[y_off:y_off+h, x_off:x_off+w] = img</div>
             </div>
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-blue-500">
-                <span class="text-3xl mb-3 block">🎯</span>
-                <h3 class="text-lg font-bold mb-2">SVM Kernel RBF</h3>
-                <p class="text-slate-400 text-sm mb-4">Margen de separación óptimo en espacio transformado de Hilbert mediante kernel gaussiano.</p>
-                <div class="mono text-xs text-blue-400 font-bold">Accuracy: 100.0% | Latencia: 0.03ms</div>
+            <div class="card">
+                <h3>🌲 Modelos de Clasificación</h3>
+                <p>Se entrenaron y calibraron 4 modelos con validación estratificada:</p>
+                <ul style="margin-left: 20px; margin-top: 10px; color: var(--text-muted);">
+                    <li><strong>XGBoost Forest:</strong> 66.7% Accuracy (Top Desempeño)</li>
+                    <li><strong>SVM (RBF Kernel):</strong> 62.5% Accuracy</li>
+                    <li><strong>SVD + Linear SVC:</strong> 58.3% Accuracy</li>
+                    <li><strong>Regresión Logística:</strong> 58.3% Accuracy</li>
+                </ul>
             </div>
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-purple-500">
-                <span class="text-3xl mb-3 block">🌀</span>
-                <h3 class="text-lg font-bold mb-2">SVD (Eigen-Citrus)</h3>
-                <p class="text-slate-400 text-sm mb-4">Reducción de dimensión espacial pura (4096 &rarr; 15 componentes singulares) emulando Eigenfaces.</p>
-                <div class="mono text-xs text-purple-400 font-bold">Accuracy: 93.3% | Latencia: 0.12ms</div>
-            </div>
-            <div class="glass-card p-6 rounded-2xl border-t-4 border-amber-500">
-                <span class="text-3xl mb-3 block">🌲</span>
-                <h3 class="text-lg font-bold mb-2">XGBoost Forest</h3>
-                <p class="text-slate-400 text-sm mb-4">Ensamble secuencial de árboles acelerado por gradiente. Máxima robustez ante correlaciones.</p>
-                <div class="mono text-xs text-amber-400 font-bold">Accuracy: 100.0% | Latencia: 0.08ms</div>
+            <div class="card">
+                <h3>🔬 SVD: Eigen-Animals</h3>
+                <p>Descomposición espectral de la matriz plana de 4096 dimensiones para capturar vectores singulares correspondientes a siluetas morfológicas (orejas puntiagudas, hocicos y contornos cefálicos).</p>
+                <div class="code-box">python models/predict.py --image ... --model svd</div>
             </div>
         </div>
-    </section>
 
-    <!-- Demo Simulator -->
-    <section id="demo" class="max-w-4xl mx-auto px-6 py-16">
-        <div class="glass-card p-8 rounded-3xl text-center">
-            <h2 class="text-2xl font-bold mb-4">🧪 Simulador de Inferencia en Tiempo Real</h2>
-            <p class="text-slate-400 text-sm mb-6">Selecciona una fruta para simular la extracción de características y predicción simultánea:</p>
-            <div class="flex justify-center gap-4 mb-8">
-                <button onclick="simulate('naranja')" class="px-5 py-2.5 rounded-lg bg-orange-600/30 hover:bg-orange-600/50 border border-orange-500 text-orange-300 font-medium">🍊 Probar Naranja</button>
-                <button onclick="simulate('pomelo')" class="px-5 py-2.5 rounded-lg bg-rose-600/30 hover:bg-rose-600/50 border border-rose-500 text-rose-300 font-medium">🌸 Probar Pomelo</button>
-                <button onclick="simulate('limon')" class="px-5 py-2.5 rounded-lg bg-yellow-600/30 hover:bg-yellow-600/50 border border-yellow-500 text-yellow-300 font-medium">🍋 Probar Limón</button>
-            </div>
-            <div id="result-box" class="p-6 bg-slate-900/90 rounded-2xl border border-slate-800 text-left mono text-sm">
-                <span class="text-slate-500">// Haz clic en uno de los botones para ejecutar la inferencia...</span>
-            </div>
+        <div class="card" style="margin-bottom: 40px;">
+            <h3>🚀 Ejecución Rápida del Dashboard</h3>
+            <p>Inicia la interfaz gráfica Streamlit para interactuar con el modelo en tiempo real:</p>
+            <div class="code-box">streamlit run dashboard/app.py</div>
         </div>
-    </section>
 
-    <footer class="border-t border-slate-800 text-center py-8 text-sm text-slate-500">
-        Machine Learning 1 – Facultad de Ingeniería (Universidad Nacional de Asunción) | Ing. Carlos Benitez
-    </footer>
-
-    <script>
-        function simulate(fruit) {
-            const box = document.getElementById('result-box');
-            let data = {};
-            if(fruit === 'naranja') {
-                data = {
-                    clase: "NARANJA",
-                    hue: "22.4° (Naranja)", aspect: "1.01 (Esférico)",
-                    modelos: { "Regresión": "99.8%", "SVM RBF": "99.4%", "SVD": "94.2%", "XGBoost": "99.6%" }
-                };
-            } else if(fruit === 'pomelo') {
-                data = {
-                    clase: "POMELO",
-                    hue: "354.1° (Rosa/Rubí)", aspect: "1.08 (Oblato)",
-                    modelos: { "Regresión": "99.5%", "SVM RBF": "98.9%", "SVD": "91.5%", "XGBoost": "99.2%" }
-                };
-            } else {
-                data = {
-                    clase: "LIMÓN",
-                    hue: "58.7° (Amarillo)", aspect: "1.42 (Elipsoidal)",
-                    modelos: { "Regresión": "99.4%", "SVM RBF": "93.9%", "SVD": "97.9%", "XGBoost": "98.2%" }
-                };
-            }
-            box.innerHTML = `
-                <div class="text-emerald-400 font-bold text-lg mb-2">✅ Resultado: ${data.clase}</div>
-                <div class="text-slate-400 mb-3">Tono Dominante: <span class="text-white">${data.hue}</span> | Relación de Aspecto: <span class="text-white">${data.aspect}</span></div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                    <div class="p-2 bg-slate-800 rounded">Regresión: <span class="text-orange-400 font-bold">${data.modelos["Regresión"]}</span></div>
-                    <div class="p-2 bg-slate-800 rounded">SVM RBF: <span class="text-blue-400 font-bold">${data.modelos["SVM RBF"]}</span></div>
-                    <div class="p-2 bg-slate-800 rounded">SVD: <span class="text-purple-400 font-bold">${data.modelos["SVD"]}</span></div>
-                    <div class="p-2 bg-slate-800 rounded">XGBoost: <span class="text-amber-400 font-bold">${data.modelos["XGBoost"]}</span></div>
-                </div>
-            `;
-        }
-    </script>
+        <footer>
+            Proyecto de Machine Learning • Branch <code>project-test</code> • Repositorio GitHub
+        </footer>
+    </div>
 </body>
 </html>

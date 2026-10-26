@@ -1,82 +1,100 @@
+import os
 import cv2
 import numpy as np
 import pandas as pd
 
-def extract_features_from_image(image_input):
+def insert_in_black_canvas(image_bgr, target_size=(256, 256)):
     """
-    Extrae el vector de características de 40 dimensiones (color HSV/RGB,
-    momentos estadísticos y morfología) y la miniatura 64x64 para SVD.
-    
-    Args:
-        image_input: Ruta de archivo (str), buffer de bytes o array numpy BGR/RGB.
-        
-    Returns:
-        tuple: (dict_features, flat_image_for_svd)
+    Inserts an arbitrary-sized real image into a black matrix canvas of target_size,
+    strictly maintaining the original aspect ratio without distortion (letterbox padding).
     """
-    if isinstance(image_input, str):
-        img_bgr = cv2.imread(image_input)
-    elif isinstance(image_input, bytes):
-        nparr = np.frombuffer(image_input, np.uint8)
-        img_bgr = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    elif isinstance(image_input, np.ndarray):
-        img_bgr = image_input if len(image_input.shape) == 3 else cv2.cvtColor(image_input, cv2.COLOR_GRAY2BGR)
-    else:
-        raise ValueError("Formato de entrada no soportado.")
+    h, w = image_bgr.shape[:2]
+    target_h, target_w = target_size
+    
+    scale = min(target_w / w, target_h / h)
+    new_w = max(1, int(round(w * scale)))
+    new_h = max(1, int(round(h * scale)))
+    
+    # High-quality interpolation
+    interp = cv2.INTER_AREA if scale < 1.0 else cv2.INTER_CUBIC
+    resized = cv2.resize(image_bgr, (new_w, new_h), interpolation=interp)
+    
+    canvas = np.zeros((target_h, target_w, 3), dtype=np.uint8)
+    
+    # Calculate centering offsets
+    y_offset = (target_h - new_h) // 2
+    x_offset = (target_w - new_w) // 2
+    
+    canvas[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
+    return canvas, (x_offset, y_offset, new_w, new_h)
+
+def extract_image_features(image_bgr, target_size=(256, 256)):
+    """
+    Given a raw image of any dimension, letterboxes it into a black canvas and
+    extracts color, texture, and statistical features plus a 64x64 flat image representation.
+    """
+    orig_h, orig_w = image_bgr.shape[:2]
+    canvas_bgr, bbox = insert_in_black_canvas(image_bgr, target_size=target_size)
+    
+    # Convert color spaces
+    canvas_rgb = cv2.cvtColor(canvas_bgr, cv2.COLOR_BGR2RGB)
+    canvas_hsv = cv2.cvtColor(canvas_bgr, cv2.COLOR_BGR2HSV)
+    canvas_gray = cv2.cvtColor(canvas_bgr, cv2.COLOR_BGR2GRAY)
+    
+    # Mask non-black pixels (the animal region)
+    mask = canvas_gray > 5
+    if not np.any(mask):
+        mask = np.ones_like(canvas_gray, dtype=bool)
         
-    if img_bgr is None:
-        raise ValueError("No se pudo decodificar la imagen.")
-        
-    img_bgr = cv2.resize(img_bgr, (224, 224))
-    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-    img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+    rgb_masked = canvas_rgb[mask]
+    hsv_masked = canvas_hsv[mask]
     
-    # 1. Momentos RGB
-    r_mean, g_mean, b_mean = img_rgb[:, :, 0].mean(), img_rgb[:, :, 1].mean(), img_rgb[:, :, 2].mean()
-    r_std, g_std, b_std = img_rgb[:, :, 0].std(), img_rgb[:, :, 1].std(), img_rgb[:, :, 2].std()
+    # Color statistics
+    r_mean, g_mean, b_mean = np.mean(rgb_masked, axis=0)
+    r_std, g_std, b_std = np.std(rgb_masked, axis=0)
     
-    # 2. Momentos HSV
-    h_mean, s_mean, v_mean = img_hsv[:, :, 0].mean(), img_hsv[:, :, 1].mean(), img_hsv[:, :, 2].mean()
-    h_std, s_std, v_std = img_hsv[:, :, 0].std(), img_hsv[:, :, 1].std(), img_hsv[:, :, 2].std()
+    h_mean, s_mean, v_mean = np.mean(hsv_masked, axis=0)
+    h_std, s_std, v_std = np.std(hsv_masked, axis=0)
     
-    # 3. Histogramas HSV normalizados
-    h_hist = cv2.calcHist([img_hsv], [0], None, [16], [0, 180]).flatten()
-    h_hist /= (h_hist.sum() + 1e-6)
+    # Color histograms (8 bins per channel in HSV)
+    h_hist = cv2.calcHist([canvas_hsv], [0], mask.astype(np.uint8), [8], [0, 180]).flatten()
+    s_hist = cv2.calcHist([canvas_hsv], [1], mask.astype(np.uint8), [8], [0, 256]).flatten()
+    v_hist = cv2.calcHist([canvas_hsv], [2], mask.astype(np.uint8), [8], [0, 256]).flatten()
     
-    s_hist = cv2.calcHist([img_hsv], [1], None, [8], [0, 256]).flatten()
-    s_hist /= (s_hist.sum() + 1e-6)
+    h_hist = h_hist / (np.sum(h_hist) + 1e-6)
+    s_hist = s_hist / (np.sum(s_hist) + 1e-6)
+    v_hist = v_hist / (np.sum(v_hist) + 1e-6)
     
-    # 4. Morfología
-    mask = (img_gray < 225).astype(np.uint8) * 255
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Texture features
+    sobel_x = cv2.Sobel(canvas_gray, cv2.CV_64F, 1, 0, ksize=3)
+    sobel_y = cv2.Sobel(canvas_gray, cv2.CV_64F, 0, 1, ksize=3)
+    grad_mag = np.sqrt(sobel_x**2 + sobel_y**2)
+    grad_mean = float(np.mean(grad_mag[mask]))
+    grad_std = float(np.std(grad_mag[mask]))
     
-    if contours:
-        c = max(contours, key=cv2.contourArea)
-        area = cv2.contourArea(c)
-        perimeter = cv2.arcLength(c, True)
-        x, y, w, h = cv2.boundingRect(c)
-        aspect_ratio = float(w) / h if h > 0 else 1.0
-        circularity = 4 * np.pi * area / (perimeter ** 2 + 1e-6)
-    else:
-        aspect_ratio, circularity, area = 1.0, 1.0, 1000.0
-        
-    feat = {
-        'r_mean': r_mean, 'g_mean': g_mean, 'b_mean': b_mean,
-        'r_std': r_std, 'g_std': g_std, 'b_std': b_std,
-        'h_mean': h_mean, 's_mean': s_mean, 'v_mean': v_mean,
-        'h_std': h_std, 's_std': s_std, 'v_std': v_std,
-        'aspect_ratio': aspect_ratio,
-        'circularity': circularity,
-        'area': area
+    laplacian_var = float(cv2.Laplacian(canvas_gray, cv2.CV_64F).var())
+    
+    # Aspect ratio and fill ratio
+    aspect_ratio = float(orig_w / (orig_h + 1e-6))
+    fill_ratio = float(np.sum(mask) / (target_size[0] * target_size[1]))
+    
+    feature_dict = {
+        "r_mean": float(r_mean), "g_mean": float(g_mean), "b_mean": float(b_mean),
+        "r_std": float(r_std), "g_std": float(g_std), "b_std": float(b_std),
+        "h_mean": float(h_mean), "s_mean": float(s_mean), "v_mean": float(v_mean),
+        "h_std": float(h_std), "s_std": float(s_std), "v_std": float(v_std),
+        "grad_mean": grad_mean, "grad_std": grad_std,
+        "laplacian_var": laplacian_var,
+        "aspect_ratio": aspect_ratio, "fill_ratio": fill_ratio
     }
     
-    for i, val in enumerate(h_hist):
-        feat[f'h_bin_{i}'] = val
-    for i, val in enumerate(s_hist):
-        feat[f's_bin_{i}'] = val
+    for i in range(8):
+        feature_dict[f"h_hist_{i}"] = float(h_hist[i])
+        feature_dict[f"s_hist_{i}"] = float(s_hist[i])
+        feature_dict[f"v_hist_{i}"] = float(v_hist[i])
         
-    # Representación 64x64 aplanada para SVD
-    thumb_gray = cv2.resize(img_gray, (64, 64))
-    flat_svd = thumb_gray.flatten() / 255.0
+    # Flat image for SVD (64x64 normalized)
+    img_64 = cv2.resize(canvas_gray, (64, 64), interpolation=cv2.INTER_AREA)
+    img_flat = (img_64.astype(np.float32) / 255.0).flatten()
     
-    return feat, flat_svd
+    return feature_dict, canvas_rgb, img_flat

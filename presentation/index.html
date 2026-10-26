@@ -3,106 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defensa Técnica: Clasificación de Cítricos | ML1 FIUNA</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Presentación: Clasificador Perros vs Gatos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d16;
+            --slide-bg: #111827;
+            --primary: #38bdf8;
+            --accent: #f43f5e;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        .slide-container { width: 90vw; max-width: 960px; height: 560px; background: var(--slide-bg); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; overflow: hidden; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .slide { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+        h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; }
+        p { font-size: 1.15rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+        .badge { display: inline-block; padding: 6px 14px; background: rgba(244, 63, 94, 0.15); color: var(--accent); border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; }
+        .nav-controls { position: absolute; bottom: 25px; right: 40px; display: flex; gap: 12px; }
+        button { background: rgba(56, 189, 248, 0.15); color: var(--primary); border: 1px solid var(--primary); padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:hover { background: var(--primary); color: #000; }
+        .counter { position: absolute; bottom: 30px; left: 40px; color: var(--muted); font-size: 0.95rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: var(--primary); }
+    </style>
 </head>
 <body>
-    <div class="presentation-container">
+    <div class="slide-container">
         <!-- Slide 1 -->
-        <div class="slide active" id="slide-1">
-            <div class="badge">Machine Learning 1 – Segundo Parcial</div>
-            <h1>Clasificación Automatizada de Cítricos</h1>
-            <h2>Naranjas, Pomelos y Limones mediante Visión Computacional</h2>
-            <div class="author">Ing. Carlos Benitez | Dr. Diego Stalder | FIUNA 2026</div>
+        <div class="slide active">
+            <span class="badge">PROYECTO MACHINE LEARNING</span>
+            <h1>Clasificador Inteligente:<br>Perros vs Gatos</h1>
+            <p>Entrenamiento de 4 modelos de aprendizaje automático (Regresión, SVM, SVD y XGBoost) utilizando imágenes reales y normalización mediante matriz negra.</p>
+            <p style="color: var(--primary); font-weight: 600;">Autor: Carlos Benitez • Octubre 2026</p>
         </div>
 
         <!-- Slide 2 -->
-        <div class="slide" id="slide-2">
-            <h2>1. El Desafío de la Industria Citrícola</h2>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Problema</h3>
-                    <p>La selección manual de cítricos en cintas transportadoras presenta fatiga humana, inconsistencias en clasificación por color y retrasos operativos.</p>
-                </div>
-                <div class="card">
-                    <h3>Objetivo</h3>
-                    <p>Desarrollar un sistema de clasificación óptico no invasivo capaz de inferir la variedad con latencias menores a 1 ms y exactitud superior al 95%.</p>
-                </div>
-            </div>
+        <div class="slide">
+            <h2>El Desafío del Preprocesamiento</h2>
+            <p><strong>El problema del resize tradicional:</strong> Comprime desproporcionadamente las proporciones de animales con orejas altas o siluetas alargadas.</p>
+            <p><strong>Nuestra Solución (Matriz Negra):</strong></p>
+            <ul style="margin-left: 25px; color: var(--muted); font-size: 1.1rem; line-height: 1.8;">
+                <li>Cálculo de factor de escala invariante $s = \min(256/W, 256/H)$</li>
+                <li>Inserción centrada en un lienzo negro de $256 	imes 256$ píxeles</li>
+                <li>Preservación matemática exacta de la relación de aspecto</li>
+            </ul>
         </div>
 
         <!-- Slide 3 -->
-        <div class="slide" id="slide-3">
-            <h2>2. Extracción de Descriptores Discriminativos</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <h3>Espacio HSV</h3>
-                    <p>Histograma de Tono (Hue) para aislar la longitud de onda de reflexión: amarillo (limón), naranja y rosado (pomelo).</p>
-                </div>
-                <div class="card">
-                    <h3>Morfometría</h3>
-                    <p>Relación de aspecto (W/H) para detectar la excentricidad del limón vs la esfericidad de la naranja.</p>
-                </div>
-                <div class="card">
-                    <h3>Espacial SVD</h3>
-                    <p>Descomposición en valores singulares sobre la imagen completa para extraer autovectores espaciales.</p>
-                </div>
-            </div>
+        <div class="slide">
+            <h2>Extracción de Rasgos & SVD</h2>
+            <p><strong>Pipeline Dual de Características:</strong></p>
+            <ul style="margin-left: 25px; color: var(--muted); font-size: 1.05rem; line-height: 1.7;">
+                <li><strong>Rasgos Tabulares:</strong> Momentos de color en RGB y HSV, histogramas normalizados, magnitudes de gradiente Sobel y varianza Laplaciana de nitidez.</li>
+                <li><strong>Espacio Espectral (SVD):</strong> Descomposición en 20 componentes singulares de las imágenes planas de 64x64 (Eigen-Animals).</li>
+            </ul>
         </div>
 
         <!-- Slide 4 -->
-        <div class="slide" id="slide-4">
-            <h2>3. Resultados del Benchmark</h2>
-            <table class="styled-table">
+        <div class="slide">
+            <h2>Resultados de Evaluación (Test Set)</h2>
+            <table>
                 <thead>
-                    <tr><th>Algoritmo</th><th>Accuracy</th><th>F1-Score</th><th>Latencia</th></tr>
+                    <tr><th>Modelo</th><th>Exactitud</th><th>Precisión</th><th>F1-Score</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Regresión Logística</td><td class="highlight">100.0%</td><td>1.000</td><td>0.03 ms</td></tr>
-                    <tr><td>SVM Kernel RBF</td><td class="highlight">100.0%</td><td>1.000</td><td>0.03 ms</td></tr>
-                    <tr><td>SVD (Eigen-Citrus)</td><td>93.3%</td><td>0.933</td><td>0.12 ms</td></tr>
-                    <tr><td>XGBoost Forest</td><td class="highlight">100.0%</td><td>1.000</td><td>0.08 ms</td></tr>
+                    <tr style="color: #38bdf8; font-weight: bold;"><td>XGBoost Forest</td><td>66.67%</td><td>68.75%</td><td>65.71%</td></tr>
+                    <tr><td>SVM (RBF)</td><td>62.50%</td><td>65.13%</td><td>60.80%</td></tr>
+                    <tr><td>SVD + Linear SVC</td><td>58.33%</td><td>61.11%</td><td>55.56%</td></tr>
+                    <tr><td>Regresión Logística</td><td>58.33%</td><td>61.11%</td><td>55.56%</td></tr>
                 </tbody>
             </table>
         </div>
 
         <!-- Slide 5 -->
-        <div class="slide" id="slide-5">
-            <h2>4. Conclusiones y Despliegue</h2>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Ecosistema Completo</h3>
-                    <p>Modelos serializados con soporte de inferencia vía CLI, API REST (FastAPI) y Dashboard interactivo (Streamlit).</p>
-                </div>
-                <div class="card">
-                    <h3>Impacto</h3>
-                    <p>Demostración práctica de cómo técnicas lineales (SVD, Regresión) y no lineales (SVM, Boosting) resuelven un problema real de ingeniería.</p>
-                </div>
-            </div>
+        <div class="slide">
+            <h2>Conclusiones & Demo</h2>
+            <p>✅ <strong>Robustez:</strong> XGBoost Forest lidera la clasificación binaria combinando eficazmente textura y colorimetría.</p>
+            <p>✅ <strong>Demostrador Interactivo:</strong> Aplicación Streamlit con soporte de inferencia en tiempo real y selector de galería.</p>
+            <p>✅ <strong>Código Abierto:</strong> Repositorio versionado con Git en la rama <code>project-test</code>.</p>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <button onclick="prevSlide()" class="btn">◀ Anterior</button>
-            <span id="slide-indicator" class="indicator">1 / 5</span>
-            <button onclick="nextSlide()" class="btn">Siguiente ▶</button>
+        <div class="counter" id="slide-num">1 / 5</div>
+        <div class="nav-controls">
+            <button onclick="prevSlide()">← Anterior</button>
+            <button onclick="nextSlide()">Siguiente →</button>
         </div>
     </div>
 
     <script>
-        let currentSlide = 1;
-        const totalSlides = 5;
-        function showSlide(n) {
-            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            document.getElementById('slide-' + n).classList.add('active');
-            document.getElementById('slide-indicator').innerText = n + ' / ' + totalSlides;
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.getElementById('slide-num');
+
+        function updateSlide() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === current));
+            counter.textContent = `${current + 1} / ${slides.length}`;
         }
-        function nextSlide() { if(currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
-        function prevSlide() { if(currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+
+        function nextSlide() {
+            if (current < slides.length - 1) { current++; updateSlide(); }
+        }
+
+        function prevSlide() {
+            if (current > 0) { current--; updateSlide(); }
+        }
+
         document.addEventListener('keydown', (e) => {
-            if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
-            if(e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
         });
     </script>
 </body>
