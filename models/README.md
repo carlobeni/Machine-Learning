@@ -1,40 +1,21 @@
-# Modelos Entrenados de Machine Learning
+# Modelos Entrenados de Machine Learning 🧠
 
-Este directorio almacena los 4 clasificadores serializados entrenados sobre el dataset de cítricos (Naranjas, Pomelos y Limones):
+Este directorio almacena los artefactos y clasificadores entrenados para distinguir entre perros y gatos:
 
-## Modelos Disponibles
-1. **`logistic_regression.joblib` (Regresión Logística Multiclase):**
-   - Clasificador lineal probabilístico multinomial (`solver='lbfgs'`).
-   - Excelente interpretabilidad mediante los pesos asignados a cada descriptor de color y forma.
-   - **Rendimiento:** Accuracy: 100% | Latencia de Inferencia: ~0.03 ms.
+## Modelos Serializados
+1. **`xgboost_forest.joblib`**: Clasificador ensemble de árboles potenciados por gradiente (**XGBoost Forest**). Top desempeño con 66.7% Accuracy y 65.7% F1 en Test Set.
+2. **`svm_rbf.joblib`**: Support Vector Machine con kernel radial gaussiano ($C=2.0$, $\gamma=\text{scale}$).
+3. **`svd_pipeline.joblib`**: Pipeline espectral compuesto por `TruncatedSVD(n_components=20)` sobre imágenes planas de $64 \times 64$ y un clasificador lineal (`Linear SVC`).
+4. **`logistic_regression.joblib`**: Modelo lineal discriminante regularizado ($L_2$).
 
-2. **`svm_rbf.joblib` (Support Vector Machine):**
-   - Modelo no lineal con Kernel RBF de base radial ($C=5.0$, $\gamma='scale'$).
-   - Genera hiperplanos de separación de margen óptimo en espacios de alta dimensión.
-   - **Rendimiento:** Accuracy: 100% | Latencia de Inferencia: ~0.03 ms.
+## Transformadores y Métricas
+- **`scaler.joblib`**: `StandardScaler` ajustado sobre las características tabulares de entrenamiento.
+- **`label_encoder.joblib`**: Mapeo entre clases string (`gatos`, `perros`) e índices numéricos.
+- **`metrics.json`**: Resumen en formato JSON con métricas de Exactitud, Precisión, Recall, F1 y matrices de confusión.
+- **`confusion_matrices.png`**: Gráfico comparativo de matrices de confusión en el conjunto de prueba.
+- **`svd_eigen_animals.png`**: Proyección gráfica de los vectores singulares morfológicos (Eigen-Animals).
 
-3. **`svd_pipeline.joblib` (Descomposición en Valores Singulares - Eigen-Citrus):**
-   - Pipeline de reducción de dimensionalidad con `TruncatedSVD(n_components=15)` seguido de un clasificador lineal.
-   - Proyecta imágenes en escala de grises sobre los modos espaciales de máxima varianza (*Eigen-Citrus*), emulando la técnica clásica de *Eigenfaces*.
-   - **Rendimiento:** Accuracy: 93.33% | Latencia de Inferencia: ~0.12 ms.
-
-4. **`xgboost_forest.joblib` (XGBoost Forest Ensemble):**
-   - Ensamble de 100 árboles de decisión acelerados por gradiente con submuestreo de características y muestras.
-   - Extraordinaria robustez frente a no-linealidades y correlaciones espaciales.
-   - **Rendimiento:** Accuracy: 100% | Latencia de Inferencia: ~0.08 ms.
-
-## Artefactos Complementarios
-- `scaler.joblib`: Estandarizador `StandardScaler` ajustado sobre el conjunto de entrenamiento.
-- `label_encoder.joblib`: Mapeo biyectivo de etiquetas (`0: limon`, `1: naranja`, `2: pomelo`).
-- `metrics.json`: Registro de métricas de exactitud, F1 ponderado, matrices de confusión y tiempos.
-- `confusion_matrices.png`: Gráfico con las matrices de confusión de los cuatro modelos.
-- `svd_eigen_citrus.png`: Visualización de los primeros 8 modos propios (*Eigen-Citrus*).
-
-## Cómo ejecutar una predicción desde la línea de comandos (CLI)
+## CLI de Predicción
 ```bash
-# Probar todos los modelos sobre una imagen de prueba:
-python models/predict.py --image data/raw/naranjas/naranja_01.jpg --model all
-
-# Probar específicamente el modelo SVD:
-python models/predict.py --image data/raw/limones/limon_05.jpg --model svd
+python models/predict.py --image "data/raw/gatos/gato_000.jpg" --model xgb
 ```

@@ -1,15 +1,27 @@
-# Datos Preprocesados y Extracción de Características
+# Datos Preprocesados (Matriz Negra & Feature Vectors) 🐾
 
-Este directorio contiene las representaciones estructuradas derivadas del procesamiento digital de imágenes:
+Este directorio contiene las imágenes procesadas y las representaciones numéricas estructuradas para el entrenamiento de los modelos de Machine Learning.
 
-## Archivos Generados
-1. `features_citricos.csv`: Tabla con 120 filas y 40 columnas de características numéricas extraídas por visión computacional:
-   - **Momentos de Color (12 features):** Medias y desviaciones estándar en los espacios RGB y HSV.
-   - **Histograma de Tono / Hue (16 bins):** Cuantifica la distribución espectral de la longitud de onda dominante (clave para diferenciar amarillo limón de naranja y rosado pomelo).
-   - **Histograma de Saturación (8 bins):** Mide la pureza y vivacidad del color de la cáscara.
-   - **Descriptores Geométricos (3 features):** Área del fruto, relación de aspecto (*Aspect Ratio = Ancho / Alto*) y factor de circularidad ($4\pi A / P^2$).
-   - `label`: Etiqueta categórica (`limon`, `naranja`, `pomelo`).
+## 1. Imágenes Insertadas en Matriz Negra (`gatos/` y `perros/`)
+Para evitar la distorsión morfológica provocada por el redimensionamiento estándar (`resize`), cada fotografía de resolución arbitraria se escala manteniendo intacto su aspect ratio y se inserta centrada en un lienzo cuadrado negro de ceros ($256 \times 256 \times 3$).
 
-2. `dataset_citricos.npz`: Archivo binario comprimido que almacena la matriz `X_flat` (120 × 4096) con las imágenes en escala de grises de 64×64 normalizadas, utilizado directamente por el pipeline de **SVD (Singular Value Decomposition)**.
+- **`gatos/`**: 60 imágenes normalizadas en matriz negra de $256 \times 256$ px.
+- **`perros/`**: 60 imágenes normalizadas en matriz negra de $256 \times 256$ px.
 
-3. `preprocessor.py`: Módulo utilitario en Python que implementa la función `extract_features_from_image()` para inferencia en tiempo real en la API y el Dashboard.
+### Algoritmo de Inserción:
+```python
+s = min(256 / W_orig, 256 / H_orig)
+W_new, H_new = round(W_orig * s), round(H_orig * s)
+canvas = np.zeros((256, 256, 3), dtype=np.uint8)
+canvas[y_off:y_off + H_new, x_off:x_off + W_new] = cv2.resize(img, (W_new, H_new))
+```
+
+## 2. Archivos Estructurados
+- **`features_animales.csv`**: Tabla tabular con 120 registros y características extraídas por visión por computador:
+  - **Momentos de Color (RGB y HSV):** Medias y desviaciones estándar sobre la región del animal (omitiendo el fondo negro).
+  - **Histogramas de Color:** 24 bins normalizados (8 en Tono, 8 en Saturación, 8 en Brillo).
+  - **Textura y Nitidez:** Magnitud media y dispersión del gradiente Sobel, junto con la varianza del operador Laplaciano.
+  - **Descriptores Morfológicos:** Aspect Ratio original y Fill Ratio en el canvas.
+  - **Etiqueta (`label`):** `gatos` o `perros`.
+- **`dataset_animales.npz`**: Archivo comprimido con la matriz plana normalizada $X_{images} \in \mathbb{R}^{120 \times 4096}$ (escala de grises $64 \times 64$) utilizada por el pipeline de **SVD (Singular Value Decomposition)**, junto con las matrices tabulares $X_{tabular}$ y las etiquetas $y$.
+- **`preprocessor.py`**: Módulo con las funciones `insert_in_black_canvas()` y `extract_image_features()` para preprocesamiento e inferencia.

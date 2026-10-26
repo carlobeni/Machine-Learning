@@ -100,17 +100,32 @@ if app_mode == "🎯 Inferencia & Clasificación":
     
     with col_input:
         st.subheader("1. Selección o Carga de Imagen")
-        input_source = st.radio("Origen de la imagen:", ["Muestra del Repositorio", "Subir mi propia imagen"], horizontal=True)
+        input_source = st.radio(
+            "Origen de la imagen:",
+            ["Imágenes Preprocesadas (Matriz Negra 256x256)", "Imágenes Crudas (Resolución Variable)", "Subir mi propia imagen"],
+            horizontal=False
+        )
         
         selected_img_bgr = None
         orig_filename = ""
+        is_already_processed = False
         
-        if input_source == "Muestra del Repositorio":
-            animal_choice = st.selectbox("Selecciona categoría de muestra:", ["gatos", "perros"])
+        if input_source == "Imágenes Preprocesadas (Matriz Negra 256x256)":
+            is_already_processed = True
+            animal_choice = st.selectbox("Selecciona categoría:", ["gatos", "perros"])
+            sample_dir = os.path.join(PROCESSED_DIR, animal_choice)
+            if os.path.exists(sample_dir):
+                sample_files = sorted(os.listdir(sample_dir))[:30]
+                sample_selected = st.selectbox("Selecciona archivo procesado:", sample_files)
+                fpath = os.path.join(sample_dir, sample_selected)
+                selected_img_bgr = cv2.imread(fpath)
+                orig_filename = sample_selected
+        elif input_source == "Imágenes Crudas (Resolución Variable)":
+            animal_choice = st.selectbox("Selecciona categoría:", ["gatos", "perros"])
             sample_dir = os.path.join(RAW_DIR, animal_choice)
             if os.path.exists(sample_dir):
-                sample_files = sorted(os.listdir(sample_dir))[:25]
-                sample_selected = st.selectbox("Selecciona archivo:", sample_files)
+                sample_files = sorted(os.listdir(sample_dir))[:30]
+                sample_selected = st.selectbox("Selecciona archivo crudo:", sample_files)
                 fpath = os.path.join(sample_dir, sample_selected)
                 selected_img_bgr = cv2.imread(fpath)
                 orig_filename = sample_selected
@@ -123,14 +138,14 @@ if app_mode == "🎯 Inferencia & Clasificación":
                 
         if selected_img_bgr is not None:
             h_orig, w_orig = selected_img_bgr.shape[:2]
-            st.info(f"Resolución original: **{w_orig} x {h_orig} px** (Aspect Ratio: {w_orig/h_orig:.2f})")
+            st.info(f"Dimensiones de entrada: **{w_orig} x {h_orig} px** (Aspect Ratio: {w_orig/h_orig:.2f})")
             
-            # Show original and letterbox canvas
+            # Extract features and canvas
             feat_dict, canvas_rgb, img_flat = preprocessor.extract_image_features(selected_img_bgr)
             
             c_orig, c_pad = st.columns(2)
             with c_orig:
-                st.caption("Imagen Original (Sin distorsión)")
+                st.caption("Imagen de Entrada")
                 st.image(cv2.cvtColor(selected_img_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
             with c_pad:
                 st.caption("Matriz Negra 256x256 (Letterbox Padding)")
@@ -249,17 +264,19 @@ elif app_mode == "🔬 Preprocesamiento & SVD (Black Matrix)":
     En visión artificial tradicional, redimensionar directamente una imagen con `cv2.resize(img, (256, 256))` 
     distorsiona la relación de aspecto (un perro de cuerpo alargado o un gato con orejas puntiagudas se achata o deforma).
     
-    Para evitar esto, implementamos:
+    Para evitar esto y mantener la consistencia de los datos:
     1. **Cálculo de Escala Proporcional:** $s = \min(256 / W, 256 / H)$.
-    2. **Redimensionado Proporcional:** $(W_{new}, H_{new}) = (round(W \cdot s), round(H \cdot s))$.
-    3. **Canvas de Ceros (Negro):** Matriz de $256 	imes 256 	imes 3$ rellena con ceros.
+    2. **Redimensionado Proporcional:** $(W_{new}, H_{new}) = (\text{round}(W \cdot s), \text{round}(H \cdot s))$.
+    3. **Canvas de Ceros (Negro):** Matriz de $256 \times 256 \times 3$ rellena con ceros.
     4. **Centrado Exacto:** Inserción en $(y_{offset}, x_{offset}) = ((256 - H_{new})/2, (256 - W_{new})/2)$.
+    
+    Todas las imágenes procesadas se encuentran almacenadas directamente en `data/processed/gatos/` y `data/processed/perros/`.
     """)
     
     st.markdown("---")
     st.subheader("2. Descomposición en Valores Singulares (SVD: Eigen-Animals)")
     st.markdown("""
-    Al proyectar las imágenes normalizadas $X \in \mathbb{R}^{n 	imes 4096}$ mediante SVD:
+    Al proyectar las imágenes normalizadas $X \in \mathbb{R}^{n \times 4096}$ mediante SVD:
     $$X = U \Sigma V^T$$
     Los vectores de $V^T$ representan las componentes principales o **Eigen-Animals**. 
     Cada imagen de perro o gato se descompone como una combinación lineal de estas matrices fundamentales:

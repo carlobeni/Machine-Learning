@@ -1,13 +1,10 @@
-# Dataset de Fotografías Reales de Cítricos (Raw Data)
+# Datos Crudos (Raw Dataset) 🐕 🐱
 
-Este conjunto de datos está constituido por **150 fotografías reales auténticas** provenientes del repositorio de investigación académica **`Fruit-Images-Dataset`** (Horea Mureșan & Mihai Oltean, Universitatea Babeș-Bolyai):
+Colección de fotografías auténticas descargadas desde repositorio público de GitHub ([niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard](https://github.com/niruhan/CNN-Image-Classifier-with-Keras-by-deeplizard)), derivado del benchmark oficial *Kaggle Cats vs Dogs*.
 
-## Distribución de Clases Reales
-- `data/raw/naranjas/`: 50 fotografías reales de Naranjas (*Orange*).
-- `data/raw/pomelos/`: 50 fotografías reales de Pomelos Rosados (*Grapefruit Pink*).
-- `data/raw/limones/`: 50 fotografías reales de Limones (*Lemon*).
+## Estructura
+- **`gatos/`**: 60 fotografías reales de gatos domésticos.
+- **`perros/`**: 60 fotografías reales de perros domésticos.
+- **`dataset_info.json`**: Metadatos de procedencia, licencia, número de muestras y especificaciones técnicas.
 
-## Especificaciones
-- **Tipo:** Fotografías reales capturadas con cámara digital de alta definición sobre fondo neutro en múltiples ángulos de rotación.
-- **Formato:** JPEG estándar (.jpg).
-- **Procesamiento:** Redimensionadas y normalizadas mediante `data/processed/preprocessor.py`.
+Las imágenes poseen dimensiones heterogéneas (desde 220x300 hasta 500x499 píxeles) y condiciones de iluminación natural, reflejando casos de uso reales en visión artificial.

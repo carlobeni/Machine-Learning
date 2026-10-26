@@ -1,10 +1,11 @@
-# Presentación Técnica del Proyecto (Slides)
+# Presentación Interactiva del Proyecto 🖥️
 
-Diapositivas interactivas en HTML5 y CSS moderno para la defensa del proyecto citrícola.
+Diapositivas interactivas desarrolladas en **HTML5, CSS y JavaScript moderno** para exponer el proyecto de clasificación de perros y gatos.
 
-## Cómo Visualizar
-Abre directamente `presentation/index.html` en cualquier navegador web o ejecuta un servidor local:
+## Visualización
+Abre el archivo `index.html` en cualquier navegador web moderno:
 ```bash
-python -m http.server 8080 --directory presentation
+# En Windows:
+start presentation/index.html
 ```
-Usa las teclas de flecha `◀` y `▶` del teclado o los botones en pantalla para navegar.
+Navega entre diapositivas utilizando las teclas de dirección (Flecha Izquierda / Derecha o Barra Espaciadora).
