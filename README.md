@@ -8,12 +8,7 @@
 ## Índice
 
 1. [Visión General del Proyecto](#1-visión-general-del-proyecto)
-2. [Guía de Instalación y Configuración de Node.js](#2-guía-de-instalación-y-configuración-de-nodejs)
-   - [Requisitos Previos](#requisitos-previos)
-   - [Instalación en Windows](#instalación-en-windows)
-   - [Instalación en macOS y Linux](#instalación-en-macos-y-linux)
-   - [Verificación del Entorno](#verificación-del-entorno)
-   - [Gestores de Paquetes (npm, pnpm, yarn)](#gestores-de-paquetes)
+2. [Guía de Instalación de Node.js en Windows (Paso a Paso Oficial)](#2-guía-de-instalación-de-nodejs-en-windows-paso-a-paso-oficial)
 3. [Paso a Paso: Creación de la Aplicación Web con Next.js](#3-paso-a-paso-creación-de-la-aplicación-web-con-nextjs)
    - [Paso 1: Inicialización del Proyecto Next.js](#paso-1-inicialización-del-proyecto-nextjs)
    - [Paso 2: Estructura de Directorios Recomendada](#paso-2-estructura-de-directorios-recomendada)
@@ -30,9 +25,9 @@
 
 ## 1. Visión General del Proyecto
 
-El objetivo de la aplicación web es proporcionar una interfaz gráfica intuitiva, rápida y responsive que permita:
-- Subir una imagen cualquiera de un gato o perro mediante arrastrar y soltar (*drag & drop*) o explorador de archivos.
-- Preprocesar visualmente la imagen mediante **Letterbox Zero-Padding** en una matriz negra de $256 \times 256$ manteniendo la relación de aspecto original sin deformaciones.
+El objetivo de la aplicación web es proporcionar una interfaz gráfica intuitiva, moderna y responsive que permita:
+- Subir una imagen cualquiera de un gato o perro mediante arrastrar y soltar (*drag & drop*) o explorador de archivos de Windows.
+- Preprocesar visualmente la imagen mediante **Letterbox Zero-Padding** en una matriz negra de $256 \times 256$ manteniendo la relación de aspecto original sin deformaciones anatómicas.
 - Seleccionar el modelo de clasificación a consultar:
   - **SVD Subespacios (Menor Norma Residual)** con descomposición ortogonal dual.
   - **SVM (Kernel RBF Calibrado)**.
@@ -41,123 +36,63 @@ El objetivo de la aplicación web es proporcionar una interfaz gráfica intuitiv
 - Visualizar los resultados en tiempo real:
   - Etiqueta predicha (`GATO` / `PERRO`) con porcentaje de confianza.
   - En SVD: Normas residuales euclidianas a cada subespacio ($\|\mathbf{e}_{cat}\|_2$ vs $\|\mathbf{e}_{dog}\|_2$) y la diferencia $\Delta = |\|\mathbf{e}_{perro}\| - \|\mathbf{e}_{gato}\||$.
-  - Galería comparativa de autovectores (**Eigen-Gatos** y **Eigen-Perros**) y curvas de reconstrucción.
+  - Galería interactiva con las componentes base (**Eigen-Gatos** y **Eigen-Perros**) y curvas de reconstrucción.
 
 ---
 
-## 2. Guía de Instalación y Configuración de Node.js
+## 2. Guía de Instalación de Node.js en Windows (Paso a Paso Oficial)
 
-Para construir y ejecutar aplicaciones con Next.js se requiere el entorno de ejecución **Node.js** (versión LTS recomendada).
+Para trabajar con Next.js únicamente necesitas instalar **Node.js** descargando el instalador oficial desde su página web. Es un proceso estándar de Windows tipo *"Siguiente, Siguiente, Finalizar"*.
 
-### Requisitos Previos
-- **Versión de Node.js:** `>= 18.18.0` (se recomienda **Node.js 20 LTS** o superior).
-- **Sistema Operativo:** Windows 10/11, macOS o Linux.
+### Paso 1: Descargar el Instalador Oficial
+1. Abre tu navegador web e ingresa a: **[https://nodejs.org/](https://nodejs.org/)**
+2. En la página principal verás dos botones verdes grandes. Haz clic en el botón de la izquierda que dice:
+   > **LTS (Recomendado para la mayoría / Recommended For Most Users)**  
+   *(Esto descargará automáticamente el archivo instalador oficial para Windows de 64 bits, por ejemplo: `node-v20.x.x-x64.msi`).*
 
----
+### Paso 2: Ejecutar el Asistente de Instalación
+1. Ve a tu carpeta de **Descargas** y haz doble clic sobre el archivo `.msi` descargado.
+2. En la ventana de bienvenida de *Node.js Setup Wizard*, haz clic en **Next**.
+3. Marca la casilla **"I accept the terms in the License Agreement"** y haz clic en **Next**.
+4. **Destination Folder:** Deja la ruta por defecto (`C:\Program Files\nodejs\`) y haz clic en **Next**.
+5. **Custom Setup:** Deja todas las opciones seleccionadas tal como vienen (esto asegura que `Node.js runtime`, `npm package manager` y `Add to PATH` queden instalados automáticamente) y haz clic en **Next**.
+6. **Tools for Native Modules:** Deja la casilla **sin marcar** (no es necesaria para Next.js básico) y haz clic en **Next**.
+7. Haz clic en **Install**. Si Windows te muestra una ventana de confirmación de permisos de administrador (*Control de cuentas de usuario*), selecciona **Sí**.
+8. Una vez completada la barra de progreso, haz clic en **Finish**.
 
-### Instalación en Windows
+### Paso 3: Verificar la Instalación
+1. Abre una nueva ventana de **PowerShell**, **Símbolo del sistema (CMD)** o la terminal integrada de **VS Code** (si ya tenías una terminal abierta antes de instalar, ciérrala y ábrela nuevamente para que tome las nuevas variables del sistema).
+2. Ejecuta los siguientes dos comandos:
 
-Existen tres métodos recomendados para Windows:
-
-#### Método A: Instalador Oficial (.msi) — *El más simple*
-1. Ingresa a la página oficial: [nodejs.org](https://nodejs.org/).
-2. Descarga la versión **LTS (Long Term Support)** recomendada para la mayoría de usuarios.
-3. Ejecuta el archivo `.msi` descargado y sigue el asistente:
-   - Acepta los términos de la licencia.
-   - Mantén la ruta de instalación por defecto (`C:\Program Files\nodejs\`).
-   - Asegúrate de marcar la casilla **"Add to PATH"**.
-   - (Opcional) Puedes desmarcar la casilla de instalación de herramientas de compilación C/C++ a menos que requieras compilar módulos nativos.
-4. Reinicia la terminal o PowerShell para que reconozca las variables de entorno.
-
-#### Método B: Vía Administrador de Paquetes de Windows (`winget`)
-Abre PowerShell como administrador y ejecuta:
 ```powershell
-winget install OpenJS.NodeJS.LTS
-```
-Cierra y vuelve a abrir PowerShell para aplicar los cambios en el `PATH`.
-
-#### Método C: Usando NVM para Windows (`nvm-windows`) — *Para desarrolladores avanzados*
-Si necesitas gestionar múltiples versiones de Node.js:
-1. Descarga el instalador desde el repositorio oficial: [coreybutler/nvm-windows](https://github.com/coreybutler/nvm-windows/releases).
-2. Instala y luego ejecuta en PowerShell:
-   ```powershell
-   nvm install 20.18.0
-   nvm use 20.18.0
-   ```
-
----
-
-### Instalación en macOS y Linux
-
-En macOS y distribuciones Linux (Ubuntu/Debian/Fedora), se recomienda usar **nvm** (Node Version Manager):
-
-1. **Instalar NVM:**
-   ```bash
-   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-   ```
-2. **Cargar NVM en la sesión:**
-   ```bash
-   export NVM_DIR="$HOME/.nvm"
-   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-   ```
-3. **Instalar y activar la versión LTS de Node.js:**
-   ```bash
-   nvm install --lts
-   nvm use --lts
-   ```
-
-*Alternativa en macOS con Homebrew:*
-```bash
-brew install node@20
-```
-
----
-
-### Verificación del Entorno
-
-Una vez completada la instalación, abre tu terminal y ejecuta:
-
-```bash
 node -v
-# Ejemplo de salida esperada: v20.18.0 (o superior a v18.18.0)
+```
+> **Salida esperada:** Una versión como `v20.x.x` o superior a `v18.18.0`.
 
+```powershell
 npm -v
-# Ejemplo de salida esperada: 10.8.2
 ```
+> **Salida esperada:** Una versión de npm como `10.x.x`.
 
-Si ambos comandos devuelven sus respectivos números de versión, el entorno Node.js está listo para trabajar con Next.js.
-
----
-
-### Gestores de Paquetes
-
-Junto con Node.js se incluye automáticamente **`npm`**. Opcionalmente, puedes utilizar gestores más rápidos y eficientes como **`pnpm`**:
-
-```bash
-# Para instalar pnpm globalmente:
-npm install -g pnpm
-
-# Para verificar:
-pnpm -v
-```
+Con esto Node.js y npm quedan listos en Windows para ejecutar y desarrollar la aplicación con Next.js.
 
 ---
 
 ## 3. Paso a Paso: Creación de la Aplicación Web con Next.js
 
-A continuación se detalla el proceso completo para construir la aplicación web desde cero, integrando la UI moderna con la inferencia de los modelos entrenados.
+A continuación se detalla la hoja de ruta para construir la plataforma web desde cero, integrando la UI moderna con la inferencia de los modelos entrenados.
 
 ---
 
 ### Paso 1: Inicialización del Proyecto Next.js
 
-En la raíz del proyecto, ejecuta el generador oficial de Next.js creando un subdirectorio llamado `web/`:
+En la raíz del proyecto, ejecuta el comando oficial de Next.js creando un subdirectorio llamado `web/`:
 
-```bash
+```powershell
 npx create-next-app@latest web
 ```
 
-El asistente interactivo te solicitará la siguiente configuración recomendada:
+En la terminal de Windows responde las preguntas interactivas con las siguientes opciones recomendadas:
 
 ```text
 ✔ Would you like to use TypeScript? … Yes
@@ -169,8 +104,8 @@ El asistente interactivo te solicitará la siguiente configuración recomendada:
 ✔ Would you like to customize the import alias (@/*)? … No (Enter para @/*)
 ```
 
-Una vez finalizado, ingresa a la carpeta del proyecto web:
-```bash
+Al terminar, ingresa a la carpeta creada:
+```powershell
 cd web
 ```
 
@@ -231,12 +166,12 @@ Existen dos estrategias estándar para conectar la interfaz web de Next.js con l
 ```
 
 #### Enfoque Recomendado: Microservicio Backend en FastAPI / Flask
-Un microservicio ligero en Python (`backend/api.py`) expone los modelos en el puerto `8000`:
-- Utiliza las dependencias ya configuradas en `environment.yml` (`scikit-learn`, `joblib`, `opencv-python`, `xgboost`).
-- La API Route de Next.js (`/api/predict`) actúa como intermediario seguro (*BFF - Backend for Frontend*) o la UI consulta directamente el microservicio.
+Un microservicio ligero en Python expone los modelos en el puerto local `8000`:
+- Utiliza las dependencias ya configuradas en el entorno Conda (`scikit-learn`, `joblib`, `opencv-python`, `xgboost`).
+- La API Route de Next.js (`/api/predict`) actúa como intermediario seguro (*Backend for Frontend*) o la UI consulta directamente el microservicio.
 
 #### Enfoque Alternativo: Proceso Python Spawn vía Node.js
-La ruta de API de Next.js (`src/app/api/predict/route.ts`) ejecuta un subproceso de Python mediante `child_process.spawn`, pasando la ruta del archivo temporal y retornando el JSON de salida directamente a la UI sin requerir un servidor permanente adicional.
+La ruta de API de Next.js (`src/app/api/predict/route.ts`) ejecuta un subproceso de Python mediante `child_process.spawn`, pasando la ruta del archivo temporal y retornando el JSON de salida directamente a la UI.
 
 ---
 
@@ -278,7 +213,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No se envió ninguna imagen' }, { status: 400 });
     }
 
-    // Reenviar al microservicio de inferencia Python
+    // Reenviar al microservicio de inferencia Python en localhost:8000
     const apiBackendUrl = process.env.PYTHON_API_URL || 'http://localhost:8000/predict';
     const backendForm = new FormData();
     backendForm.append('file', file);
@@ -306,16 +241,16 @@ export async function POST(req: NextRequest) {
 ### Paso 5: Diseño y Componentes de la Interfaz de Usuario (UI/UX)
 
 1. **`ImageUploader.tsx`**:
-   - Zona con soporte Drag & Drop usando la librería `react-dropzone` o eventos nativos de HTML5.
+   - Soporte Drag & Drop o explorador de Windows.
    - Restricción a formatos `.jpg`, `.jpeg`, `.png`, `.webp`.
-   - Límite de tamaño sugerido: $\le 10	ext{ MB}$.
+   - Límite de tamaño sugerido: $\le 10\text{ MB}$.
    - Vista previa inmediata tras la carga.
 
 2. **`CanvasPreview.tsx`**:
-   - Dibuja sobre un elemento `<canvas>` HTML5 la imagen centrada sobre una matriz negra de $256 	imes 256$, ilustrando al usuario la técnica de **Letterbox Zero-Padding** que previene distorsiones anatómicas antes de la inferencia.
+   - Dibuja sobre un elemento `<canvas>` HTML5 la imagen centrada sobre una matriz negra de $256 \times 256$, ilustrando la técnica de **Letterbox Zero-Padding** que previene distorsiones anatómicas antes de la inferencia.
 
 3. **`ModelSelector.tsx`**:
-   - Selector estilizado en forma de pestañas (*segmented control*) para alternar entre:
+   - Selector en pestañas para alternar entre:
      - 🐱 **SVD Subespacios** (Algoritmo de menor residuo ortogonal, $r=20$).
      - ⚡ **SVM RBF** (Máquina de soporte vectorial con kernel radial).
      - 🌲 **XGBoost** (Ensamble de 150 árboles de decisión).
@@ -327,7 +262,7 @@ export async function POST(req: NextRequest) {
    - En SVD: Tarjeta analítica detallando:
      - Norma Residual a Gatos: $\|\mathbf{e}_{cat}\|_2$.
      - Norma Residual a Perros: $\|\mathbf{e}_{dog}\|_2$.
-     - Regla de decisión: $\hat{y} = rg\min (\|\mathbf{e}_{cat}\|_2, \|\mathbf{e}_{dog}\|_2)$.
+     - Regla de decisión: $\hat{y} = \arg\min (\|\mathbf{e}_{cat}\|_2, \|\mathbf{e}_{dog}\|_2)$.
      - Indicador visual del margen de separación $\Delta$.
 
 ---
@@ -335,20 +270,20 @@ export async function POST(req: NextRequest) {
 ### Paso 6: Estilos y Retroalimentación Visual con Tailwind CSS
 
 Instalar librerías complementarias recomendadas para UI moderna:
-```bash
+```powershell
 npm install lucide-react clsx tailwind-merge framer-motion
 ```
 
 - **`lucide-react`**: Íconos modernos para upload, estado de carga, check y alertas.
 - **`framer-motion`**: Transiciones fluidas en la revelación de tarjetas de resultados y animaciones de carga.
-- **Diseño responsive**: Adaptable a dispositivos móviles, tablets y escritorios con tema oscuro (*Dark Mode*) automático.
+- **Diseño responsive**: Adaptable a cualquier resolución con soporte de modo oscuro (*Dark Mode*) automático.
 
 ---
 
 ### Paso 7: Ejecución en Desarrollo y Pruebas Locales
 
 1. **Iniciar el frontend en modo desarrollo:**
-   ```bash
+   ```powershell
    npm run dev
    ```
 2. **Acceder a la aplicación:**
@@ -363,7 +298,7 @@ npm install lucide-react clsx tailwind-merge framer-motion
 ### Paso 8: Compilación para Producción y Despliegue
 
 #### Compilación Estática y Servidor Node:
-```bash
+```powershell
 npm run build
 npm run start
 ```
@@ -381,7 +316,7 @@ npm run start
 
 El backend web se apoyará en los artefactos ya entrenados y validados:
 
-- **Notebook de Preprocesamiento:** [`data/preprocesamiento_datos.ipynb`](data/preprocesamiento_datos.ipynb) (Acondicionamiento en matriz negra $256 	imes 256$ y extracción de 349 features).
+- **Notebook de Preprocesamiento:** [`data/preprocesamiento_datos.ipynb`](data/preprocesamiento_datos.ipynb) (Acondicionamiento en matriz negra $256 \times 256$ y extracción de 349 features).
 - **Notebook de Modelos y SVD:** [`models/clasificacion_subespacios_svd_y_modelos.ipynb`](models/clasificacion_subespacios_svd_y_modelos.ipynb).
 - **Artefactos Serializados:**
   - `models/svd_pipeline.joblib`: Estimador `SVDSubspaceClassifier` ajustado.
