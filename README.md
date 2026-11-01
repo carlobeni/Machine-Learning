@@ -17,7 +17,7 @@
    - [Paso 4: Consumo de Datos Estáticos y Métricas](#paso-4-consumo-de-datos-estáticos-y-métricas)
    - [Paso 5: Componentes Visuales y Estilos con Tailwind CSS](#paso-5-componentes-visuales-y-estilos-con-tailwind-css)
    - [Paso 6: Ejecución y Pruebas Locales en Windows](#paso-6-ejecución-y-pruebas-locales-en-windows)
-4. [Guía de Despliegue en Vercel](#4-guía-de-despliegue-en-vercel)
+4. [Guía de Despliegue Exclusivo en Vercel (Sin Docker)](#4-guía-de-despliegue-exclusivo-en-vercel-sin-docker)
    - [Método A: Despliegue desde GitHub (Panel Web de Vercel - Recomendado)](#método-a-despliegue-desde-github-panel-web-de-vercel---recomendado)
    - [Método B: Despliegue Directo desde Terminal con Vercel CLI](#método-b-despliegue-directo-desde-terminal-con-vercel-cli)
    - [Verificación y Dominio en Producción](#verificación-y-dominio-en-producción)
@@ -259,7 +259,11 @@ npm install lucide-react clsx tailwind-merge recharts
 
 ---
 
-## 4. Guía de Despliegue en Vercel
+## 4. Guía de Despliegue Exclusivo en Vercel
+
+> [!IMPORTANT]
+> **Despliegue Exclusivo en Vercel (Sin Docker ni Contenedores):**  
+> Al tratarse de una solución puramente frontend de reportería estadística e interactiva (sin dependencias de APIs en Python ni microservicios), **se descarta por completo el uso de Docker y contenedores**. El despliegue se gestiona de forma directa, nativa y exclusiva en la plataforma oficial **Vercel**, garantizando compilación automática, distribución en CDN global y tiempo de carga óptimo sin necesidad de infraestructura pesada.
 
 **Vercel** es la plataforma creada por los desarrolladores de Next.js y ofrece el despliegue más rápido, escalable y sin costo para proyectos frontend.
 
@@ -370,7 +374,7 @@ Este apartado proporciona un **prompt maestro estructurado y detallado** diseña
    - `[correo@ing.una.py]`
    - `[usuario_github]`
    - `[URL_DEL_REPOSITORIO_GITHUB]`
-   - `[URL_VERCEL_O_PAGES]`
+   - `[URL_VERCEL_PRODUCCION]`
 3. **Pega el prompt en tu asistente de IA preferido** o en tu IDE (Cursor / Copilot / Claude Dev) para que genere automáticamente el código completo de la interfaz, componentes interactivos y visualizaciones frontend.
 
 ---
@@ -387,6 +391,7 @@ La web debe cumplir de manera rigurosa y exhaustiva con todos los requerimientos
 REGLAS ARQUITECTURALES CRÍTICAS (FRONTEND PURO):
 ================================================================================
 1. ARQUITECTURA: Es una aplicación 100% CLIENT-SIDE / STATIC FRONTEND. NO crees APIs en Python, NO crees endpoints `/api/*` de Next.js, NO utilices servidores Flask ni FastAPI. Toda la reportería, gráficas, matrices de confusión y demostraciones interactivas deben consumir datos estáticos JSON pre-exportados (`metrics.json`, `svd_parameters.json`, `dataset_summary.json`) y figuras estáticas en `/public/figures/`.
+NO USES DOCKER NI CONTENEDORES: Queda estrictamente descartado el uso de Dockerfile o docker-compose. El despliegue debe ser única y exclusivamente en Vercel.
 2. DISEÑO Y ESTILOS: Utiliza Tailwind CSS con una estética moderna, limpia y profesional (inspirada en Shadcn UI / Vercel Design System), tipografía nítida, paleta de colores sobria (zinc/slate con acentos indigo/violet), soporte para Modo Oscuro (Dark Mode) y diseño 100% adaptable a dispositivos móviles (Responsive Design).
 3. MATEMÁTICAS: Todas las fórmulas matemáticas deben estar renderizadas con KaTeX o LaTeX impecablemente formateado.
 4. REPRODUCIBILIDAD: Todos los módulos deben enlazar a los cuadernos interactivos oficiales (.ipynb) alojados en el repositorio de GitHub.
@@ -528,5 +533,5 @@ Genera el código modular y limpio dentro de `src/`:
 - `src/components/*`: Componentes reutilizables (`Navbar.tsx`, `Footer.tsx`, `MetricCard.tsx`, `BenchmarkTable.tsx`, `ConfusionMatrixView.tsx`, `SVDChartsViewer.tsx`, `InteractiveResidualDemo.tsx`).
 - `src/data/*`: Archivos JSON con los datos estructurados para carga instantánea.
 
-Entrega código TypeScript 100% tipado, sin errores de compilación, utilizando sintaxis limpia de Tailwind CSS y listo para ser desplegado en Vercel.
+Entrega código TypeScript 100% tipado, sin errores de compilación, utilizando sintaxis limpia de Tailwind CSS y listo para ser desplegado única y exclusivamente en Vercel (sin Docker ni configuraciones complejas de servidores).
 ```
