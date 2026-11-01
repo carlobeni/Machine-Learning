@@ -8,7 +8,7 @@
 
 ## Índice
 
-1. [Visión del Portal de Reportería (Puro Frontend)](#1-visión-del-portal-de-reportería-puro-frontend)
+1. [Pagina web de Reportería (Puro Frontend)](#1-visión-del-portal-de-reportería-puro-frontend)
 2. [Guía de Instalación de Node.js en Windows (Paso a Paso Oficial)](#2-guía-de-instalación-de-nodejs-en-windows-paso-a-paso-oficial)
 3. [Paso a Paso: Creación de la Aplicación de Reportería con Next.js](#3-paso-a-paso-creación-de-la-aplicación-de-reportería-con-nextjs)
    - [Paso 1: Inicialización del Proyecto Next.js](#paso-1-inicialización-del-proyecto-nextjs)
@@ -28,7 +28,7 @@
 
 ---
 
-## 1. Visión del Portal de Reportería (Puro Frontend)
+## 1. Pagina web de Reporteria (Puro Frontend)
 
 El objetivo de la plataforma web es comunicar con claridad, rigor y estética los resultados de la investigación y experimentación realizada con Machine Learning:
 
@@ -382,10 +382,7 @@ Este apartado proporciona un **prompt maestro estructurado y detallado** diseña
 ### Prompt Estructurado Copiable
 
 ```markdown
-Actúa como un Ingeniero de Software Frontend Senior y Especialista en Machine Learning y Divulgación Científica.
-Tu tarea es construir el código completo y los componentes de una aplicación web moderna de reportería científica e interactiva desarrollada con Next.js (App Router), TypeScript y Tailwind CSS para presentar el Proyecto Semestral de la cátedra Machine Learning 1 (FIUNA).
-
-La web debe cumplir de manera rigurosa y exhaustiva con todos los requerimientos formales y rúbrica de evaluación del Trabajo Práctico 4 (TP4) de la Facultad de Ingeniería de la Universidad Nacional de Asunción (FIUNA).
+Estoy trabajando en una pagina web de reporteria de mi projecto de machine learnig 1 y necesito que me ayudes, he realizado las pruebas y analisis completo en el directorio raiz donde tengo todo el trabajo documentado
 
 ================================================================================
 REGLAS ARQUITECTURALES CRÍTICAS (FRONTEND PURO):
