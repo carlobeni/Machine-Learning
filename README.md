@@ -1,86 +1,81 @@
-# Clasificador de Gatos y Perros: Aplicación Web con Next.js y Modelos SVD / Machine Learning
+# Clasificador de Gatos y Perros: Portal Web de Reportería con Next.js
 
 > **Rama:** `project-web`  
-> Esta rama contiene la **hoja de ruta técnica, arquitectura y guía paso a paso** para el desarrollo y despliegue de una plataforma web moderna utilizando **Next.js (App Router)**, conectada a los modelos de clasificación de animales por **Subespacios SVD (Criterio de Menor Norma Residual)** y algoritmos de Machine Learning (SVM RBF, XGBoost y Regresión Logística).
+> Esta rama contiene la **hoja de ruta técnica, arquitectura y guía paso a paso** para la creación y despliegue en **Vercel** de una aplicación web moderna de **reportería interactiva y visualización de resultados** construida con **Next.js (Puro Frontend)**.  
+> Al ser una solución exclusivamente de reportería, **no requiere APIs, microservicios ni servidores backend**: consume directamente los datos procesados, figuras y métricas generadas por los notebooks para presentarlos en un dashboard interactivo de alto impacto visual.
 
 ---
 
 ## Índice
 
-1. [Visión General del Proyecto](#1-visión-general-del-proyecto)
+1. [Visión del Portal de Reportería (Puro Frontend)](#1-visión-del-portal-de-reportería-puro-frontend)
 2. [Guía de Instalación de Node.js en Windows (Paso a Paso Oficial)](#2-guía-de-instalación-de-nodejs-en-windows-paso-a-paso-oficial)
-3. [Paso a Paso: Creación de la Aplicación Web con Next.js](#3-paso-a-paso-creación-de-la-aplicación-web-con-nextjs)
+3. [Paso a Paso: Creación de la Aplicación de Reportería con Next.js](#3-paso-a-paso-creación-de-la-aplicación-de-reportería-con-nextjs)
    - [Paso 1: Inicialización del Proyecto Next.js](#paso-1-inicialización-del-proyecto-nextjs)
-   - [Paso 2: Estructura de Directorios Recomendada](#paso-2-estructura-de-directorios-recomendada)
-   - [Paso 3: Arquitectura de Integración Web - Machine Learning](#paso-3-arquitectura-de-integración-web---machine-learning)
-   - [Paso 4: Implementación de la Capa de API (Backend de Inferencia)](#paso-4-implementación-de-la-capa-de-api-backend-de-inferencia)
-   - [Paso 5: Diseño y Componentes de la Interfaz de Usuario (UI/UX)](#paso-5-diseño-y-componentes-de-la-interfaz-de-usuario-uiux)
-   - [Paso 6: Estilos y Retroalimentación Visual con Tailwind CSS](#paso-6-estilos-y-retroalimentación-visual-con-tailwind-css)
-   - [Paso 7: Ejecución en Desarrollo y Pruebas Locales](#paso-7-ejecución-en-desarrollo-y-pruebas-locales)
-   - [Paso 8: Compilación para Producción y Despliegue](#paso-8-compilación-para-producción-y-despliegue)
-4. [Modelos y Datos Disponibles en el Repositorio](#4-modelos-y-datos-disponibles-en-el-repositorio)
-5. [Métricas de Rendimiento de los Modelos](#5-métricas-de-rendimiento-de-los-modelos)
+   - [Paso 2: Estructura del Proyecto Frontend](#paso-2-estructura-del-proyecto-frontend)
+   - [Paso 3: Módulos de Reportería y Dashboard](#paso-3-módulos-de-reportería-y-dashboard)
+   - [Paso 4: Consumo de Datos Estáticos y Métricas](#paso-4-consumo-de-datos-estáticos-y-métricas)
+   - [Paso 5: Componentes Visuales y Estilos con Tailwind CSS](#paso-5-componentes-visuales-y-estilos-con-tailwind-css)
+   - [Paso 6: Ejecución y Pruebas Locales en Windows](#paso-6-ejecución-y-pruebas-locales-en-windows)
+4. [Guía de Despliegue en Vercel](#4-guía-de-despliegue-en-vercel)
+   - [Método A: Despliegue desde GitHub (Panel Web de Vercel - Recomendado)](#método-a-despliegue-desde-github-panel-web-de-vercel---recomendado)
+   - [Método B: Despliegue Directo desde Terminal con Vercel CLI](#método-b-despliegue-directo-desde-terminal-con-vercel-cli)
+   - [Verificación y Dominio en Producción](#verificación-y-dominio-en-producción)
+5. [Modelos, Datos y Métricas de Referencia](#5-modelos-datos-y-métricas-de-referencia)
 
 ---
 
-## 1. Visión General del Proyecto
+## 1. Visión del Portal de Reportería (Puro Frontend)
 
-El objetivo de la aplicación web es proporcionar una interfaz gráfica intuitiva, moderna y responsive que permita:
-- Subir una imagen cualquiera de un gato o perro mediante arrastrar y soltar (*drag & drop*) o explorador de archivos de Windows.
-- Preprocesar visualmente la imagen mediante **Letterbox Zero-Padding** en una matriz negra de $256 \times 256$ manteniendo la relación de aspecto original sin deformaciones anatómicas.
-- Seleccionar el modelo de clasificación a consultar:
-  - **SVD Subespacios (Menor Norma Residual)** con descomposición ortogonal dual.
-  - **SVM (Kernel RBF Calibrado)**.
-  - **XGBoost Forest (150 Árboles)**.
-  - **Regresión Logística Regularizada ($L_2$)**.
-- Visualizar los resultados en tiempo real:
-  - Etiqueta predicha (`GATO` / `PERRO`) con porcentaje de confianza.
-  - En SVD: Normas residuales euclidianas a cada subespacio ($\|\mathbf{e}_{cat}\|_2$ vs $\|\mathbf{e}_{dog}\|_2$) y la diferencia $\Delta = |\|\mathbf{e}_{perro}\| - \|\mathbf{e}_{gato}\||$.
-  - Galería interactiva con las componentes base (**Eigen-Gatos** y **Eigen-Perros**) y curvas de reconstrucción.
+El objetivo de la plataforma web es comunicar con claridad, rigor y estética los resultados de la investigación y experimentación realizada con Machine Learning:
+
+- **Dashboard Comparativo de Modelos:** Visualización de métricas de desempeño (Accuracy, Precision, Recall, F1-Score) comparando el Clasificador de Subespacios SVD frente a XGBoost, SVM RBF y Regresión Logística.
+- **Reporte Matemático del Método SVD:** Presentación interactiva de las curvas de valores singulares en escala logarítmica, energía acumulada al 90%, varianza explicada acumulada y el umbral de corte óptimo de ruido estocástico mediante el teorema de **Gavish-Donoho** ($\tau$).
+- **Galería Morfológica de Eigen-Animals:** Demostración visual de los autovectores (**Eigen-Gatos** y **Eigen-Perros**) y cómo se reconstruye una imagen truncada mediante combinaciones lineales ortogonales (Teorema de Eckart-Young).
+- **Explorador del Dataset y Preprocesamiento:** Exhibición del acondicionamiento en **Letterbox Zero-Padding ($256 \times 256$)** que preserva la relación de aspecto anatómica sin deformación, junto a la explicación de las 349 características visuales (HOG, HSV, Sobel, Laplacian).
+- **Simulador Interactivo en Cliente:** Demostración didáctica que permite al usuario explorar ejemplos y observar en tiempo real el cálculo de normas residuales $\|\mathbf{e}_{cat}\|_2$ vs $\|\mathbf{e}_{dog}\|_2$ y la regla de decisión por **menor norma residual**.
 
 ---
 
 ## 2. Guía de Instalación de Node.js en Windows (Paso a Paso Oficial)
 
-Para trabajar con Next.js únicamente necesitas instalar **Node.js** descargando el instalador oficial desde su página web. Es un proceso estándar de Windows tipo *"Siguiente, Siguiente, Finalizar"*.
+Para trabajar con Next.js en Windows únicamente necesitas instalar **Node.js** descargando su instalador oficial. Es el proceso estándar de Windows:
 
 ### Paso 1: Descargar el Instalador Oficial
 1. Abre tu navegador web e ingresa a: **[https://nodejs.org/](https://nodejs.org/)**
-2. En la página principal verás dos botones verdes grandes. Haz clic en el botón de la izquierda que dice:
+2. Haz clic en el botón verde de la izquierda que dice:
    > **LTS (Recomendado para la mayoría / Recommended For Most Users)**  
-   *(Esto descargará automáticamente el archivo instalador oficial para Windows de 64 bits, por ejemplo: `node-v20.x.x-x64.msi`).*
+   *(Descargará automáticamente el archivo oficial para Windows de 64 bits: `node-v20.x.x-x64.msi`).*
 
 ### Paso 2: Ejecutar el Asistente de Instalación
-1. Ve a tu carpeta de **Descargas** y haz doble clic sobre el archivo `.msi` descargado.
-2. En la ventana de bienvenida de *Node.js Setup Wizard*, haz clic en **Next**.
-3. Marca la casilla **"I accept the terms in the License Agreement"** y haz clic en **Next**.
-4. **Destination Folder:** Deja la ruta por defecto (`C:\Program Files\nodejs\`) y haz clic en **Next**.
-5. **Custom Setup:** Deja todas las opciones seleccionadas tal como vienen (esto asegura que `Node.js runtime`, `npm package manager` y `Add to PATH` queden instalados automáticamente) y haz clic en **Next**.
-6. **Tools for Native Modules:** Deja la casilla **sin marcar** (no es necesaria para Next.js básico) y haz clic en **Next**.
-7. Haz clic en **Install**. Si Windows te muestra una ventana de confirmación de permisos de administrador (*Control de cuentas de usuario*), selecciona **Sí**.
-8. Una vez completada la barra de progreso, haz clic en **Finish**.
+1. Ve a tu carpeta de **Descargas** y abre el archivo `.msi` descargado.
+2. En la ventana de bienvenida de *Node.js Setup Wizard*, pulsa **Next**.
+3. Marca la casilla **"I accept the terms in the License Agreement"** y pulsa **Next**.
+4. **Destination Folder:** Deja la ruta por defecto (`C:\Program Files\nodejs\`) y pulsa **Next**.
+5. **Custom Setup:** Deja todas las opciones predeterminadas (incluye el runtime, `npm` y la adición al `PATH`) y pulsa **Next**.
+6. **Tools for Native Modules:** Deja la casilla **sin marcar** (no es requerida) y pulsa **Next**.
+7. Pulsa **Install**. Cuando Windows solicite confirmación de permisos de administrador (*UAC*), selecciona **Sí**.
+8. Al completarse la barra, pulsa **Finish**.
 
 ### Paso 3: Verificar la Instalación
-1. Abre una nueva ventana de **PowerShell**, **Símbolo del sistema (CMD)** o la terminal integrada de **VS Code** (si ya tenías una terminal abierta antes de instalar, ciérrala y ábrela nuevamente para que tome las nuevas variables del sistema).
-2. Ejecuta los siguientes dos comandos:
+1. Abre una ventana de **PowerShell** o **Símbolo del sistema (CMD)** (si ya tenías una abierta, ciérrala y ábrela nuevamente).
+2. Ejecuta:
 
 ```powershell
 node -v
-```
-> **Salida esperada:** Una versión como `v20.x.x` o superior a `v18.18.0`.
+# Salida esperada: v20.x.x (o superior a v18.18.0)
 
-```powershell
 npm -v
+# Salida esperada: 10.x.x
 ```
-> **Salida esperada:** Una versión de npm como `10.x.x`.
 
-Con esto Node.js y npm quedan listos en Windows para ejecutar y desarrollar la aplicación con Next.js.
+Con esto, el entorno queda completamente listo en Windows.
 
 ---
 
-## 3. Paso a Paso: Creación de la Aplicación Web con Next.js
+## 3. Paso a Paso: Creación de la Aplicación de Reportería con Next.js
 
-A continuación se detalla la hoja de ruta para construir la plataforma web desde cero, integrando la UI moderna con la inferencia de los modelos entrenados.
+A continuación se detalla cómo crear el proyecto web frontend estructurado para reportería estática e interactiva.
 
 ---
 
@@ -92,7 +87,7 @@ En la raíz del proyecto, ejecuta el comando oficial de Next.js creando un subdi
 npx create-next-app@latest web
 ```
 
-En la terminal de Windows responde las preguntas interactivas con las siguientes opciones recomendadas:
+Responde en la terminal de Windows con las siguientes opciones recomendadas:
 
 ```text
 ✔ Would you like to use TypeScript? … Yes
@@ -104,47 +99,54 @@ En la terminal de Windows responde las preguntas interactivas con las siguientes
 ✔ Would you like to customize the import alias (@/*)? … No (Enter para @/*)
 ```
 
-Al terminar, ingresa a la carpeta creada:
+Al finalizar la instalación, ingresa a la carpeta:
 ```powershell
 cd web
 ```
 
 ---
 
-### Paso 2: Estructura de Directorios Recomendada
+### Paso 2: Estructura del Proyecto Frontend
 
-La estructura limpia y modular dentro de `web/` seguirá las mejores prácticas del **Next.js App Router**:
+Organización limpia dentro de `web/` orientada exclusivamente a reportería, visualización y componentes UI:
 
 ```
 web/
-├── public/                     # Activos estáticos (íconos, logos, imágenes de ejemplo)
-│   ├── examples/               # Muestras de prueba de gatos y perros
+├── public/                         # Activos estáticos
+│   ├── figures/                    # Gráficas generadas en models/
+│   │   ├── svd_curva_seleccion_dimension.png
+│   │   ├── svd_eigen_animals.png
+│   │   └── confusion_matrices.png
+│   ├── examples/                   # Muestras de prueba de gatos y perros
 │   └── favicon.ico
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx          # Layout global (Navbar, Footer, Tema oscuro/claro)
-│   │   ├── page.tsx            # Página principal: Clasificador interactivo
-│   │   ├── metrics/
-│   │   │   └── page.tsx        # Página de métricas comparativas y matrices de confusión
-│   │   ├── svd-analysis/
-│   │   │   └── page.tsx        # Página del estudio matemático SVD y Eigen-Animals
-│   │   └── api/
-│   │       ├── predict/
-│   │       │   └── route.ts    # Endpoint POST para procesar imagen e invocar inferencia
-│   │       └── health/
-│   │           └── route.ts    # Endpoint de verificación de estado
+│   │   ├── layout.tsx              # Shell general: Header, Navbar de navegación y Footer
+│   │   ├── page.tsx                # Página de inicio: Resumen ejecutivo del proyecto
+│   │   ├── benchmark/
+│   │   │   └── page.tsx            # Reporte comparativo de modelos y matrices de confusión
+│   │   ├── svd-theory/
+│   │   │   └── page.tsx            # Estudio matemático SVD: Espectro, Gavish-Donoho y subespacios
+│   │   ├── eigen-gallery/
+│   │   │   └── page.tsx            # Galería interactiva de Eigen-Gatos y Eigen-Perros
+│   │   └── dataset/
+│   │       └── page.tsx            # Reporte de datos: Letterbox 256x256 y 349 características
 │   ├── components/
-│   │   ├── ImageUploader.tsx   # Zona de carga (Drag & Drop y preview de archivo)
-│   │   ├── CanvasPreview.tsx   # Visualizador de la imagen en Letterbox negro 256x256
-│   │   ├── ModelSelector.tsx   # Selector de modelo (SVD, SVM, XGBoost, LogReg)
-│   │   ├── ResultsCard.tsx     # Card de predicción, confianza y barras de probabilidad
-│   │   ├── SVDMetricsView.tsx  # Métricas residuales ||e_cat|| vs ||e_dog|| y delta
-│   │   └── Navbar.tsx          # Barra de navegación superior
+│   │   ├── Navbar.tsx              # Barra de navegación principal
+│   │   ├── MetricCard.tsx          # Card numérica destacada (Accuracy, F1, etc.)
+│   │   ├── BenchmarkTable.tsx      # Tabla comparativa interactiva con ordenamiento
+│   │   ├── ConfusionMatrixView.tsx # Visualizador de matrices de confusión
+│   │   ├── SVDChartsViewer.tsx     # Visualizador detallado de los 6 paneles SVD
+│   │   ├── ReconstructionSlider.tsx# Slider interactivo de reconstrucción según rango r
+│   │   └── ZeroPaddingVisualizer.tsx # Demostrador visual del canvas 256x256
+│   ├── data/
+│   │   ├── metrics.json            # Métricas oficiales exportadas de models/metrics.json
+│   │   ├── svd_parameters.json     # Parámetros SVD (beta, w_beta, tau, r_optimo)
+│   │   └── dataset_summary.json    # Estadísticas del dataset (clases, dimensiones, balance)
 │   ├── lib/
-│   │   ├── types.ts            # Definiciones de TypeScript para predicciones y modelos
-│   │   └── constants.ts        # Rutas de endpoints y configuración
+│   │   └── types.ts                # Tipos de TypeScript para métricas y datos
 │   └── styles/
-│       └── globals.css         # Directivas globales de Tailwind CSS
+│       └── globals.css             # Estilos globales y clases de Tailwind CSS
 ├── package.json
 ├── tailwind.config.ts
 └── tsconfig.json
@@ -152,193 +154,194 @@ web/
 
 ---
 
-### Paso 3: Arquitectura de Integración Web - Machine Learning
+### Paso 3: Módulos de Reportería y Dashboard
 
-Existen dos estrategias estándar para conectar la interfaz web de Next.js con los modelos serializados en `models/` (`.joblib`):
+El portal se divide en 4 módulos temáticos:
 
-```
-┌───────────────────────────────┐               ┌────────────────────────────────┐
-│   Next.js Frontend (React)    │  HTTP / JSON  │  API Backend (Python FastAPI)  │
-│  - Carga de Imagen (Base64)   │ ────────────> │  - Letterbox 256x256 (OpenCV)  │
-│  - Selector de Modelo         │ <──────────── │  - Extracción 349 features     │
-│  - Visualización Resultados   │               │  - Inferencia joblib (.predict)│
-└───────────────────────────────┘               └────────────────────────────────┘
-```
+1. **Dashboard de Benchmark y Comparativa (`/benchmark`):**
+   - Comparación en tabla y gráficos de barras de **Accuracy, Precision, Recall y F1-Score**.
+   - Análisis de falsos positivos/negativos a través de las matrices de confusión generadas en `models/confusion_matrices.png`.
+   - Conclusiones sobre por qué XGBoost y el Clasificador SVD lideran el desempeño.
 
-#### Enfoque Recomendado: Microservicio Backend en FastAPI / Flask
-Un microservicio ligero en Python expone los modelos en el puerto local `8000`:
-- Utiliza las dependencias ya configuradas en el entorno Conda (`scikit-learn`, `joblib`, `opencv-python`, `xgboost`).
-- La API Route de Next.js (`/api/predict`) actúa como intermediario seguro (*Backend for Frontend*) o la UI consulta directamente el microservicio.
+2. **Estudio Matemático SVD y Gavish-Donoho (`/svd-theory`):**
+   - Explicación interactiva de la descomposición ortogonal dual $\tilde{\mathbf{X}}_{cat}$ y $\tilde{\mathbf{X}}_{dog}$.
+   - Gráfica oficial en alta resolución de los **6 paneles SVD**:
+     1. Espectro de valores singulares $\sigma_k$ (escala logarítmica).
+     2. Energía acumulada con umbral al $90\%$.
+     3. Varianza explicada acumulada con líneas de corte al $90\%$ y $95\%$.
+     4. Corte duro de Gavish-Donoho en Gatos ($\tau = 21.57 \implies r_{opt} = 31$).
+     5. Corte duro de Gavish-Donoho en Perros ($\tau = 16.75 \implies r_{opt} = 40$).
+     6. Sweep empírico de exactitud en test vs. dimensión $r$ (pico en $r=20$: $79.17\%$).
 
-#### Enfoque Alternativo: Proceso Python Spawn vía Node.js
-La ruta de API de Next.js (`src/app/api/predict/route.ts`) ejecuta un subproceso de Python mediante `child_process.spawn`, pasando la ruta del archivo temporal y retornando el JSON de salida directamente a la UI.
+3. **Galería Morfológica de Eigen-Animals (`/eigen-gallery`):**
+   - Visualización de los rostros medios de gatos y perros.
+   - Despliegue de los autovectores principales ($\mathbf{U}_1, \mathbf{U}_2, \mathbf{U}_3, \mathbf{U}_4$) mostrando las bases canónicas morfológicas del pelaje, orejas y ojos.
+   - Demostración de reconstrucción truncada (Teorema de Eckart-Young) y reducción del error relativo según aumenta el rango $r$.
+
+4. **Explorador del Dataset y Letterbox (`/dataset`):**
+   - Explicación visual de por qué se evita el redimensionamiento anisotrópico arbitrario y cómo la inserción en matriz negra $256 \times 256$ mantiene intactas las proporciones corporales del animal.
+   - Desglose de las 349 características tabulares: HOG (forma de orejas y hocico), estadísticas de color RGB/HSV en primer plano, gradientes Sobel, varianza Laplaciana y pirámide de cuadrantes $2 \times 2$.
 
 ---
 
-### Paso 4: Implementación de la Capa de API (Backend de Inferencia)
+### Paso 4: Consumo de Datos Estáticos y Métricas
 
-#### A. Definición de Tipos en TypeScript (`src/lib/types.ts`)
+Al ser puro frontend, los datos se cargan desde archivos JSON locales estáticos ubicados en `src/data/`, garantizando una carga instantánea y máxima compatibilidad con Vercel:
+
 ```typescript
-export type ModelType = 'svd' | 'svm' | 'xgb' | 'lr';
-
-export interface PredictionResponse {
-  success: boolean;
-  prediction: 'GATO' | 'PERRO';
-  confidence: number;
-  probabilities: {
-    gatos: number;
-    perros: number;
-  };
-  svdDetails?: {
-    normCat: number;
-    normDog: number;
-    delta: number;
-    dimensionR: number;
-  };
-  processingTimeMs: number;
-}
-```
-
-#### B. API Route en Next.js (`src/app/api/predict/route.ts`)
-```typescript
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function POST(req: NextRequest) {
-  try {
-    const formData = await req.formData();
-    const file = formData.get('image') as File | null;
-    const model = (formData.get('model') as string) || 'svd';
-
-    if (!file) {
-      return NextResponse.json({ error: 'No se envió ninguna imagen' }, { status: 400 });
-    }
-
-    // Reenviar al microservicio de inferencia Python en localhost:8000
-    const apiBackendUrl = process.env.PYTHON_API_URL || 'http://localhost:8000/predict';
-    const backendForm = new FormData();
-    backendForm.append('file', file);
-    backendForm.append('model', model);
-
-    const response = await fetch(apiBackendUrl, {
-      method: 'POST',
-      body: backendForm,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error en el servicio Python: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+// src/data/metrics.json
+{
+  "XGBoost Forest (150 Árboles)": {
+    "accuracy": 84.72,
+    "precision": 80.49,
+    "recall": 91.67,
+    "f1_score": 85.71,
+    "type": "Ensamble no lineal"
+  },
+  "SVD Subespacios (Menor Norma)": {
+    "accuracy": 79.17,
+    "precision": 83.87,
+    "recall": 72.22,
+    "f1_score": 77.61,
+    "type": "Método de Subespacios Duales"
+  },
+  "SVM (Kernel RBF)": {
+    "accuracy": 77.78,
+    "precision": 79.41,
+    "recall": 75.00,
+    "f1_score": 77.14,
+    "type": "Hiperplano en espacio de Hilbert"
+  },
+  "Regresión Logística (L2)": {
+    "accuracy": 75.00,
+    "precision": 71.43,
+    "recall": 83.33,
+    "f1_score": 76.92,
+    "type": "Modelo lineal regularizado"
   }
 }
 ```
 
----
-
-### Paso 5: Diseño y Componentes de la Interfaz de Usuario (UI/UX)
-
-1. **`ImageUploader.tsx`**:
-   - Soporte Drag & Drop o explorador de Windows.
-   - Restricción a formatos `.jpg`, `.jpeg`, `.png`, `.webp`.
-   - Límite de tamaño sugerido: $\le 10\text{ MB}$.
-   - Vista previa inmediata tras la carga.
-
-2. **`CanvasPreview.tsx`**:
-   - Dibuja sobre un elemento `<canvas>` HTML5 la imagen centrada sobre una matriz negra de $256 \times 256$, ilustrando la técnica de **Letterbox Zero-Padding** que previene distorsiones anatómicas antes de la inferencia.
-
-3. **`ModelSelector.tsx`**:
-   - Selector en pestañas para alternar entre:
-     - 🐱 **SVD Subespacios** (Algoritmo de menor residuo ortogonal, $r=20$).
-     - ⚡ **SVM RBF** (Máquina de soporte vectorial con kernel radial).
-     - 🌲 **XGBoost** (Ensamble de 150 árboles de decisión).
-     - 📊 **Regresión Logística** (Modelo lineal con regularización $L_2$).
-
-4. **`ResultsCard.tsx` y `SVDMetricsView.tsx`**:
-   - Badge destacado con la predicción: `GATO` (azul/violeta) o `PERRO` (naranja/ámbar).
-   - Barra de progreso interactiva con porcentaje de confianza.
-   - En SVD: Tarjeta analítica detallando:
-     - Norma Residual a Gatos: $\|\mathbf{e}_{cat}\|_2$.
-     - Norma Residual a Perros: $\|\mathbf{e}_{dog}\|_2$.
-     - Regla de decisión: $\hat{y} = \arg\min (\|\mathbf{e}_{cat}\|_2, \|\mathbf{e}_{dog}\|_2)$.
-     - Indicador visual del margen de separación $\Delta$.
+Las figuras generadas en `models/*.png` se copian directamente a `web/public/figures/` para ser servidas como imágenes estáticas optimizadas mediante el componente `<Image />` de Next.js.
 
 ---
 
-### Paso 6: Estilos y Retroalimentación Visual con Tailwind CSS
+### Paso 5: Componentes Visuales y Estilos con Tailwind CSS
 
-Instalar librerías complementarias recomendadas para UI moderna:
+Instalar librerías complementarias recomendadas para UI moderna y gráficos interactivos:
+
 ```powershell
-npm install lucide-react clsx tailwind-merge framer-motion
+npm install lucide-react clsx tailwind-merge recharts
 ```
 
-- **`lucide-react`**: Íconos modernos para upload, estado de carga, check y alertas.
-- **`framer-motion`**: Transiciones fluidas en la revelación de tarjetas de resultados y animaciones de carga.
-- **Diseño responsive**: Adaptable a cualquier resolución con soporte de modo oscuro (*Dark Mode*) automático.
+- **`lucide-react`**: Íconos modernos para indicadores de rendimiento, tendencias, información matemática y descargas.
+- **`recharts`**: Creación de gráficos interactivos de barras y líneas para explorar las métricas y valores singulares sin requerir backend.
+- **Diseño responsive con Tailwind CSS:** Compatible con pantallas móviles, tablets y monitores de escritorio, con soporte de modo oscuro (*Dark Mode*) automático.
 
 ---
 
-### Paso 7: Ejecución en Desarrollo y Pruebas Locales
+### Paso 6: Ejecución y Pruebas Locales en Windows
 
-1. **Iniciar el frontend en modo desarrollo:**
+1. **Iniciar el servidor de desarrollo local:**
    ```powershell
    npm run dev
    ```
-2. **Acceder a la aplicación:**
-   Abre tu navegador en [http://localhost:3000](http://localhost:3000).
-
-3. **Pruebas de Inferencia:**
-   - Sube una imagen de prueba de `data/processed/gatos/gato_000.jpg` o cualquier fotografía propia.
-   - Valida la predicción y los valores de norma residual calculados por SVD.
+2. **Abrir en el navegador:**
+   Ingresa a **[http://localhost:3000](http://localhost:3000)**.
+3. Navega por las secciones de métricas, análisis SVD y galería para verificar que las gráficas, tablas y textos carguen correctamente.
 
 ---
 
-### Paso 8: Compilación para Producción y Despliegue
+## 4. Guía de Despliegue en Vercel
 
-#### Compilación Estática y Servidor Node:
-```powershell
-npm run build
-npm run start
-```
+**Vercel** es la plataforma creada por los desarrolladores de Next.js y ofrece el despliegue más rápido, escalable y sin costo para proyectos frontend.
 
-#### Opciones de Despliegue:
-1. **Vercel (Frontend Next.js):**
-   - Conexión directa con el repositorio de GitHub.
-   - Despliegue automático en la red CDN global de Vercel.
-2. **Contenedor Docker (Solución completa Full-Stack):**
-   - Imagen multi-etapa que contiene tanto el entorno Python para inferencia con OpenCV y Scikit-Learn como el runtime de Node.js sirviendo Next.js en el puerto `3000`.
+### Método A: Despliegue desde GitHub (Panel Web de Vercel - Recomendado)
+
+Este método conecta tu repositorio directamente con Vercel para generar despliegues continuos automáticos (*CI/CD*) cada vez que haces un `git push`.
+
+1. **Subir los cambios a GitHub:**
+   Asegúrate de que la rama `project-web` esté actualizada en tu repositorio de GitHub:
+   ```powershell
+   git push origin project-web
+   ```
+
+2. **Crear o iniciar sesión en Vercel:**
+   - Ingresa a **[https://vercel.com/](https://vercel.com/)**.
+   - Haz clic en **Sign Up** o **Log In** y selecciona **Continue with GitHub** para vincular tu cuenta.
+
+3. **Importar el Repositorio:**
+   - En tu panel de control (*Dashboard*) de Vercel, haz clic en **Add New...** y luego en **Project**.
+   - En la lista de repositorios de GitHub, busca `Machine-Learning` (o el nombre de tu repositorio) y haz clic en **Import**.
+
+4. **Configuración del Proyecto en Vercel:**
+   - **Project Name:** Puedes dejar el nombre predeterminado o cambiarlo a `clasificador-animales-svd`.
+   - **Framework Preset:** Vercel detectará automáticamente **Next.js**.
+   - **Root Directory:** *(Muy Importante)* Como el proyecto web estará dentro del subdirectorio `web`, haz clic en **Edit** junto a *Root Directory* y selecciona la carpeta **`web`**.
+   - **Build and Output Settings:** Déjalos por defecto:
+     - *Build Command:* `next build`
+     - *Output Directory:* `.next`
+     - *Install Command:* `npm install`
+   - **Environment Variables:** No se requieren variables de entorno al ser una plataforma de reportería puramente frontend.
+
+5. **Desplegar:**
+   - Haz clic en el botón azul **Deploy**.
+   - Vercel compilará la aplicación en aproximadamente 1 minuto. Al finalizar, mostrará una pantalla de celebración con confeti y una captura de tu sitio web en vivo.
 
 ---
 
-## 4. Modelos y Datos Disponibles en el Repositorio
+### Método B: Despliegue Directo desde Terminal con Vercel CLI
 
-El backend web se apoyará en los artefactos ya entrenados y validados:
+Si prefieres desplegar directamente desde PowerShell en Windows sin abrir el navegador:
 
-- **Notebook de Preprocesamiento:** [`data/preprocesamiento_datos.ipynb`](data/preprocesamiento_datos.ipynb) (Acondicionamiento en matriz negra $256 \times 256$ y extracción de 349 features).
-- **Notebook de Modelos y SVD:** [`models/clasificacion_subespacios_svd_y_modelos.ipynb`](models/clasificacion_subespacios_svd_y_modelos.ipynb).
-- **Artefactos Serializados:**
-  - `models/svd_pipeline.joblib`: Estimador `SVDSubspaceClassifier` ajustado.
-  - `models/svm_rbf.joblib`: Modelo SVM con kernel RBF.
-  - `models/xgboost_forest.joblib`: Modelo XGBoost Forest.
-  - `models/logistic_regression.joblib`: Modelo de Regresión Logística.
-  - `models/scaler.joblib`: Estandarizador `StandardScaler` (349 variables).
-  - `models/label_encoder.joblib`: Mapeo de etiquetas (`0: gatos`, `1: perros`).
-- **Figuras Oficiales:**
-  - `models/svd_curva_seleccion_dimension.png`: 6 paneles de análisis espectral, Gavish-Donoho y sweep de exactitud vs. rango $r$.
-  - `models/svd_eigen_animals.png`: Componentes base (Eigen-Gatos vs. Eigen-Perros).
-  - `models/confusion_matrices.png`: Matrices de confusión en test ($N=72$).
+1. **Instalar Vercel CLI globalmente o ejecutarlo con npx:**
+   Desde la carpeta `web/` en PowerShell:
+   ```powershell
+   npx vercel
+   ```
+
+2. **Seguir las preguntas del asistente en la terminal:**
+   - *Set up and deploy?* → **y**
+   - *Which scope do you want to deploy to?* → Selecciona tu usuario de Vercel.
+   - *Link to existing project?* → **n**
+   - *What's your project's name?* → Presiona Enter (toma `web` o el nombre que elijas).
+   - *In which directory is your code located?* → `./` (Enter).
+   - *Want to modify settings?* → **n**
+
+3. **Despliegue a Producción:**
+   Para generar la URL definitiva de producción:
+   ```powershell
+   npx vercel --prod
+   ```
 
 ---
 
-## 5. Métricas de Rendimiento de los Modelos
+### Verificación y Dominio en Producción
 
-Evaluadas en el conjunto de prueba independiente ($N=72$ muestras no vistas):
+Una vez completado el despliegue, Vercel te proporcionará una URL pública segura con HTTPS, por ejemplo:
+> **`https://clasificador-animales-svd.vercel.app`**
 
-| Modelo | Accuracy (%) | Precision (%) | Recall (%) | F1-Score (%) | Fundamento Matemático |
+Cualquier persona o evaluador podrá ingresar a ese enlace desde cualquier dispositivo para revisar la reportería interactiva del clasificador.
+
+---
+
+## 5. Modelos, Datos y Métricas de Referencia
+
+La información presentada en la plataforma web refleja los resultados experimentales obtenidos en los notebooks del proyecto:
+
+### Métricas Oficiales sobre el Conjunto de Test ($N=72$ Muestras Independientes)
+
+| Modelo | Accuracy (%) | Precision (%) | Recall (%) | F1-Score (%) | Fundamento Teórico |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **XGBoost Forest (150 Árboles)** | **84.72%** | 80.49% | **91.67%** | **85.71%** | Ensamble no lineal de árboles de decisión |
 | **SVD Subespacios (Menor Norma)** | **79.17%** | **83.87%** | 72.22% | **77.61%** | **Distancia ortogonal mínima al subespacio ($\min \|\mathbf{e}\|_2$)** |
 | **SVM (Kernel RBF)** | 77.78% | 79.41% | 75.00% | 77.14% | Hiperplano de separación óptimo en espacio de Hilbert |
 | **Regresión Logística ($L_2$)** | 75.00% | 71.43% | 83.33% | 76.92% | Función sigmoide lineal regularizada |
+
+### Artefactos Generados en el Repositorio
+- **Preprocesamiento:** [`data/preprocesamiento_datos.ipynb`](data/preprocesamiento_datos.ipynb) (Acondicionamiento en canvas negro $256 \times 256$ y extracción de 349 características).
+- **Modelado Matemático y SVD:** [`models/clasificacion_subespacios_svd_y_modelos.ipynb`](models/clasificacion_subespacios_svd_y_modelos.ipynb).
+- **Gráficas Oficiales:**
+  - `models/svd_curva_seleccion_dimension.png` (Análisis de 6 paneles: espectro, energía, varianza, Gavish-Donoho y sweep de rango).
+  - `models/svd_eigen_animals.png` (Eigen-Gatos y Eigen-Perros).
+  - `models/confusion_matrices.png` (Matrices de confusión).
