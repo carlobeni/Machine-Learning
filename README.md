@@ -53,7 +53,11 @@ Para trabajar con Next.js en Windows únicamente necesitas instalar **Node.js** 
 3. Marca la casilla **"I accept the terms in the License Agreement"** y pulsa **Next**.
 4. **Destination Folder:** Deja la ruta por defecto (`C:\Program Files\nodejs\`) y pulsa **Next**.
 5. **Custom Setup:** Deja todas las opciones predeterminadas (incluye el runtime, `npm` y la adición al `PATH`) y pulsa **Next**.
-6. **Tools for Native Modules:** Deja la casilla **sin marcar** (no es requerida) y pulsa **Next**.
+6. **Tools for Native Modules (¡IMPORTANTE: Dejar DESMARCADA!):**
+   - Verás una pantalla que dice: *"Automatically install the necessary tools. Note that this will also install Chocolatey..."*.
+   - **DEJA ESTA CASILLA DESMARCADA (en blanco).**
+   - **¿Por qué no es necesario Chocolatey?** Marcar esa opción activa la descarga e instalación automática de Chocolatey, Python nativo y paquetes pesados de compilación en C++ de Visual Studio (~3 a 5 GB extras en disco). Esto **ralentiza enormemente la instalación** (puede demorar de 15 a 30 minutos extras) y **no se necesita en absoluto** para desarrollar la aplicación de reportería web con Next.js, React o Tailwind CSS. Al dejarla desmarcada, la instalación concluye limpiamente en menos de 1 minuto.
+   - Pulsa **Next**.
 7. Pulsa **Install**. Cuando Windows solicite confirmación de permisos de administrador (*UAC*), selecciona **Sí**.
 8. Al completarse la barra, pulsa **Finish**.
 
