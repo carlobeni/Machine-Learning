@@ -1,0 +1,94 @@
+{
+  "test_samples": 72,
+  "train_samples": 288,
+  "models": [
+    {
+      "id": "xgboost",
+      "name": "XGBoost Forest (150 Árboles)",
+      "shortName": "XGBoost",
+      "family": "Ensamble No Lineal (Gradient Boosting)",
+      "accuracy": 84.72,
+      "precision": 80.49,
+      "recall": 91.67,
+      "f1_score": 85.71,
+      "train_accuracy": 100.0,
+      "confusion_matrix": {
+        "tn": 28,
+        "fp": 8,
+        "fn": 3,
+        "tp": 33
+      },
+      "hyperparameters": "n_estimators=150, max_depth=4, lr=0.05, subsample=0.8, colsample_bytree=0.8",
+      "inference_complexity": "O(T · d) = 150 × 4 comparaciones de umbral",
+      "inference_time_ms": 1.45,
+      "highlight": "Mejor Rendimiento Global (Accuracy & Recall)",
+      "notes": "Captura interacciones no lineales de orden superior entre descriptores de forma HOG y distribución cromática HSV."
+    },
+    {
+      "id": "svd",
+      "name": "SVD Subespacios (Menor Norma)",
+      "shortName": "SVD Subespacios",
+      "family": "Proyección Ortogonal Dual en Subespacios (r=20)",
+      "accuracy": 79.17,
+      "precision": 83.87,
+      "recall": 72.22,
+      "f1_score": 77.61,
+      "train_accuracy": 98.96,
+      "confusion_matrix": {
+        "tn": 31,
+        "fp": 5,
+        "fn": 10,
+        "tp": 26
+      },
+      "hyperparameters": "r=20 componentes por clase, T=0.25 (Softmax), Truncamiento Gavish-Donoho",
+      "inference_complexity": "O(m · r) = 2 × (349 × 20) productos punto + 2 normas L2",
+      "inference_time_ms": 0.18,
+      "highlight": "Mayor Precisión (83.87%) y Menor Tasa de Falsos Positivos",
+      "notes": "Supera a SVM RBF y Regresión Logística usando únicamente álgebra lineal matricial determinista sin optimización iterativa."
+    },
+    {
+      "id": "svm",
+      "name": "SVM (Kernel RBF)",
+      "shortName": "SVM RBF",
+      "family": "Clasificador de Margen Máximo en Espacio de Hilbert",
+      "accuracy": 77.78,
+      "precision": 79.41,
+      "recall": 75.0,
+      "f1_score": 77.14,
+      "train_accuracy": 100.0,
+      "confusion_matrix": {
+        "tn": 29,
+        "fp": 7,
+        "fn": 9,
+        "tp": 27
+      },
+      "hyperparameters": "C=10.0, kernel=\"rbf\", gamma=\"scale\"",
+      "inference_complexity": "O(N_sv · m) evaluaciones de kernel Gaussiano exp(-γ||x - x_i||²)",
+      "inference_time_ms": 0.92,
+      "highlight": "Balance Simétrico entre Clases",
+      "notes": "Mapea las 349 características a dimensión infinita mediante kernel radial, logrando buena separación aunque sensible a ruido de alta dimensión."
+    },
+    {
+      "id": "logreg",
+      "name": "Regresión Logística (L2)",
+      "shortName": "Reg. Logística (L2)",
+      "family": "Modelo Lineal Probabilístico Sigmoideo",
+      "accuracy": 75.0,
+      "precision": 71.43,
+      "recall": 83.33,
+      "f1_score": 76.92,
+      "train_accuracy": 100.0,
+      "confusion_matrix": {
+        "tn": 24,
+        "fp": 12,
+        "fn": 6,
+        "tp": 30
+      },
+      "hyperparameters": "C=1.0, penalty=\"l2\", solver=\"lbfgs\", max_iter=1000",
+      "inference_complexity": "O(m) = 1 producto interno en R^349 + función sigmoide",
+      "inference_time_ms": 0.08,
+      "highlight": "Baseline Lineal de Alta Sensibilidad (83.33% Recall)",
+      "notes": "Un único hiperplano lineal resulta insuficiente para separar la variabilidad morfológica intra-clase, generando mayor tasa de falsos positivos (12 gatos clasificados como perros)."
+    }
+  ]
+}

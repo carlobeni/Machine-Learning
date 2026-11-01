@@ -506,17 +506,6 @@ SECCIÓN 6: CONCLUSIONES Y TRABAJO FUTURO (Criterio 6 del TP4)
   * Data Augmentation geométrica y fotométrica en tiempo de entrenamiento.
   * Fusión de características profundas con subespacios ortogonales.
 
---------------------------------------------------------------------------------
-SECCIÓN 7: DEMOSTRADOR DIDÁCTICO EN CLIENTE (Simulador de Clasificación)
---------------------------------------------------------------------------------
-- Módulo interactivo "Inspector de Muestra":
-  * Permite al usuario seleccionar una muestra de test (ej.: Gato #12 o Perro #05).
-  * Muestra la imagen acondicionada en 256x256.
-  * Calcula y muestra gráficamente las dos barras de residuo:
-    - Residuo al Subespacio de Gatos: $\|\mathbf{e}_{cat}\|_2$
-    - Residuo al Subespacio de Perros: $\|\mathbf{e}_{dog}\|_2$
-  * Destaca visualmente la regla de decisión: "¿Cuál residuo es menor? -> Predicción: [GATO / PERRO]".
-
 ================================================================================
 ESTRUCTURA DE ARCHIVOS NEXT.JS ESPERADA:
 ================================================================================
